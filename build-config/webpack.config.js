@@ -13,6 +13,9 @@ module.exports = {
         port: 8080
     },
     module: {
-        rules: require("./rules.config")
+        rules: require("./rules.config"),
+    },
+    resolve: {
+        extensions: ['.js', '.jsx']
     }
 }

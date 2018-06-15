@@ -36,18 +36,14 @@
       }
       
       .home-body {
+          padding-bottom: 50px;
           &>h1 {
               padding-bottom: 9.5px;
               margin: 42px 0 21px;
               border-bottom: 1px solid #434857;
           }
-          .stats-box .statcard {
-              .img-responsive {
-                  margin: 0 auto;
-              }
-              .statcard-desc {
-                  font-weight: bold;
-                  font-size: 16px;
-              }
+          &>p,
+          &>ul {
+              font-size: 1.25em;
           }
       }
