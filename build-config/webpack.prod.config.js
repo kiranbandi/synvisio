@@ -1,6 +1,7 @@
 'use strict';
 var webpack = require("webpack");
 var path = require("path");
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: ['babel-polyfill', './src/app.js'],
@@ -14,9 +15,14 @@ module.exports = {
                 NODE_ENV: JSON.stringify('production')
             }
         }),
-        new webpack.optimize.UglifyJsPlugin()
+        new UglifyJSPlugin({
+            sourceMap: false
+        })
     ],
     module: {
-        rules: require('./rules.config')
+        rules: require("./rules.config"),
+    },
+    resolve: {
+        extensions: ['.js', '.jsx']
     }
 }
