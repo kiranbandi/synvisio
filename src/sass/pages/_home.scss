@@ -1,0 +1,53 @@
+      .home-header {
+          padding-top: 75px;
+          padding-bottom: 75px;
+          margin-bottom: 30px;
+          font-size: 20px;
+          color: #fff;
+          position: relative;
+          h1 {
+              margin-bottom: 5px;
+              font-size: 40px;
+              line-height: 1;
+              font-weight: bold;
+          }
+          p {
+              font-weight: 300;
+              line-height: 1.4;
+          }
+          &:before {
+              content: "";
+              position: absolute;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+              background: rgba(0, 0, 0, 0.35);
+          }
+      }
+      
+      @media (min-width: 768px) {
+          .home-header {
+              font-size: 24px;
+              h1 {
+                  font-size: 60px;
+              }
+          }
+      }
+      
+      .home-body {
+          &>h1 {
+              padding-bottom: 9.5px;
+              margin: 42px 0 21px;
+              border-bottom: 1px solid #434857;
+          }
+          .stats-box .statcard {
+              .img-responsive {
+                  margin: 0 auto;
+              }
+              .statcard-desc {
+                  font-weight: bold;
+                  font-size: 16px;
+              }
+          }
+      }

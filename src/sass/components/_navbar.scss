@@ -1,0 +1,26 @@
+#app-container > .navbar {
+    a {
+	font-weight: bold;
+	text-transform: uppercase;
+    }
+    	#navbar span.icon {
+    	padding: 4px 5px;
+        border: 3px solid #cfd2da;
+        margin-right: 10px;
+        border-radius: 35px;
+    	}
+    	
+    	.navbar-brand-icon {
+    	        margin-top: -6px;
+                padding: 3px 5px;
+                border: 3px solid #cfd2da;
+                margin-right: 10px;
+                border-radius: 35px;
+    	}
+	
+	.navbar-nav {
+    margin: 0px;
+    padding: 0px 2px;
+    }
+
+}

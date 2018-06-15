@@ -1,0 +1,24 @@
+// import base - contains global styles, such as resets, typography, colors
+
+// import vendors 
+@import 'vendor/toastr';
+
+// import components- contains each self-contained component in its own .scss partial
+@import 'components/container';
+@import 'components/navbar';
+@import 'components/ticketCard';
+@import 'components/graphCard';
+@import 'components/statcard';
+
+
+// import pages contains page-specific styling
+@import 'pages/home';
+@import 'pages/notFound';
+@import 'pages/parkCar';
+@import 'pages/login';
+@import 'pages/dashboard';
+
+
+
+
+
