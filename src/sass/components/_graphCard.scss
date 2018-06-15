@@ -1,0 +1,62 @@
+.graph-container {
+    position:relative;
+    cursor:pointer;
+    border-radius: 15px;
+    border: 5px solid #1c9fdd;
+    margin-bottom:10px;
+    padding:5px;
+    
+    
+    div.table-responsive.legend-table {
+        margin:10px auto;    
+    }
+    
+ .slot-name {
+    font-weight: bold;
+    text-align: center;
+    font-size: 16px;
+    text-transform: uppercase;
+    
+    }
+    &.selected {
+        border-color:indianred;
+    }
+
+
+
+&:after, &:before {
+    position:absolute;
+    opacity:0;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+}
+&:after {
+    content: '\A';
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+}
+&:before {
+    font-family: sans-serif;
+    content: 'VIEW PARKING STATS';
+    width: 100%;
+    color: #fff;
+    z-index: 1;
+    top: 45%;
+    padding: 4px 10px;
+    text-align: center;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    font-size: 20px;
+    font-weight: bold;
+}
+&:hover:after, &:hover:before {
+    opacity:1;
+}
+
+}
+
+

@@ -1,0 +1,29 @@
+.dashboard-container {
+
+.loadingContainer>div{
+	margin:10px auto;
+}
+    	.hr-divider {
+			font-size:17px;
+			margin:20px auto;
+
+			.hr-divider-content {
+			font-weight:bold;
+			text-align:center;
+			margin : 30px auto;
+			}
+	}
+	
+	.quickViewBox {
+		text-align:center;
+		.statcard-number {
+			padding:10px;
+		}
+	}
+	
+	.locationStatBox {
+			.statcard-number {
+			padding-top:10px;
+		}
+	}
+}

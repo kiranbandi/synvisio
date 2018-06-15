@@ -1,0 +1,70 @@
+.login-container {
+	
+    position: relative;
+    margin-top: 60px;
+    background: #1a1c22;
+    border: 5px solid #1ca8dd;
+    border-radius:15px;
+    
+
+
+	.login-icon {
+	position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0px auto;
+    top: -30px;
+    height: 50px;
+    width: 50px;
+    background: #1ca8dd;
+    font-size: 30px;
+    border-radius: 25px;
+    color: #1a1c22;
+    text-align: center;
+
+	}
+
+	.hr-divider {
+			font-size:17px;
+			margin:20px auto;
+
+			.hr-divider-content {
+			background:#1a1c22;
+			font-weight:bold;
+			text-align:center;
+			margin : 30px auto;
+			}
+	}
+	.fb-btn , .admin-btn {
+	    margin: 0px auto 20px auto;
+	    font-size: 16px;
+	    display: block;
+	}
+	
+	.fb-btn:hover, .fb-btn:focus, .fb-btn.focus {
+    text-decoration: none;
+    background: #4267b2;
+    color:inherit;
+}
+
+.admin-btn {
+    line-height:35px;
+.login-span{
+      vertical-align:top;
+      & + div {
+    margin-left: 10px;
+    vertical-align:top;
+    display:inline-block;
+}    
+
+}    
+
+    
+    
+}
+
+
+
+
+
+}

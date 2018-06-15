@@ -1,0 +1,55 @@
+.ticket-card-container {
+  text-transform: uppercase;
+      text-align: center;
+  
+  	.hr-divider {
+       font-size: 21px;
+          margin: 20px auto;
+
+			.hr-divider-content {
+     font-weight: bold;
+          margin: 30px auto;
+			}
+	}
+	
+	.btn .icon {
+    margin-right:10px;
+	}
+	
+	.hr-divider + div {
+	    margin : 10px auto;
+	}
+	
+	 
+  
+  .statcard-number {
+   margin-bottom: 35px;
+}
+
+.name-slot {
+      margin-top: 35px;
+   .statcard-desc {
+     font-weight: bold;
+       font-size: 14px;
+  text-transform: uppercase;
+	  }
+}
+
+.parking-status-indicator {
+         padding: 15px;
+   border-radius: 100px;
+       font-size: 20px;
+     font-weight: bold !important;
+    
+     .icon {
+    margin-right:8px;
+}
+
+}
+
+}
+
+
+
+
+
