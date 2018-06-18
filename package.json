@@ -50,6 +50,7 @@
         "gh-pages": "^1.2.0",
         "image-webpack-loader": "^3.2.0",
         "node-sass": "^4.9.0",
+        "redux-devtools-extension": "^2.13.2",
         "resolve-url-loader": "^2.3.0",
         "sass-loader": "^7.0.3",
         "style-loader": "^0.21.0",
