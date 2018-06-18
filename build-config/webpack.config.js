@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     mode: 'development',
-    entry: ['babel-polyfill', './src/app.js'],
+    entry: ['babel-polyfill', './src/app.jsx'],
     output: {
         path: __dirname + '/build/assets/bundle',
         filename: "bundle.js",
