@@ -1,15 +1,11 @@
 /*global $*/
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import { connect } from 'react-redux';
-import * as sessionActions from '../redux/actions/sessionActions';
-import { bindActionCreators } from 'redux';
 
 class NavBar extends Component {
 
     constructor(props) {
         super(props);
-        this.logOut = this.logOut.bind(this);
     }
 
     componentDidMount() {
@@ -21,11 +17,6 @@ class NavBar extends Component {
             }
         });
 
-    }
-
-    logOut(event) {
-        event.preventDefault();
-        this.props.actions.logOutUser();
     }
 
     render() {
@@ -57,19 +48,6 @@ class NavBar extends Component {
                                     </Link>
                             </li>
                         </ul>
-
-                        <ul className='nav navbar-nav navbar-right'>
-                            <li> {this.props.logged_in ?
-                                <Link to='/Logout' onClick={this.logOut}>
-                                    <span className="icon icon-log-out"></span> Logout
-                                        </Link>
-                                :
-                                <Link to='/Login'>
-                                    <span className="icon icon-user"></span> Login
-                                        </Link>
-                            }
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </nav>
@@ -77,14 +55,4 @@ class NavBar extends Component {
     }
 }
 
-function mapStateToProps(state, ownProps) {
-    return { logged_in: state.session.sessionStatus };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        actions: bindActionCreators(sessionActions, dispatch)
-    };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default NavBar;
