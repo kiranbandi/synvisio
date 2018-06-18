@@ -7,73 +7,71 @@ var ajaxHelpers = {};
 
 // Parameters required for invoking Lambda function
 var pullParams = {
-  FunctionName : 'choozago-api',
-  InvocationType : 'RequestResponse',
-  LogType : 'None'
+    FunctionName: 'choozago-api',
+    InvocationType: 'RequestResponse',
+    LogType: 'None'
 };
 
 
 ajaxHelpers.getStatus = function(locationCode) {
 
-  let action = 'getStatus';
-    
-    let payLoad =JSON.stringify({ action, data: { locationCode } },null,2) ,
-        pullParamsData = Object.assign({},pullParams,{Payload:payLoad})
+    let action = 'getStatus';
 
-    return $.Deferred(function( defer ) {
-        
+    let payLoad = JSON.stringify({ action, data: { locationCode } }, null, 2),
+        pullParamsData = Object.assign({}, pullParams, { Payload: payLoad })
+
+    return $.Deferred(function(defer) {
+
         lambda.invoke(pullParamsData, function(error, data) {
-          if (error) {
+            if (error) {
                 defer.reject();
                 toastr["error"]("Network error please try again", "ERROR")
-          } 
-          else {
-              var recordData = JSON.parse(data.Payload);
-            if(!recordData) {
-                toastr["error"]("No Records Found , Please try again")
+            } else {
+                var recordData = JSON.parse(data.Payload);
+                if (!recordData) {
+                    toastr["error"]("No Records Found , Please try again")
+                }
+                defer.resolve(recordData);
             }
-            defer.resolve(recordData);
-          }
         });
-    
+
     }).promise();
 
 }
 
 
-ajaxHelpers.ticketCall = function(ticketId,action) {
-    
-    let payLoad =JSON.stringify({ action, data: { ticketId } },null,2) ,
-        pullParamsData = Object.assign({},pullParams,{Payload:payLoad})
+ajaxHelpers.ticketCall = function(ticketId, action) {
 
-    return $.Deferred(function( defer ) {
-        
+    let payLoad = JSON.stringify({ action, data: { ticketId } }, null, 2),
+        pullParamsData = Object.assign({}, pullParams, { Payload: payLoad })
+
+    return $.Deferred(function(defer) {
+
         lambda.invoke(pullParamsData, function(error, data) {
-          if (error) {
+            if (error) {
                 defer.reject();
                 toastr["error"]("Network error please try again", "ERROR")
-          } 
-          else {
-            var ticketStatus = JSON.parse(data.Payload);
-            if(!ticketStatus) {
-                toastr["error"]("No Records Found , Please try again")
+            } else {
+                var ticketStatus = JSON.parse(data.Payload);
+                if (!ticketStatus) {
+                    toastr["error"]("No Records Found , Please try again")
+                }
+                defer.resolve(ticketStatus);
             }
-            defer.resolve(ticketStatus);
-          }
         });
-    
+
     }).promise();
 
-  }
-  
-  
-ajaxHelpers.getLoginToken = function(userid,password) {
-    
-    return $.Deferred(function( defer ) {
-        defer.resolve('abc'); 
-        }).promise();
+}
 
-  }
-  
-  
+
+ajaxHelpers.getLoginToken = function(userid, password) {
+
+    return $.Deferred(function(defer) {
+        defer.resolve('abc');
+    }).promise();
+
+}
+
+
 module.exports = ajaxHelpers;

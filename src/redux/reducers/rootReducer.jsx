@@ -1,7 +1,7 @@
-import {combineReducers} from 'redux';  
+import { combineReducers } from 'redux';
 import session from './sessionReducer';
 
-const rootReducer = combineReducers({  
+const rootReducer = combineReducers({
   // short hand property names
   session
 })
