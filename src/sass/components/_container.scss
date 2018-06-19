@@ -1,0 +1,27 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    #root {
+        min-height: 100%;
+        padding-bottom: 60px;
+        position: relative;
+        #app-container {
+            min-height: 100%;
+            .footer {
+                position: absolute;
+                bottom: 0px;
+                height: 50px;
+                padding: 10px;
+                background: #1a1c22;
+                .footer-inner {
+                    display: inline-block;
+                    a {
+                        font-size: 1.25em;
+                    }
+                }
+            }
+        }
+    }
+}
