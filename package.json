@@ -21,9 +21,10 @@
     "license": "MIT",
     "homepage": "https://github.com/kiranbandi/mcscanx-synteny-visualizer#readme",
     "dependencies": {
-        "amazon-cognito-identity-js": "^2.0.9",
-        "aws-sdk": "^2.258.1",
+        "axios": "^0.18.0",
         "chart.js": "^2.7.2",
+        "d3": "^5.5.0",
+        "lodash": "^4.17.10",
         "moment": "^2.22.2",
         "react": "^16.4.1",
         "react-chartjs": "^1.2.0",

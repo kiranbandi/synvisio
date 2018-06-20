@@ -1,6 +1,7 @@
 /*global $*/
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
 class NavBar extends Component {
 
@@ -38,14 +39,14 @@ class NavBar extends Component {
 
                         <ul className='nav navbar-nav'>
                             <li>
-                                <Link to='/Dashboard'>
+                                <Link to={'/Dashboard/' + this.props.sourceID}>
                                     <span className="icon icon-line-graph"></span> Dashboard
-                                    </Link>
+                                </Link>
                             </li>
                             <li>
                                 <Link to='/Configuration'>
                                     <span className="icon icon-tools"></span> Configuration
-                                    </Link>
+                                </Link>
                             </li>
                         </ul>
                     </div>
@@ -55,4 +56,8 @@ class NavBar extends Component {
     }
 }
 
-export default NavBar;
+function mapStateToProps(state, ownProps) {
+    return { sourceID: state.oracle.sourceID };
+}
+
+export default connect(mapStateToProps)(NavBar);

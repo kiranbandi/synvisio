@@ -1,3 +1,6 @@
 export default {
-  session: {}
+  oracle: {
+    sourceID: 'bn',
+    loaderState: false
+  }
 };
