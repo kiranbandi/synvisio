@@ -1,12 +1,4 @@
-.dashboard-container {
-    .loadingContainer {
-        width: 100%;
-        min-height: 400px;
-        &>img {
-            display: block;
-            margin: 100px auto;
-        }
-    }
+.dashboard-root {
     .hr-divider {
         font-size: 17px;
         margin: 20px auto;

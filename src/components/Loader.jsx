@@ -1,3 +1,3 @@
 import React, { Component } from 'react';
 
-export default () => <div className='loadingContainer'><img src="assets/img/spinner.gif" /></div>;
+export default () => <div className='loading-container'><img src="assets/img/spinner.gif" /></div>;

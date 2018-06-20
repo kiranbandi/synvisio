@@ -4,6 +4,8 @@
 // import components- contains each self-contained component in its own .scss partial
 @import 'components/container';
 @import 'components/navbar';
+@import 'components/loader';
+@import 'components/information';
 // import pages contains page-specific styling
 @import 'pages/home';
 @import 'pages/notFound';

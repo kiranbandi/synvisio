@@ -5,6 +5,7 @@ import { Loader } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { setSourceID, setLoaderState, setGenomicData } from '../redux/actions/actions';
+import Information from '../components/Information';
 
 class Dashboard extends Component {
 
@@ -42,8 +43,12 @@ class Dashboard extends Component {
     render() {
         const { loaderState } = this.props;
         return (
-            <div className='dashboard-container container m-t'>
-                {!loaderState ? <h1 className='m-a text-center'>Dashboard Page Coming Soon ....</h1> : <Loader />}
+            <div className='dashboard-root m-t'>
+                {!loaderState ?
+                    <div className='dashboard-container'>
+                        <Information />
+                    </div>
+                    : <Loader />}
             </div>
         );
     }
