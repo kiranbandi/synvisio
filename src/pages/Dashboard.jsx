@@ -31,7 +31,7 @@ class Dashboard extends Component {
         }
 
         getGenomicsData(sourceID).then((data) => {
-            // set the genomic data in redux state
+            // set the genomic data
             setGenomicData(data);
         }).always(() => {
             // Turn off the loader

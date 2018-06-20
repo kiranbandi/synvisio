@@ -1,9 +1,10 @@
 .dashboard-container {
     .loadingContainer {
         width: 100%;
+        min-height: 400px;
         &>img {
             display: block;
-            margin: 10px auto;
+            margin: 100px auto;
         }
     }
     .hr-divider {
