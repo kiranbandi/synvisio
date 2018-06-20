@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 //  Image url handling is convoluted in scss , much easier to set inline and get images from root
 let backgroundStyle = { background: 'url(assets/img/synvisio.jpg)' };
@@ -49,10 +50,10 @@ class Home extends Component {
           <p>We are working on adding several new features to this tool.The current development progress is documented <a href="https://trello.com/b/ag1Upk33/mcscanx-synteny-visualizer">here</a>.We are also working on offering users the ability to upload their
               own sequences.But for the time being we have loaded up several sample files as listed below :</p>
           <ul>
-            <li> <a href="https://kiranbandi.github.io/mcscanx-synteny-visualizer/?source=bn">Bn</a> - Brassica napus , Canola </li>
-            <li> <a href="https://kiranbandi.github.io/mcscanx-synteny-visualizer/?source=at">At</a> - Arabidopsis thaliana ,Thale cress </li>
-            <li> <a href="https://kiranbandi.github.io/mcscanx-synteny-visualizer/?source=os_sb">Os vs Sb</a> - Os(Oriza sativa, Rice) vs Sb(Sorghum bicolor , Corn)</li>
-            <li> <a href="https://kiranbandi.github.io/mcscanx-synteny-visualizer/?source=at_vv">At vs Vv</a> - At(Arabidopsis thaliana, Thale cress) vs Vv(Vitis vinifera , Grape Vine)</li>
+            <li> <Link to={'/Dashboard/bn'}> Bn </Link> - Brassica napus , Canola </li>
+            <li> <Link to={'/Dashboard/at'}> At </Link> - Arabidopsis thaliana ,Thale cress </li>
+            <li> <Link to={'/Dashboard/os_sb'}> Os vs Sb </Link> - Os(Oriza sativa, Rice) vs Sb(Sorghum bicolor , Corn)</li>
+            <li> <Link to={'/Dashboard/at_vv'}> At vs Vv </Link> - At(Arabidopsis thaliana, Thale cress) vs Vv(Vitis vinifera , Grape Vine)</li>
           </ul>
 
         </div>
