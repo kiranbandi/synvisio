@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as d3 from 'd3';
-import _ from 'lodash';
 
 class Information extends Component {
 
@@ -69,7 +68,6 @@ class Information extends Component {
     }
 
     render() {
-
         const { information = { parameters: [] } } = this.props,
             informationList = information.parameters.map((val, ind) => <h4 key={ind} className='sub-info'>{val.join(" : ")}</h4>);
 
@@ -78,6 +76,11 @@ class Information extends Component {
                 <div className='info-container col-sm-12 col-md-6 text-xs-center'>
                     <h2 className='text-primary text-xs-center'>MCScanX Parameters</h2>
                     {informationList}
+                    <select className="selectpicker">
+                        <option>Mustard</option>
+                        <option>Ketchup</option>
+                        <option>Relish</option>
+                    </select>
                 </div>
                 <div className='graphic-container col-sm-12 col-md-6 text-xs-center'>
                     <h2 className='text-primary text-xs-center'>Share of Collinear Genes</h2>
