@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
-import { Loader } from '../components';
+import { Loader, Information, FilterPanel } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { setSourceID, setLoaderState, setGenomicData } from '../redux/actions/actions';
-import Information from '../components/Information';
+
 
 class Dashboard extends Component {
 
@@ -47,6 +47,7 @@ class Dashboard extends Component {
                 {!loaderState ?
                     <div className='dashboard-container'>
                         <Information />
+                        <FilterPanel />
                     </div>
                     : <Loader />}
             </div>
