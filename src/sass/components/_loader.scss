@@ -1,0 +1,9 @@
+.loading-container {
+    width: 100%;
+    min-height: 400px;
+    padding-top: 100px;
+    &>img {
+        display: block;
+        margin: 0px auto;
+    }
+}
