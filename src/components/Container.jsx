@@ -19,7 +19,7 @@ export default class Container extends Component {
                     <div className="container-fluid">
                         <div className='w-md footer-inner'>
                             <span className="left text-xs-left">
-                                <a className="footer-link" href="mailto:venkat.bandi@usask.ca?subject=MCSCANX Synteny Tool&amp;body=Please%20Fill%20">Contact us</a>
+                                <a className="footer-link" href="mailto:venkat.bandi@usask.ca?subject=MCSCANX Synteny Tool&amp;body=Please%20Fill%20">Contact Us</a>
                             </span>
                         </div>
                         <div className='w-md footer-inner text-xs-right'>
