@@ -4,6 +4,7 @@ export default {
     loaderState: false,
     configuration: {
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
+      'alignmentList': [],
       'dotView': {
         'width': '500'
       },

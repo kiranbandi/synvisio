@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import sampleSourceMapper from '../../utils/sampleSourceMapper';
+import processAlignment from '../../utils/filterAlignment';
 
 export function setLoaderState(loaderState) {
     return { type: types.SET_LOADER_STATE, loaderState };
@@ -25,6 +26,21 @@ export function setGenomicData(data) {
 export function setRootMarkers(markers) {
     return { type: types.SET_ROOT_MARKERS, markers };
 }
+
+export function setALignmentList(alignmentList) {
+    return { type: types.SET_ALIGNMENT_LIST, alignmentList };
+}
+
+export function filterData(sourceMarkers = [], targetMarkers = [], alignmentList = []) {
+
+    const markers = { 'source': sourceMarkers, 'target': targetMarkers },
+        updatedAlignmentList = processAlignment(markers, alignmentList);
+    return dispatch => {
+        dispatch(setRootMarkers(markers));
+        dispatch(setALignmentList(updatedAlignmentList));
+    };
+}
+
 
 
 
