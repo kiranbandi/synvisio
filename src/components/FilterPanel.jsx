@@ -1,35 +1,54 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import sortAlphaNum from '../utils/sortAlphaNum';
+import { filterData } from '../redux/actions/actions';
 
 class FilterPanel extends Component {
 
     constructor(props) {
         super(props);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     componentDidMount() {
-        $('.sourceChromosomeSelect').selectpicker({
-            'actionsBox': true,
-            'iconBase': 'icon',
-            'tickIcon': 'icon-check',
-            'selectedTextFormat': 'count > 2'
-        });
-        $('.targetChromosomeSelect').selectpicker({
-            'actionsBox': true,
-            'iconBase': 'icon',
-            'tickIcon': 'icon-check',
-            'selectedTextFormat': 'count > 2'
-        });
+        const { markers = { 'source': [], 'target': [] } } = this.props;
+
+        $('.sourceChromosomeSelect')
+            .selectpicker({
+                'actionsBox': true,
+                'iconBase': 'icon',
+                'tickIcon': 'icon-check',
+                'selectedTextFormat': 'count > 2'
+            })
+            .selectpicker('val', markers.source);
+
+        $('.targetChromosomeSelect')
+            .selectpicker({
+                'actionsBox': true,
+                'iconBase': 'icon',
+                'tickIcon': 'icon-check',
+                'selectedTextFormat': 'count > 2'
+            })
+            .selectpicker('val', markers.target);;
     }
 
     componentDidUpdate() {
-        $('.sourceChromosomeSelect').selectpicker('refresh');
-        $('.targetChromosomeSelect').selectpicker('refresh');
+        const { markers = { 'source': [], 'target': [] } } = this.props;
+        $('.sourceChromosomeSelect').selectpicker('refresh').selectpicker('val', markers.source);
+        $('.targetChromosomeSelect').selectpicker('refresh').selectpicker('val', markers.target);
     }
 
     componentWillUnmount() {
         $('.sourceChromosomeSelect').selectpicker('destroy');
         $('.targetChromosomeSelect').selectpicker('destroy');
+    }
+    onSubmit(e) {
+        e.preventDefault();
+        const sourceMarkers = $('.sourceChromosomeSelect').selectpicker('val'),
+            targetMarkers = $('.targetChromosomeSelect').selectpicker('val');
+        //  if markers lists are null set them to empty lists
+        this.props.filterData(!!sourceMarkers ? sourceMarkers : [], !!targetMarkers ? targetMarkers : [], this.props.alignmentList);
     }
 
     render() {
@@ -59,7 +78,7 @@ class FilterPanel extends Component {
                         </select>
 
                     </div>
-                    <button type="submit" className="btn btn-primary-outline">
+                    <button type="submit" className="btn btn-primary-outline" onClick={this.onSubmit}>
                         GO <span className="icon icon-cw"></span>
                     </button>
                 </form>
@@ -68,23 +87,17 @@ class FilterPanel extends Component {
     }
 }
 
+function mapDispatchToProps(dispatch) {
+    return { filterData: bindActionCreators(filterData, dispatch) };
+}
+
 function mapStateToProps(state, ownProps) {
-    return { chromosomeMap: state.genome.chromosomeMap };
+    return {
+        chromosomeMap: state.genome.chromosomeMap,
+        markers: state.oracle.configuration.markers,
+        alignmentList: state.genome.alignmentList
+    };
 }
 
-export default connect(mapStateToProps)(FilterPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(FilterPanel);
 
-
-function sortAlphaNum(a, b) {
-    let reA = /[^a-zA-Z]/g;
-    let reN = /[^0-9]/g;
-    let aA = a[0].replace(reA, "");
-    let bA = b[0].replace(reA, "");
-    if (aA === bA) {
-        let aN = parseInt(a[0].replace(reN, ""), 10);
-        let bN = parseInt(b[0].replace(reN, ""), 10);
-        return aN === bN ? 0 : aN > bN ? 1 : -1;
-    } else {
-        return aA > bA ? 1 : -1;
-    }
-}
