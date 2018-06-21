@@ -20,7 +20,11 @@ export function setSourceID(sourceID) {
 }
 
 export function setGenomicData(data) {
-    return { type: types.SET_GENOME_DATA, data };
+    const { genomeLibrary, alignmentList, ...otherData } = data;
+    //  Treading Dangerous Territory here by polluting the global name space 
+    //  But this reduces the load placed on the redux and react global store
+    window.synVisioGenomeData = { genomeLibrary, alignmentList };
+    return { type: types.SET_GENOME_DATA, data: otherData };
 }
 
 export function setRootMarkers(markers) {
