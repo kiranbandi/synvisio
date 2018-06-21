@@ -7,6 +7,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
       return Object.assign({}, state, { loaderState: action.loaderState })
     case types.SET_SOURCEID:
       return Object.assign({}, state, { sourceID: action.sourceID })
+    case types.SET_ROOT_MARKERS:
+      return Object.assign({}, state, { markers: action.markers })
     default:
       return state;
   }

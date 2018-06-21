@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
-import { Loader, Information, FilterPanel } from '../components';
+import { Loader, Information } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setSourceID, setLoaderState, setGenomicData } from '../redux/actions/actions';
+import { configureSourceID, setLoaderState, setGenomicData } from '../redux/actions/actions';
 
 
 class Dashboard extends Component {
@@ -16,7 +16,7 @@ class Dashboard extends Component {
     componentDidMount() {
         // get the source name based on window query params
         let { sourceID } = this.props.params;
-        const { setSourceID, setLoaderState, setGenomicData } = this.props.actions;
+        const { configureSourceID, setLoaderState, setGenomicData } = this.props.actions;
 
         // Turn on loader
         setLoaderState(true);
@@ -28,7 +28,7 @@ class Dashboard extends Component {
         }
         else {
             // update the sourceID set in the state with the new sourceID
-            setSourceID(sourceID);
+            configureSourceID(sourceID);
         }
 
         getGenomicsData(sourceID).then((data) => {
@@ -47,7 +47,6 @@ class Dashboard extends Component {
                 {!loaderState ?
                     <div className='dashboard-container'>
                         <Information />
-                        <FilterPanel />
                     </div>
                     : <Loader />}
             </div>
@@ -57,7 +56,7 @@ class Dashboard extends Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators({ setSourceID, setLoaderState, setGenomicData }, dispatch)
+        actions: bindActionCreators({ configureSourceID, setLoaderState, setGenomicData }, dispatch)
     };
 }
 

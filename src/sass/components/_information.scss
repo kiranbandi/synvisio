@@ -1,10 +1,18 @@
 #information-root {
     h4.sub-info {
         text-transform: capitalize;
+        margin-bottom: 6px;
+        margin-top: 6px;
     }
     .pieText {
         fill: white;
         font-size: 18px;
         font-weight: bold;
+    }
+    .filter-panel-container {
+        padding-top: 15px;
+        label {
+            padding: 0px 15px 15px 0px;
+        }
     }
 }
