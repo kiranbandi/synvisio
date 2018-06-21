@@ -4,3 +4,4 @@ export { default as Loader } from './Loader';
 export { default as Information } from './Information';
 export { default as FilterPanel } from './FilterPanel';
 export { default as PieChart } from './PieChart';
+export { default as GenomeView } from './GenomeView';
