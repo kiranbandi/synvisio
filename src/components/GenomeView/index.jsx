@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 import { select, schemeCategory10 } from 'd3';
 import Markers from './Markers';
 import Links from './Links';
