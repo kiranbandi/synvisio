@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { schemeCategory10 } from 'd3';
+import MarkerText from './MarkerText';
 
 export default class Markers extends Component {
 
@@ -45,13 +46,13 @@ export default class Markers extends Component {
             // create marker text units
             let markerTextUnits = markerList.map((d, i) => {
 
-                return <text key={markerListId + "-markertext-" + i}
+                return <MarkerText
+                    key={markerListId + "-markertext-outer" + i}
+                    outerKey={markerListId + "-markertext-" + i}
                     className={' markersText marker-text-' + markerListId}
                     x={d.x + (d.dx / 2)}
-                    y={configuration.genomeView.verticalPositions[markerListId] + 5}>
-                    {d.key}
-                </text>
-
+                    y={configuration.genomeView.verticalPositions[markerListId] + 5}
+                    text={d.key} />
 
             });
             markerElements.push(markerTextUnits);
@@ -63,10 +64,8 @@ export default class Markers extends Component {
 
     render() {
 
-        const { configuration, markerPositions } = this.props;
-
-
-        const markerElements = this.generateMarkerElements(configuration, markerPositions);
+        const { configuration, markerPositions } = this.props,
+            markerElements = this.generateMarkerElements(configuration, markerPositions);
 
         return (
             <g className='markerContainer' ref={node => this.node = node}>
