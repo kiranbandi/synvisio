@@ -48,7 +48,7 @@ class FilterPanel extends Component {
         const sourceMarkers = $('.sourceChromosomeSelect').selectpicker('val'),
             targetMarkers = $('.targetChromosomeSelect').selectpicker('val');
         //  if markers lists are null set them to empty lists
-        this.props.filterData(!!sourceMarkers ? sourceMarkers : [], !!targetMarkers ? targetMarkers : [], this.props.alignmentList);
+        this.props.filterData(!!sourceMarkers ? sourceMarkers : [], !!targetMarkers ? targetMarkers : []);
     }
 
     render() {
