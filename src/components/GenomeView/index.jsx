@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { select, schemeCategory10 } from 'd3';
 import Markers from './Markers';
+import Links from './Links';
 
 class GenomeView extends Component {
 
@@ -55,8 +56,10 @@ class GenomeView extends Component {
         return markers;
     }
 
-    initialiseLinks(configuration, alignmentList, genomeLibrary, chromosomeMap) {
-        return _.map(alignmentList, (alignment) => {
+    initialiseLinks(configuration, chromosomeMap, markerPositions) {
+        return _.map(configuration.alignmentList, (alignment) => {
+
+            const { genomeLibrary } = window.synVisio;
 
             let firstLink = alignment.links[0],
                 lastLink = alignment.links[alignment.links.length - 1];
@@ -72,8 +75,8 @@ class GenomeView extends Component {
             let sourceChromosome = chromosomeMap.get(alignment.source),
                 targetChromosome = chromosomeMap.get(alignment.target);
 
-            let sourceMarker = _.find(configuration.genomeView.markerPositions.source, (o) => o.key == alignment.source),
-                targetMarker = _.find(configuration.genomeView.markerPositions.target, (o) => o.key == alignment.target);
+            let sourceMarker = _.find(markerPositions.source, (o) => o.key == alignment.source),
+                targetMarker = _.find(markerPositions.target, (o) => o.key == alignment.target);
 
             let sourceGeneWidth = ((sourceGenes[1] - sourceGenes[0]) / (sourceChromosome.width)) * (sourceMarker.dx),
                 targetGeneWidth = ((targetGenes[1] - targetGenes[0]) / (targetChromosome.width)) * (targetMarker.dx),
@@ -100,18 +103,18 @@ class GenomeView extends Component {
         })
     }
 
-
-
     render() {
 
         const { configuration, genomeData } = this.props,
             maxWidth = select('#root').node().clientWidth,
-            markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, maxWidth);
+            markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, maxWidth),
+            linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions);
 
         return (
             <div className='genomeViewRoot' >
                 <svg className='genomeViewSVG' height={configuration.genomeView.height} width={maxWidth}>
                     <Markers configuration={configuration} markerPositions={markerPositions} />
+                    <Links configuration={configuration} linkPositions={linkPositions} />
                 </svg>
             </div>
         );

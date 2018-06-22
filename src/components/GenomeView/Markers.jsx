@@ -7,7 +7,6 @@ export default class Markers extends Component {
 
     constructor(props) {
         super(props);
-        this.generateMarkerElements = this.generateMarkerElements.bind(this);
     }
 
     generateMarkerElements(configuration, markerPositions) {
@@ -28,11 +27,11 @@ export default class Markers extends Component {
                 // Add style to elements
                 style = {
                     'strokeWidth': '20px',
-                    'strokeLinecap': 'round'
+                    'strokeLinecap': 'round',
+                    stroke
                 }
                 return <line key={markerListId + "-line-" + i}
                     className={'chromosomeMarkers marker-' + markerListId + " marker-" + markerListId + "-" + d.key}
-                    stroke={stroke}
                     x1={d.x}
                     y1={configuration.genomeView.verticalPositions[markerListId]}
                     x2={d.x + d.dx}
@@ -68,7 +67,7 @@ export default class Markers extends Component {
             markerElements = this.generateMarkerElements(configuration, markerPositions);
 
         return (
-            <g className='markerContainer' ref={node => this.node = node}>
+            <g className='markerContainer'>
                 {markerElements}
             </g>
         );

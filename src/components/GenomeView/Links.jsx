@@ -1,75 +1,135 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { schemeCategory10 } from 'd3';
+import { schemeCategory10, interpolateNumber } from 'd3';
 
 
 export default class Links extends Component {
 
     constructor(props) {
         super(props);
-        this.generateMarkerElements = this.generateMarkerElements.bind(this);
     }
 
-    generateMarkerElements(configuration, markerPositions) {
+    createLinkLinePath(d) {
+        let curvature = 0.65;
+        // code block sourced from d3-sankey https://github.com/d3/d3-sankey for drawing curved blocks
+        var x0 = d.source.x,
+            x1 = d.target.x,
+            y0 = d.source.y,
+            y1 = d.target.y,
+            yi = interpolateNumber(y0, y1),
+            y2 = yi(curvature),
+            y3 = yi(1 - curvature);
 
-        let markerElements = [];
+        return "M" + x0 + "," + y0 + // svg start point
+            "C" + x0 + "," + y2 + // curve point 1
+            " " + x1 + "," + y3 + // curve point 2
+            " " + x1 + "," + y1; // end point
+    }
 
-        _.map(markerPositions, (markerList, markerListId) => {
-            // create marker lines
-            let markerLines = markerList.map((d, i) => {
-                let stroke, style;
-                // Decide on stroke colour
-                if (markerListId == 'source') {
-                    let sourceIndex = configuration.markers.source.indexOf(d.key);
-                    stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
-                } else {
-                    stroke = (i % 2 == 0) ? '#3a3a3a' : 'grey';
-                }
-                // Add style to elements
-                style = {
-                    'strokeWidth': '20px',
-                    'strokeLinecap': 'round'
-                }
-                return <line key={markerListId + "-line-" + i}
-                    className={'chromosomeMarkers marker-' + markerListId + " marker-" + markerListId + "-" + d.key}
-                    stroke={stroke}
-                    x1={d.x}
-                    y1={configuration.genomeView.verticalPositions[markerListId]}
-                    x2={d.x + d.dx}
-                    y2={configuration.genomeView.verticalPositions[markerListId]}
-                    style={style}>
-                </line>
+    createLinkPolygonPath(d) {
 
-            });
-            markerElements.push(markerLines);
+        let curvature = 0.65;
+        // code block sourced from d3-sankey https://github.com/d3/d3-sankey for drawing curved blocks
+        var x = d.source.x,
+            x1 = d.target.x,
+            y = d.source.y,
+            y1 = d.target.y,
+            yi = interpolateNumber(y, y1),
+            y2 = yi(curvature),
+            y3 = yi(1 - curvature),
+            p0 = d.target.x1,
+            p1 = d.source.x1,
+            q0 = d.target.y,
+            q1 = d.source.y,
+            qi = interpolateNumber(q0, q1),
+            q2 = qi(curvature),
+            q3 = qi(1 - curvature);
 
-            // create marker text units
-            let markerTextUnits = markerList.map((d, i) => {
+        return "M" + x + "," + y + // svg start point
+            "C" + x + "," + y2 + // 1st curve point 1
+            " " + x1 + "," + y3 + // 1st curve point 2
+            " " + x1 + "," + y1 + // 1st curve end point
+            "L" + p0 + "," + q0 + // bottom line
+            "C" + p0 + "," + q2 + // 2nd curve point 1
+            " " + p1 + "," + q3 + // 2nd curve point 2
+            " " + p1 + "," + q1 // end point and move back to start
+    }
 
-                return <MarkerText
-                    key={markerListId + "-markertext-outer" + i}
-                    outerKey={markerListId + "-markertext-" + i}
-                    className={' markersText marker-text-' + markerListId}
-                    x={d.x + (d.dx / 2)}
-                    y={configuration.genomeView.verticalPositions[markerListId] + 5}
-                    text={d.key} />
 
-            });
-            markerElements.push(markerTextUnits);
+    generateLinkElements(configuration, linkPositions) {
+
+        let linkElements = [];
+
+        // split links into two parts , the links that have widths of less than 2 px can be drawn as lines 
+        // and the other are drawn as polygon links
+        let link_collection = _.partition(linkPositions, function (link) { return link.width == '2'; });
+
+        // 0th index has line links and 1st index has polygon links
+        // Draw links lines for small links
+        let genomicLinks = link_collection[0].map((d, i) => {
+            let stroke, style;
+            // Decide on stroke colour
+            let sourceIndex = configuration.markers.source.indexOf(d.alignment.source);
+            stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
+            // Add style to elements
+            style = {
+                'strokeWidth': d.width,
+                stroke
+            }
+            // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
+            return <path key={"line-link-" + i}
+                className={'genome-link link hover-link' + " link-source-" + d.alignment.source}
+                d={this.createLinkLinePath(d)}
+                style={style}>
+                <title>
+                    {d.alignment.source + " => " + d.alignment.target +
+                        "\n type : " + d.alignment.type +
+                        "\n E value : " + d.alignment.e_value +
+                        "\n score : " + d.alignment.score +
+                        "\n count : " + d.alignment.count}
+                </title>
+            </path>
+
         });
+        linkElements.push(genomicLinks);
 
-        return markerElements;
+        // Draw links Polygons for large links
+        let genomicPolygonLinks = link_collection[1].map((d, i) => {
+            let fill, style;
+            // Decide on stroke colour
+            let sourceIndex = configuration.markers.source.indexOf(d.alignment.source);
+            fill = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
+            // Add style to elements
+            style = { fill }
+            // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
+            return <path key={"line-link-" + i}
+                className={'genome-link link-polygon hover-link-polygon' + " link-source-" + d.alignment.source}
+                d={this.createLinkPolygonPath(d)}
+                style={style}>
+                <title>
+                    {d.alignment.source + " => " + d.alignment.target +
+                        "\n type : " + d.alignment.type +
+                        "\n E value : " + d.alignment.e_value +
+                        "\n score : " + d.alignment.score +
+                        "\n count : " + d.alignment.count}
+                </title>
+            </path>
+
+        });
+        linkElements.push(genomicPolygonLinks);
+
+        return linkElements;
     }
 
 
     render() {
 
-        const { configuration, markerPositions } = this.props,
-            markerElements = this.generateMarkerElements(configuration, markerPositions);
+        const { configuration, linkPositions } = this.props,
+            linkElements = this.generateLinkElements(configuration, linkPositions);
 
         return (
-            <g className='markerContainer' ref={node => this.node = node}>
-                {markerElements}
+            <g className='linkContainer'>
+                {linkElements}
             </g>
         );
     }

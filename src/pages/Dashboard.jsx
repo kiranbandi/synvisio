@@ -4,7 +4,7 @@ import { hashHistory } from 'react-router';
 import { Loader, Information, GenomeView } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { configureSourceID, setLoaderState, setGenomicData } from '../redux/actions/actions';
+import { configureSourceID, setLoaderState, setGenomicData, setALignmentList } from '../redux/actions/actions';
 
 
 class Dashboard extends Component {
@@ -40,9 +40,15 @@ class Dashboard extends Component {
         });
     }
 
+    componentWillUnmount() {
+        // clear alignment list 
+        this.props.actions.setALignmentList([]);
+    }
+
     render() {
-        const { loaderState, markers } = this.props,
-            isMarkerListEmpty = markers.source.length == 0 || markers.target.length == 0;
+        const { loaderState, markers, alignmentList = [] } = this.props,
+            isMarkerListEmpty = markers.source.length == 0 || markers.target.length == 0,
+            areLinksAvailable = alignmentList.length > 0;
 
         return (
             <div className='dashboard-root m-t'>
@@ -50,7 +56,8 @@ class Dashboard extends Component {
                     <div className='dashboard-container'>
                         <Information />
                         {isMarkerListEmpty ?
-                            <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> : <GenomeView />}
+                            <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
+                            areLinksAvailable && < GenomeView />}
                     </div>
                     : <Loader />}
             </div>
@@ -60,13 +67,14 @@ class Dashboard extends Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators({ configureSourceID, setLoaderState, setGenomicData }, dispatch)
+        actions: bindActionCreators({ configureSourceID, setLoaderState, setGenomicData, setALignmentList }, dispatch)
     };
 }
 
 function mapStateToProps(state, ownProps) {
     return {
         sourceID: state.oracle.sourceID,
+        alignmentList: state.oracle.configuration.alignmentList,
         markers: state.oracle.configuration.markers,
         loaderState: state.oracle.loaderState
     };
