@@ -41,13 +41,16 @@ class Dashboard extends Component {
     }
 
     render() {
-        const { loaderState } = this.props;
+        const { loaderState, markers } = this.props,
+            isMarkerListEmpty = markers.source.length == 0 || markers.target.length == 0;
+
         return (
             <div className='dashboard-root m-t'>
                 {!loaderState ?
                     <div className='dashboard-container'>
                         <Information />
-                        <GenomeView />
+                        {isMarkerListEmpty ?
+                            <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> : <GenomeView />}
                     </div>
                     : <Loader />}
             </div>
@@ -62,7 +65,11 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state, ownProps) {
-    return { sourceID: state.oracle.sourceID, loaderState: state.oracle.loaderState };
+    return {
+        sourceID: state.oracle.sourceID,
+        markers: state.oracle.configuration.markers,
+        loaderState: state.oracle.loaderState
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

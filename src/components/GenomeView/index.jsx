@@ -55,6 +55,51 @@ class GenomeView extends Component {
         return markers;
     }
 
+    initialiseLinks(configuration, alignmentList, genomeLibrary, chromosomeMap) {
+        return _.map(alignmentList, (alignment) => {
+
+            let firstLink = alignment.links[0],
+                lastLink = alignment.links[alignment.links.length - 1];
+
+            let sourceGenes = genomeLibrary.get(firstLink.source).start < genomeLibrary.get(lastLink.source).start ? [firstLink.source, lastLink.source] : [lastLink.source, firstLink.source];
+            let targetGenes = genomeLibrary.get(firstLink.target).start < genomeLibrary.get(lastLink.target).start ? [firstLink.target, lastLink.target] : [lastLink.target, firstLink.target];
+
+            _.each([0, 1], (value) => {
+                sourceGenes[value] = genomeLibrary.get(sourceGenes[value]).start;
+                targetGenes[value] = genomeLibrary.get(targetGenes[value]).start;
+            })
+
+            let sourceChromosome = chromosomeMap.get(alignment.source),
+                targetChromosome = chromosomeMap.get(alignment.target);
+
+            let sourceMarker = _.find(configuration.genomeView.markerPositions.source, (o) => o.key == alignment.source),
+                targetMarker = _.find(configuration.genomeView.markerPositions.target, (o) => o.key == alignment.target);
+
+            let sourceGeneWidth = ((sourceGenes[1] - sourceGenes[0]) / (sourceChromosome.width)) * (sourceMarker.dx),
+                targetGeneWidth = ((targetGenes[1] - targetGenes[0]) / (targetChromosome.width)) * (targetMarker.dx),
+                sourceX = ((sourceGenes[0] - sourceChromosome.start) / (sourceChromosome.width)) * (sourceMarker.dx),
+                targetX = ((targetGenes[0] - targetChromosome.start) / (targetChromosome.width)) * (targetMarker.dx),
+                // pick the one with the smaller width and ensure the minimum is 2px
+                linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
+
+            // the marker height is 10 px so we add and reduce that to the y postion for top and bottom
+            return {
+                source: {
+                    'x': sourceMarker.x + sourceX,
+                    'y': configuration.genomeView.verticalPositions.source + 10,
+                    'x1': sourceMarker.x + sourceX + sourceGeneWidth
+                },
+                target: {
+                    'x': targetMarker.x + targetX,
+                    'y': configuration.genomeView.verticalPositions.target - 10,
+                    'x1': targetMarker.x + targetX + targetGeneWidth
+                },
+                alignment,
+                width: linkWidth
+            };
+        })
+    }
+
 
 
     render() {
@@ -66,7 +111,7 @@ class GenomeView extends Component {
         return (
             <div className='genomeViewRoot' >
                 <svg className='genomeViewSVG' height={configuration.genomeView.height} width={maxWidth}>
-                    <Markers configuration={configuration} markerPositions={markerPositions}/>
+                    <Markers configuration={configuration} markerPositions={markerPositions} />
                 </svg>
             </div>
         );

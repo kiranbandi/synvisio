@@ -13,7 +13,7 @@ class Information extends Component {
             informationList = information.parameters.map((val, ind) => <h4 key={ind} className='sub-info'>{val.join(" : ")}</h4>);
 
         return (
-            <div id='information-root'>
+            <div id='information-root' className='row'>
                 <div className='info-container col-sm-12 col-md-4 text-xs-center'>
                     <h2 className='text-primary text-xs-center'>MCScanX Parameters</h2>
                     {informationList}

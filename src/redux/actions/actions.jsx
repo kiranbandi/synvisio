@@ -35,9 +35,9 @@ export function setALignmentList(alignmentList) {
     return { type: types.SET_ALIGNMENT_LIST, alignmentList };
 }
 
-export function filterData(sourceMarkers = [], targetMarkers = [], alignmentList = []) {
-
+export function filterData(sourceMarkers = [], targetMarkers = []) {
     const markers = { 'source': sourceMarkers, 'target': targetMarkers },
+        alignmentList = window.synVisio.alignmentList,
         updatedAlignmentList = processAlignment(markers, alignmentList);
     return dispatch => {
         dispatch(setRootMarkers(markers));
