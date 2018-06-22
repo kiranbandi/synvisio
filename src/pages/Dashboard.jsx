@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
-import { Loader, Information, GenomeView } from '../components';
+import { Loader, Information, GenomeView, DotView } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureSourceID, setLoaderState, setGenomicData, setALignmentList } from '../redux/actions/actions';
@@ -57,7 +57,7 @@ class Dashboard extends Component {
                         <Information />
                         {isMarkerListEmpty ?
                             <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
-                            areLinksAvailable && < GenomeView />}
+                            areLinksAvailable && <div>< GenomeView /> <DotView /></div>}
                     </div>
                     : <Loader />}
             </div>
