@@ -10,10 +10,10 @@ export default {
       },
       'genomeView': {
         'verticalPositions': {
-          'source': 50,
-          'target': 375
+          'source': 25,
+          'target': 300
         },
-        'height': 425,
+        'height': 325,
         'width': '500'
       },
       'chromosomeView': {

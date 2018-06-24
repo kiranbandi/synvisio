@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { select } from 'd3';
 import AxisLines from './AxisLines';
+import AlignmentLine from './AlignmentLine';
 
 class DotView extends Component {
 
@@ -21,8 +22,8 @@ class DotView extends Component {
             scaleFactorY = maxWidthAvailable / maximumWidthY
 
         let posistions = {};
-
-        let sourceWidthUsedSoFar = configuration.dotView.offset;
+        // more padding on the x axis since the labels are horizontal and need more space to the left of the graph
+        let sourceWidthUsedSoFar = configuration.dotView.offset * 2;
         posistions.source = _.map(configuration.markers.source, (source, index) => {
             let sourceBit = {
                 'data': chromosomeCollection.get(source),
@@ -43,8 +44,8 @@ class DotView extends Component {
                 'key': target,
                 'y1': targetWidthUsedSoFar,
                 'y2': targetWidthUsedSoFar + (scaleFactorY * (chromosomeCollection.get(target).width)),
-                'x1': configuration.dotView.offset,
-                'x2': configuration.dotView.innerWidth + configuration.dotView.offset
+                'x1': (2 * configuration.dotView.offset),
+                'x2': configuration.dotView.innerWidth + (2 * configuration.dotView.offset)
             }
             targetWidthUsedSoFar = targetBit.y2;
             return targetBit;
@@ -52,6 +53,35 @@ class DotView extends Component {
 
         return posistions;
     }
+
+    initialiseLines(alignmentList, axisLinePositions, chromosomeCollection) {
+
+        const { genomeLibrary } = window.synVisio;
+
+        return _.map(alignmentList, (alignment) => {
+
+            let firstLink = alignment.links[0],
+                lastLink = alignment.links[alignment.links.length - 1];
+            let sourceChromosome = chromosomeCollection.get(alignment.source),
+                targetChromosome = chromosomeCollection.get(alignment.target);
+            let sourceLinePosition = _.find(axisLinePositions.source, (o) => o.key == alignment.source),
+                targetLinePosition = _.find(axisLinePositions.target, (o) => o.key == alignment.target);
+
+            let first_link_x = sourceLinePosition.x1 + ((genomeLibrary.get(firstLink.source).start - sourceChromosome.start) / sourceChromosome.width) * (sourceLinePosition.x2 - sourceLinePosition.x1);
+            let last_link_x = sourceLinePosition.x1 + ((genomeLibrary.get(lastLink.source).start - sourceChromosome.start) / sourceChromosome.width) * (sourceLinePosition.x2 - sourceLinePosition.x1);
+            let first_link_y = targetLinePosition.y1 + ((genomeLibrary.get(firstLink.target).start - targetChromosome.start) / targetChromosome.width) * (targetLinePosition.y2 - targetLinePosition.y1);
+            let last_link_y = targetLinePosition.y1 + ((genomeLibrary.get(lastLink.target).start - targetChromosome.start) / targetChromosome.width) * (targetLinePosition.y2 - targetLinePosition.y1);
+
+            return {
+                'x1': first_link_x,
+                'x2': last_link_x,
+                'y1': first_link_y,
+                'y2': last_link_y,
+                alignment
+            };
+        })
+    }
+
 
 
     render() {
@@ -63,14 +93,15 @@ class DotView extends Component {
         configuration.dotView.innerWidth = configuration.dotView.width - (2 * side_margin);
         configuration.dotView.offset = side_margin;
 
-        let axisLinePositions = this.initialisePostions(configuration, genomeData.chromosomeMap);
-        // linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions);
+        let axisLinePositions = this.initialisePostions(configuration, genomeData.chromosomeMap),
+            alignmentLinePositions = this.initialiseLines(configuration.alignmentList, axisLinePositions, genomeData.chromosomeMap);
 
         return (
             <div className='genomeViewRoot m-l-md' >
                 <svg className='dotViewSVG' height={configuration.dotView.width} width={configuration.dotView.width}>
                     <g>
                         <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
+                        <AlignmentLine alignmentLinePositions={alignmentLinePositions} />
                     </g>
                 </svg>
             </div>
