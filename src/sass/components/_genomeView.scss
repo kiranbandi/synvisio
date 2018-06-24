@@ -20,3 +20,16 @@
     stroke: #3a3a3a;
     stroke-width: 2px;
 }
+
+.dot-plot-markers {
+    fill: white;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.alignment-link-lines {
+    stroke: #00deff;
+    stroke-width: 2px;
+    opacity: 0.5;
+    cursor: pointer;
+}
