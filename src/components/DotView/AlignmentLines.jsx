@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class AlignmentLine extends Component {
+export default class AlignmentLines extends Component {
 
     constructor(props) {
         super(props);

@@ -1,4 +1,4 @@
-const width = 0.95 * window.innerWidth,
+const width = 0.975 * window.innerWidth,
   height = 0.90 * window.innerHeight;
 let configuration;
 

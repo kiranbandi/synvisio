@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import AxisLines from './AxisLines';
-import AlignmentLine from './AlignmentLine';
+import AlignmentLines from './AlignmentLines';
 
 class DotView extends Component {
 
@@ -22,7 +22,7 @@ class DotView extends Component {
 
         let posistions = {};
         // more padding on the x axis since the labels are horizontal and need more space to the left of the graph
-        let sourceWidthUsedSoFar = configuration.dotView.offset * 2;
+        let sourceWidthUsedSoFar = configuration.dotView.offset;
         posistions.source = _.map(configuration.markers.source, (source, index) => {
             let sourceBit = {
                 'data': chromosomeCollection.get(source),
@@ -43,8 +43,8 @@ class DotView extends Component {
                 'key': target,
                 'y1': targetWidthUsedSoFar,
                 'y2': targetWidthUsedSoFar + (scaleFactorY * (chromosomeCollection.get(target).width)),
-                'x1': (2 * configuration.dotView.offset),
-                'x2': configuration.dotView.innerWidth + (2 * configuration.dotView.offset)
+                'x1': configuration.dotView.offset,
+                'x2': configuration.dotView.innerWidth + configuration.dotView.offset
             }
             targetWidthUsedSoFar = targetBit.y2;
             return targetBit;
@@ -82,11 +82,10 @@ class DotView extends Component {
     }
 
 
-
     render() {
 
         let { configuration, genomeData } = this.props;
-        const side_margin = 30;
+        const side_margin = 50;
 
         configuration.dotView.innerWidth = configuration.dotView.width - (2 * side_margin);
         configuration.dotView.offset = side_margin;
@@ -96,10 +95,10 @@ class DotView extends Component {
 
         return (
             <div className='dotViewRoot' >
-                <svg className='dotViewSVG' height={configuration.dotView.width} width={configuration.dotView.width + (configuration.dotView.width * 0.075)}>
+                <svg className='dotViewSVG' height={configuration.dotView.width} width={configuration.dotView.width}>
                     <g>
                         <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
-                        <AlignmentLine alignmentLinePositions={alignmentLinePositions} />
+                        <AlignmentLines alignmentLinePositions={alignmentLinePositions} />
                     </g>
                 </svg>
             </div>
