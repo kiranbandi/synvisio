@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { select } from 'd3';
 import AxisLines from './AxisLines';
 import AlignmentLine from './AlignmentLine';
 
@@ -89,7 +88,7 @@ class DotView extends Component {
         let { configuration, genomeData } = this.props;
         const side_margin = 25;
 
-        configuration.dotView.width = Math.min(select('#root').node().clientWidth, 500);
+        configuration.dotView.width = Math.min(configuration.dotView.width, 500);
         configuration.dotView.innerWidth = configuration.dotView.width - (2 * side_margin);
         configuration.dotView.offset = side_margin;
 

@@ -55,7 +55,10 @@ class FilterPanel extends Component {
 
         let { chromosomeMap = {} } = this.props,
             // sort chromosome map 
-            chromosomeMapList = [...chromosomeMap].sort(sortAlphaNum);
+            // Zero is passed to the sorting function so that sorting happens based on the 0th value
+            //  which is the actual chromosome identifier
+            chromosomeMapList = [...chromosomeMap].sort(sortAlphaNum(0));
+
         // create list of options
         const options = chromosomeMapList.map((value, index) => {
             return <option key={index} value={value[0]}>{value[0]}</option>;

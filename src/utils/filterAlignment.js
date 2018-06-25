@@ -1,3 +1,5 @@
+import sortAlphaNum from './sortAlphaNum';
+
 export default (markers, alignmentList) => {
 
     let sourceKeyList = markers.source,
@@ -33,5 +35,5 @@ export default (markers, alignmentList) => {
             }
         }
     });
-    return filteredList;
+    return filteredList.sort(sortAlphaNum('source'));
 }

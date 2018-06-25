@@ -28,7 +28,7 @@ export default class AlignmentLine extends Component {
 
 
     render() {
-        debugger;
+
         const { alignmentLinePositions } = this.props,
             AlignmentLineElements = this.generateLinkLines(alignmentLinePositions);
 
