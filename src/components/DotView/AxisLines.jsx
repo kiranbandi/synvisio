@@ -16,13 +16,13 @@ export default class AxisLines extends Component {
         let axisLineElements = [
             // vertical line
             <line className='y-axis dot-view-line'
-                key='vertical-line-root' x1={2 * offset} y1={offset}
-                x2={2 * offset} y2={innerWidth + offset}>
+                key='vertical-line-root' x1={offset} y1={offset}
+                x2={offset} y2={innerWidth + offset}>
             </line>,
             // horizontal line
             <line className='x-axis dot-view-line'
-                key='horizontal-line-root' x1={2 * offset} y1={offset}
-                y2={offset} x2={innerWidth + (2 * offset)}>
+                key='horizontal-line-root' x1={offset} y1={offset}
+                y2={offset} x2={innerWidth + (offset)}>
             </line>
         ];
         // Add all vertical lines
