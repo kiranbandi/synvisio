@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { select, schemeCategory10 } from 'd3';
 import Markers from './Markers';
 import Links from './Links';
 
@@ -10,8 +9,9 @@ class GenomeView extends Component {
         super(props);
     }
 
-    initialiseMarkers(configuration, chromosomeCollection, maxWidthAvailable) {
+    initialiseMarkers(configuration, chromosomeCollection) {
 
+        const maxWidthAvailable = configuration.genomeView.width;
         // To arrange the markers in a proper way we find the marker List that has the maximum genome width
         //  We need this to fit in the maximum available width so we use this and find the scale factor 
         // we then fit all the other markers using the same scale factors
@@ -105,13 +105,12 @@ class GenomeView extends Component {
     render() {
 
         const { configuration, genomeData } = this.props,
-            maxWidth = select('#root').node().clientWidth,
-            markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, maxWidth),
+            markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap),
             linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions);
 
         return (
             <div className='genomeViewRoot' >
-                <svg className='genomeViewSVG' height={configuration.genomeView.height} width={maxWidth}>
+                <svg className='genomeViewSVG' height={configuration.genomeView.height} width={configuration.genomeView.width}>
                     <Markers configuration={configuration} markerPositions={markerPositions} />
                     <Links configuration={configuration} linkPositions={linkPositions} />
                 </svg>

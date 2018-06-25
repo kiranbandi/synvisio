@@ -6,7 +6,7 @@ export default {
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
       'alignmentList': [],
       'dotView': {
-        'width': '500'
+        'width': window.innerWidth
       },
       'genomeView': {
         'verticalPositions': {
@@ -14,7 +14,7 @@ export default {
           'target': 300
         },
         'height': 325,
-        'width': '500'
+        'width': window.innerWidth
       },
       'chromosomeView': {
         'verticalPositions': {
@@ -23,7 +23,7 @@ export default {
         },
         'markers': {},
         'height': 425,
-        'width': '500'
+        'width': window.innerWidth
       },
       'blockView': {
         'verticalPositions': {
