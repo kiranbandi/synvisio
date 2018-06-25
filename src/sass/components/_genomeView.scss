@@ -33,3 +33,17 @@
     opacity: 0.5;
     cursor: pointer;
 }
+
+.genomeViewSVG {
+    display: block;
+    margin: 0 auto;
+}
+
+.panelViewRoot,
+.dotViewRoot {
+    display: inline-block;
+}
+
+circle.scatter-plot-dot {
+    fill: #2a859b;
+}

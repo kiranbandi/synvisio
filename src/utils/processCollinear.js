@@ -55,7 +55,7 @@ function parseAlignmentDetails(alignmentDetails) {
     let alignmentDetailsList = alignmentDetails.split(' ');
     return {
         'score': Number(alignmentDetailsList[3].split('=')[1].trim()),
-        'e_value': alignmentDetailsList[4].split('=')[1].trim(),
+        'e_value': Number(alignmentDetailsList[4].split('=')[1].trim()),
         'count': Number(alignmentDetailsList[5].split('=')[1].trim()),
         'type': alignmentDetailsList[7].trim() == 'plus' ? 'regular' : 'flipped',
         'source': alignmentDetailsList[6].split('&')[0].trim(),
