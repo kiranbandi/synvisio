@@ -96,7 +96,7 @@ class DotView extends Component {
             alignmentLinePositions = this.initialiseLines(configuration.alignmentList, axisLinePositions, genomeData.chromosomeMap);
 
         return (
-            <div className='genomeViewRoot m-l-md' >
+            <div className='dotViewRoot m-l-md' >
                 <svg className='dotViewSVG' height={configuration.dotView.width} width={configuration.dotView.width}>
                     <g>
                         <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
