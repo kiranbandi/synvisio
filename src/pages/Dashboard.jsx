@@ -57,7 +57,12 @@ class Dashboard extends Component {
                         <Information />
                         {isMarkerListEmpty ?
                             <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
-                            areLinksAvailable && <div>< GenomeView /> <DotView /> <PanelView /></div>}
+                            areLinksAvailable &&
+                            <div className='anchor-root'>
+                                < GenomeView />
+                                <DotView />
+                                <PanelView />
+                            </div>}
                     </div>
                     : <Loader />}
             </div>
