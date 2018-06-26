@@ -21,7 +21,8 @@
     stroke-width: 2px;
 }
 
-.dot-plot-markers {
+.dot-plot-markers,
+.panel-label {
     fill: white;
     font-weight: bold;
     font-size: 1em;
@@ -42,4 +43,14 @@
 .panelViewRoot,
 .dotViewRoot {
     display: inline-block;
+}
+
+.panel-axis {
+    stroke: #3a3a3a;
+    stroke-width: 3px;
+}
+
+.label-y {
+    transform-origin: 0px 0px 0px;
+    transform: rotate(-90deg);
 }
