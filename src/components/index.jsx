@@ -7,3 +7,4 @@ export { default as PieChart } from './PieChart';
 export { default as GenomeView } from './GenomeView';
 export { default as DotView } from './DotView';
 export { default as PanelView } from './PanelView';
+export { default as RadioButton } from './RadioButton';
