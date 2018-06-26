@@ -53,16 +53,16 @@ class PanelView extends Component {
 
         if (selectedRadio == 'e_value') {
             min = valueList[_.findIndex(valueList, (o) => o != 0)];
+            min = Math.max((max / 1.0e300), min);
         }
 
         let x = scaleLinear()
             .domain([0, alignmentList.length])
             .range([0, width]);
 
-        let y = selectedRadio == 'e_value' ? scaleLog() : scaleLinear();
+        let y = selectedRadio == 'e_value' ? scaleLog().base(Math.E) : scaleLinear();
         y = y.domain([min, max])
             .range([selectedRadio == 'e_value' ? height - 2 : height, 0]);
-
 
         let dotList = alignmentList.map((alignment, index) => {
 
@@ -73,13 +73,13 @@ class PanelView extends Component {
 
             let cy;
 
-            if (selectedRadio == 'e_value' && alignment[selectedRadio] == 0) {
+            if ((selectedRadio == 'e_value' && alignment[selectedRadio] == 0) || (selectedRadio == 'e_value' && alignment[selectedRadio] < min)) {
                 cy = height;
+
             }
             else {
                 cy = y(alignment[selectedRadio]);
             }
-
 
             return <circle
                 key={'scatter-plot-' + index}
