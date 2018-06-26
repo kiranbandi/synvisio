@@ -85,7 +85,7 @@ class DotView extends Component {
     render() {
 
         let { configuration, genomeData } = this.props;
-        const side_margin = 50;
+        const side_margin = 57.5;
 
         configuration.dotView.innerWidth = configuration.dotView.width - (2 * side_margin);
         configuration.dotView.offset = side_margin;
@@ -94,7 +94,7 @@ class DotView extends Component {
             alignmentLinePositions = this.initialiseLines(configuration.alignmentList, axisLinePositions, genomeData.chromosomeMap);
 
         return (
-            <div className='dotViewRoot' >
+            <div className='dotViewRoot'>
                 <svg className='dotViewSVG' height={configuration.dotView.width} width={configuration.dotView.width}>
                     <g>
                         <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
