@@ -14,7 +14,7 @@ module.exports = [{
     },
     {
         test: /\.css/,
-        loaders: ['style', 'css']
+        loaders: ['style-loader', 'css-loader']
     },
     {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
