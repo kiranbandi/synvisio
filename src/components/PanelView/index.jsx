@@ -39,17 +39,23 @@ class PanelView extends Component {
         let { configuration } = this.props;
         let { selectedRadio } = this.state;
 
-        let availableWidth = configuration.panelView.width - 300;
+        let leftWidth = 260;
+        let availableWidth = configuration.panelView.width - leftWidth;
 
         let style = {
-            width: '150px',
+            width: (leftWidth / 2) + 'px',
             height: configuration.panelView.height * 0.80,
             margin: configuration.panelView.height * 0.1 + "px 0px"
-        },
-            sliderStyle = {
-                ...style,
-                'paddingLeft': '70px'
-            };
+        };
+        let labelContainerStyle = {
+            width: (leftWidth / 4) + 'px',
+            height: configuration.panelView.height * 0.70,
+            margin: ((configuration.panelView.height * 0.1) + "px 0px ") + ((configuration.panelView.height * 0.2) + "px 0px")
+        };
+        let sliderStyle = {
+            ...labelContainerStyle,
+            paddingLeft: (leftWidth / 8) + 'px'
+        }
 
         const margin = { top: 100, right: 40, bottom: 40, left: 40 },
             width = availableWidth - margin.left - margin.right,
@@ -120,11 +126,6 @@ class PanelView extends Component {
 
         return (
             <div className='panelViewRoot' >
-                <svg width={availableWidth} height={configuration.panelView.height} >
-                    <g transform={"translate(" + margin.left + "," + margin.top / 2 + ")"}>
-                        {dotList}
-                    </g>
-                </svg>
                 <div className='toggle-container' style={style}>
                     {_.map(this.optionLabels, (value, key) => {
                         return <RadioButton
@@ -139,6 +140,15 @@ class PanelView extends Component {
                 <div className='toggle-container' style={sliderStyle}>
                     <Slider min={0} max={10} defaultValue={0} vertical={true} onAfterChange={this.onSliderChange} />
                 </div>
+                <div className='toggle-container slider-label-container' style={labelContainerStyle}>
+                    <p className='slider-top-label'>MAX</p>
+                    <p className='slider-bottom-label'>MIN</p>
+                </div>
+                <svg width={availableWidth} height={configuration.panelView.height} >
+                    <g transform={"translate(" + margin.left + "," + margin.top / 2 + ")"}>
+                        {dotList}
+                    </g>
+                </svg>
 
             </div>
         );
