@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { RadioButton } from '../';
 import Slider from 'rc-slider';
 import { bindActionCreators } from 'redux';
-import { refineAlignmentList } from '../../redux/actions/actions';
+import { setFilterLevel } from '../../redux/actions/actions';
 
 class PanelView extends Component {
 
@@ -34,13 +34,12 @@ class PanelView extends Component {
     }
 
     onSliderChange(value) {
-
         const { min_height, max_height, y } = this.scales,
             { selectedRadio } = this.state;
-
-        let line_position = ((value * (max_height - min_height)) / 9) + min_height;
-
-        console.log(y.invert(line_position));
+        let line_pos_value = y.invert(((value * (max_height - min_height)) / 9) + min_height);
+        let { filterLevel = {} } = this.props.configuration.panelView;
+        filterLevel[selectedRadio] = { 'sliderValue': value, 'nominalValue': line_pos_value };
+        this.props.setFilterLevel(filterLevel);
     }
 
     render() {
@@ -72,9 +71,6 @@ class PanelView extends Component {
 
         let { alignmentList = [] } = configuration;
 
-        let { filterLevel = { 'count': height, 'e_value': height, 'score': height } } = configuration.panelView;
-
-
         let valueList = alignmentList.map((o) => o[selectedRadio]).sort((a, b) => a - b);
 
         let min = valueList[0],
@@ -91,11 +87,14 @@ class PanelView extends Component {
 
         let y_range = [selectedRadio == 'e_value' ? height - 2 : height, 0];
         let y_scale = selectedRadio == 'e_value' ? scaleLog().base(Math.E) : scaleLinear();
-        this.scales.y = y_scale.domain([min, max]).range(y_range);
 
+        this.scales.y = y_scale.domain([min, max]).range(y_range);
         this.scales.min_height = height;
         this.scales.max_height = 0;
 
+        let { filterLevel = {} } = configuration.panelView;
+
+        let filterLevelValue = filterLevel[selectedRadio] || { 'sliderValue': 0, 'nominalValue': min };
 
         let dotList = alignmentList.map((alignment, index) => {
             const sourceIndex = configuration.markers.source.indexOf(alignment.source),
@@ -136,6 +135,10 @@ class PanelView extends Component {
         dotList.push(<text key='label-x' className='label-x panel-label' x={x(alignmentList.length) - 75} y={this.scales.y(min) + 30} >Alignments</text>);
         dotList.push(<text key='label-y' className='label-y panel-label' x={x(0) - (this.optionLabels[selectedRadio].length * 8)} y={this.scales.y(max) - 20} >{this.optionLabels[selectedRadio]}</text>);
 
+        // Append Filter Level Line 
+        dotList.push(<line key='filter-level-line' className='panel-axis filter-level-line' x1={x(0) - 10} y1={this.scales.y(filterLevelValue.nominalValue)} x2={x(alignmentList.length)} y2={this.scales.y(filterLevelValue.nominalValue)}></line>)
+        // Append Label for Filter Level Line
+        dotList.push(<text key='label-filter-line' className='label-filter-line panel-label' x={x(0)} y={this.scales.y(filterLevelValue.nominalValue) - 15} >{this.optionLabels[selectedRadio]} >= {selectedRadio == 'e_value' ? filterLevelValue.nominalValue : filterLevelValue.nominalValue.toFixed(3)}</text>);
 
         return (
             <div className='panelViewRoot' >
@@ -151,7 +154,7 @@ class PanelView extends Component {
                     })}
                 </div>
                 <div className='toggle-container' style={sliderStyle}>
-                    <Slider min={0} max={9} defaultValue={0} vertical={true} onAfterChange={this.onSliderChange} />
+                    <Slider min={0} max={9} defaultValue={filterLevel.sliderValue} vertical={true} onAfterChange={this.onSliderChange} />
                 </div>
                 <div className='toggle-container slider-label-container' style={labelContainerStyle}>
                     <p className='slider-top-label'>MAX</p>
@@ -174,7 +177,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators({ refineAlignmentList }, dispatch)
+        setFilterLevel: bindActionCreators(setFilterLevel, dispatch)
     };
 }
 

@@ -49,6 +49,9 @@
 .panel-axis {
     stroke: #3a3a3a;
     stroke-width: 3px;
+    &.filter-level-line {
+        stroke-dasharray: 5;
+    }
 }
 
 .label-y {

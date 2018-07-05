@@ -59,7 +59,7 @@ class Dashboard extends Component {
                             <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
                             areLinksAvailable &&
                             <div className='anchor-root'>
-                                < GenomeView />
+                                <GenomeView />
                                 <DotView />
                                 <PanelView />
                             </div>}
