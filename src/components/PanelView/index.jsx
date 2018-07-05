@@ -4,6 +4,8 @@ import { scaleLinear, scaleLog, schemeCategory10 } from 'd3';
 import _ from 'lodash';
 import { RadioButton } from '../';
 import Slider from 'rc-slider';
+import { bindActionCreators } from 'redux';
+import { refineAlignmentList } from '../../redux/actions/actions';
 
 class PanelView extends Component {
 
@@ -24,6 +26,7 @@ class PanelView extends Component {
 
         this.radioChange = this.radioChange.bind(this);
         this.onSliderChange = this.onSliderChange.bind(this);
+
     }
 
     radioChange(event) {
@@ -31,7 +34,13 @@ class PanelView extends Component {
     }
 
     onSliderChange(value) {
-        console.log(value);
+
+        const { min_height, max_height, y } = this.scales,
+            { selectedRadio } = this.state;
+
+        let line_position = ((value * (max_height - min_height)) / 9) + min_height;
+
+        console.log(y.invert(line_position));
     }
 
     render() {
@@ -55,13 +64,16 @@ class PanelView extends Component {
         let sliderStyle = {
             ...labelContainerStyle,
             paddingLeft: (leftWidth / 8) + 'px'
-        }
+        };
 
         const margin = { top: 100, right: 40, bottom: 40, left: 40 },
             width = availableWidth - margin.left - margin.right,
             height = configuration.panelView.height - margin.top - margin.bottom;
 
         let { alignmentList = [] } = configuration;
+
+        let { filterLevel = { 'count': height, 'e_value': height, 'score': height } } = configuration.panelView;
+
 
         let valueList = alignmentList.map((o) => o[selectedRadio]).sort((a, b) => a - b);
 
@@ -73,26 +85,27 @@ class PanelView extends Component {
             min = Math.max((max / 1.0e300), min);
         }
 
-        this.scales.x = scaleLinear()
+        let x = scaleLinear()
             .domain([0, alignmentList.length])
             .range([0, width]);
 
-        this.scales.y = selectedRadio == 'e_value' ? scaleLog().base(Math.E) : scaleLinear();
-        this.scales.y = this.scales.y.domain([min, max])
-            .range([selectedRadio == 'e_value' ? height - 2 : height, 0]);
+        let y_range = [selectedRadio == 'e_value' ? height - 2 : height, 0];
+        let y_scale = selectedRadio == 'e_value' ? scaleLog().base(Math.E) : scaleLinear();
+        this.scales.y = y_scale.domain([min, max]).range(y_range);
+
+        this.scales.min_height = height;
+        this.scales.max_height = 0;
+
 
         let dotList = alignmentList.map((alignment, index) => {
-
             const sourceIndex = configuration.markers.source.indexOf(alignment.source),
                 style = {
                     'fill': (sourceIndex == -1) ? '#2a859b' : schemeCategory10[sourceIndex % 10]
                 };
-
             let cy;
 
             if ((selectedRadio == 'e_value' && alignment[selectedRadio] == 0) || (selectedRadio == 'e_value' && alignment[selectedRadio] < min)) {
                 cy = height;
-
             }
             else {
                 cy = this.scales.y(alignment[selectedRadio]);
@@ -102,7 +115,7 @@ class PanelView extends Component {
                 key={'scatter-plot-' + index}
                 className='scatter-plot-dot'
                 r='2.5'
-                cx={this.scales.x(index)}
+                cx={x(index)}
                 cy={cy}
                 style={style}>
                 <title>
@@ -116,12 +129,12 @@ class PanelView extends Component {
         });
 
         // Append axises to the same list
-        dotList.push(<line key='panel-x' className='panel-axis' x1={this.scales.x(0) - 10} y1={this.scales.y(min) + 10} x2={this.scales.x(alignmentList.length)} y2={this.scales.y(min) + 10}></line>);
-        dotList.push(<line key='panel-y' className='panel-axis' x1={this.scales.x(0) - 10} y1={this.scales.y(min) + 10} x2={this.scales.x(0) - 10} y2={this.scales.y(max)}></line>);
+        dotList.push(<line key='panel-x' className='panel-axis' x1={x(0) - 10} y1={this.scales.y(min) + 10} x2={x(alignmentList.length)} y2={this.scales.y(min) + 10}></line>);
+        dotList.push(<line key='panel-y' className='panel-axis' x1={x(0) - 10} y1={this.scales.y(min) + 10} x2={x(0) - 10} y2={this.scales.y(max)}></line>);
 
         // Append axis labels to the same list
-        dotList.push(<text key='label-x' className='label-x panel-label' x={this.scales.x(alignmentList.length) - 75} y={this.scales.y(min) + 30} >Alignments</text>);
-        dotList.push(<text key='label-y' className='label-y panel-label' x={this.scales.x(0) - (this.optionLabels[selectedRadio].length * 8)} y={this.scales.y(max) - 20} >{this.optionLabels[selectedRadio]}</text>);
+        dotList.push(<text key='label-x' className='label-x panel-label' x={x(alignmentList.length) - 75} y={this.scales.y(min) + 30} >Alignments</text>);
+        dotList.push(<text key='label-y' className='label-y panel-label' x={x(0) - (this.optionLabels[selectedRadio].length * 8)} y={this.scales.y(max) - 20} >{this.optionLabels[selectedRadio]}</text>);
 
 
         return (
@@ -138,7 +151,7 @@ class PanelView extends Component {
                     })}
                 </div>
                 <div className='toggle-container' style={sliderStyle}>
-                    <Slider min={0} max={10} defaultValue={0} vertical={true} onAfterChange={this.onSliderChange} />
+                    <Slider min={0} max={9} defaultValue={0} vertical={true} onAfterChange={this.onSliderChange} />
                 </div>
                 <div className='toggle-container slider-label-container' style={labelContainerStyle}>
                     <p className='slider-top-label'>MAX</p>
@@ -159,4 +172,10 @@ function mapStateToProps(state) {
     return { configuration: state.oracle.configuration };
 }
 
-export default connect(mapStateToProps)(PanelView);
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({ refineAlignmentList }, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PanelView);

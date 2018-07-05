@@ -35,6 +35,13 @@ export function setALignmentList(alignmentList) {
     return { type: types.SET_ALIGNMENT_LIST, alignmentList };
 }
 
+export function refineAlignmentList(alignmentList) {
+    
+    // return dispatch => {
+    //     dispatch(setALignmentList(alignmentList));
+    // };
+}
+
 export function filterData(sourceMarkers = [], targetMarkers = []) {
     const markers = { 'source': sourceMarkers, 'target': targetMarkers },
         alignmentList = window.synVisio.alignmentList,
