@@ -19,6 +19,10 @@ export function setSourceID(sourceID) {
     return { type: types.SET_SOURCEID, sourceID };
 }
 
+export function setFilterLevel(filterLevel) {
+    return { type: types.SET_FILTER_LEVEL, filterLevel };
+};
+
 export function setGenomicData(data) {
     const { genomeLibrary, alignmentList, ...otherData } = data;
     //  Treading Dangerous Territory here by polluting the global name space 
@@ -36,7 +40,7 @@ export function setALignmentList(alignmentList) {
 }
 
 export function refineAlignmentList(alignmentList) {
-    
+
     // return dispatch => {
     //     dispatch(setALignmentList(alignmentList));
     // };
