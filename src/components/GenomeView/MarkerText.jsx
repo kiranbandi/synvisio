@@ -28,7 +28,8 @@ export default class MarkerText extends Component {
                 key={this.props.outerKey}
                 className={this.props.className}
                 x={this.props.x}
-                y={this.props.y}>
+                y={this.props.y}
+                onClick={this.props.onMarkerClick}>
                 {this.props.text}
             </text>
         );

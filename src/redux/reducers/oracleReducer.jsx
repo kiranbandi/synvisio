@@ -14,7 +14,7 @@ export default function oracleReducer(state = initialState.oracle, action) {
     case types.SET_ALIGNMENT_LIST:
       return Object.assign({}, state, { configuration: { ...state.configuration, alignmentList: action.alignmentList } })
     case types.SET_FILTER_LEVEL:
-      return Object.assign({}, state, { configuration: { ...state.configuration, panelView: { ...state.configuration.panelView, filterLevel: action.filterLevel } } })
+      return Object.assign({}, state, { configuration: { ...state.configuration, filterLevel: action.filterLevel } })
     default:
       return state;
   }

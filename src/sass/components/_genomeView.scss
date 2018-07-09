@@ -1,94 +1,28 @@
 @import "~rc-slider/assets/index";
-.link {
-    fill: none;
-    stroke-opacity: .5;
-    cursor: pointer;
-}
-
-.markersText {
-    fill: white;
-    font-weight: bold;
-    font-size: 1.0em;
-}
-
-.link-polygon {
-    stroke: none;
-    fill-opacity: .6;
-    cursor: pointer;
-}
-
-.link.hidden-link {
-    stroke-opacity: 0;
-    pointer-events: none;
-}
-
-.link-polygon.hidden-link {
-    fill-opacity: 0;
-    pointer-events: none;
-}
-
-.dot-view-line {
-    stroke: #3a3a3a;
-    stroke-width: 2px;
-}
-
-.dot-plot-markers,
-.panel-label {
-    fill: white;
-    font-weight: bold;
-    font-size: 1em;
-}
-
-.alignment-link-lines {
-    stroke: #00deff;
-    stroke-width: 2px;
-    opacity: 0.5;
-    cursor: pointer;
-}
-
-.alignment-link-lines.hidden-alignment-link {
-    opacity: 0;
-    pointer-events: none;
-}
-
 .genomeViewSVG {
     display: block;
     margin: 0 auto;
-}
-
-.panelViewRoot,
-.dotViewRoot {
-    display: inline-block;
-}
-
-.panel-axis {
-    stroke: #3a3a3a;
-    stroke-width: 3px;
-    &.filter-level-line {
-        stroke-dasharray: 5;
+    .markersText {
+        fill: white;
+        font-weight: bold;
+        font-size: 1.0em;
     }
-}
-
-.label-y {
-    transform-origin: 0px 0px 0px;
-    transform: rotate(-90deg);
-}
-
-.toggle-container {
-    display: inline-block;
-    vertical-align: bottom;
-}
-
-.slider-label-container {
-    position: relative;
-    .slider-top-label {
-        position: absolute;
-        top: 0px;
-        margin: 0px;
+    .link {
+        fill: none;
+        stroke-opacity: .5;
+        cursor: pointer;
+        &.hidden-link {
+            stroke-opacity: 0;
+            pointer-events: none;
+        }
     }
-    .slider-bottom-label {
-        position: absolute;
-        bottom: 0px;
-        margin: 0px;
+    .link-polygon {
+        stroke: none;
+        fill-opacity: .6;
+        cursor: pointer;
+        &.hidden-link {
+            fill-opacity: 0;
+            pointer-events: none;
+        }
     }
 }
