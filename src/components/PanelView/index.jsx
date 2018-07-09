@@ -103,7 +103,7 @@ class PanelView extends Component {
 
         let { filterLevel = {} } = configuration.panelView;
 
-        let filterLevelValue = filterLevel[selectedRadio] || { 'sliderValue': 0, 'nominalValue': min };
+        let filterLevelValue = filterLevel[selectedRadio] || { 'sliderValue': 0, 'nominalValue': min, 'adjustToZero': (selectedRadio == 'e_value') };
 
         let dotList = alignmentList.map((alignment, index) => {
             const sourceIndex = configuration.markers.source.indexOf(alignment.source),
@@ -147,7 +147,13 @@ class PanelView extends Component {
         // Append Filter Level Line 
         dotList.push(<line key='filter-level-line' className='panel-axis filter-level-line' x1={x(0) - 10} y1={this.scales.y(filterLevelValue.nominalValue)} x2={x(alignmentList.length)} y2={this.scales.y(filterLevelValue.nominalValue)}></line>)
         // Append Label for Filter Level Line
-        dotList.push(<text key='label-filter-line' className='label-filter-line panel-label' x={x(0)} y={this.scales.y(filterLevelValue.nominalValue) - 15} >{this.optionLabels[selectedRadio]} >= {selectedRadio == 'e_value' ? filterLevelValue.nominalValue : filterLevelValue.nominalValue.toFixed(3)}</text>);
+        dotList.push(
+            <text key='label-filter-line'
+                className='label-filter-line panel-label'
+                x={x(0)}
+                y={this.scales.y(filterLevelValue.nominalValue) - 15} >
+                {this.optionLabels[selectedRadio]} >= {selectedRadio == 'e_value' ? (filterLevelValue.adjustToZero ? '0' : filterLevelValue.nominalValue) : filterLevelValue.nominalValue.toFixed(3)}
+            </text>);
 
         return (
             <div className='panelViewRoot' >
@@ -174,7 +180,6 @@ class PanelView extends Component {
                         {dotList}
                     </g>
                 </svg>
-
             </div>
         );
     }

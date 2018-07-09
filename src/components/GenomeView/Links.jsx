@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { schemeCategory10, interpolateNumber } from 'd3';
 
-
 export default class Links extends Component {
 
     constructor(props) {
@@ -117,7 +116,6 @@ export default class Links extends Component {
 
         });
         linkElements.push(genomicPolygonLinks);
-
         return linkElements;
     }
 

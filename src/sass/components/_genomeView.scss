@@ -46,6 +46,11 @@
     cursor: pointer;
 }
 
+.alignment-link-lines.hidden-alignment-link {
+    opacity: 0;
+    pointer-events: none;
+}
+
 .genomeViewSVG {
     display: block;
     margin: 0 auto;
