@@ -39,7 +39,7 @@ class PanelView extends Component {
             { selectedRadio } = this.state,
             { configuration, refineAlignmentList } = this.props;
         let line_pos_value = y.invert(((value * (max_height - min_height)) / 9) + min_height);
-        let { filterLevel = {} } = this.props.configuration.panelView;
+        let { filterLevel = {} } = this.props.configuration;
 
         let adjustToZero = false;
 
@@ -102,7 +102,7 @@ class PanelView extends Component {
         this.scales.min_height = height;
         this.scales.max_height = 0;
 
-        let { filterLevel = {} } = configuration.panelView;
+        let { filterLevel = {} } = configuration;
 
         let filterLevelValue = filterLevel[selectedRadio] || { 'sliderValue': 0, 'nominalValue': min, 'adjustToZero': (selectedRadio == 'e_value') };
 

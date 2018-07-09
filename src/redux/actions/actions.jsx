@@ -39,6 +39,7 @@ export function setALignmentList(alignmentList) {
     return { type: types.SET_ALIGNMENT_LIST, alignmentList };
 }
 
+
 export function refineAlignmentList(filterLevel, alignmentList) {
 
     let updatedAlignmentList = _.map(alignmentList, (o) => {
@@ -50,6 +51,12 @@ export function refineAlignmentList(filterLevel, alignmentList) {
             o.hidden = true;
         }
         else if (filterLevel.e_value != undefined && filterLevel.e_value.nominalValue > o.e_value && !filterLevel.e_value.adjustToZero) {
+            o.hidden = true;
+        }
+        else if (filterLevel.source && filterLevel.source != o.source) {
+            o.hidden = true;
+        }
+        else if (filterLevel.target && filterLevel.target != o.target) {
             o.hidden = true;
         }
         else {

@@ -2,11 +2,26 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { schemeCategory10 } from 'd3';
 import MarkerText from './MarkerText';
+import { refineAlignmentList } from '../../redux/actions/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-export default class Markers extends Component {
+class Markers extends Component {
 
     constructor(props) {
         super(props);
+        this.onMarkerClick = this.onMarkerClick.bind(this);
+        this.generateMarkerElements = this.generateMarkerElements.bind(this);
+    }
+
+    onMarkerClick(event) {
+        const markerIndicator = event.target.className.baseVal.split(" ")[2],
+            { refineAlignmentList, configuration } = this.props,
+            markerId = markerIndicator.indexOf('source') > -1 ? 'source' : 'target';
+
+        let { filterLevel = {} } = configuration;
+        filterLevel[markerId] = markerIndicator.split("-")[2];
+        refineAlignmentList(filterLevel, configuration.alignmentList);
     }
 
     generateMarkerElements(configuration, markerPositions) {
@@ -36,7 +51,8 @@ export default class Markers extends Component {
                     y1={configuration.genomeView.verticalPositions[markerListId]}
                     x2={d.x + d.dx}
                     y2={configuration.genomeView.verticalPositions[markerListId]}
-                    style={style}>
+                    style={style}
+                    onClick={this.onMarkerClick}>
                 </line>
 
             });
@@ -48,10 +64,11 @@ export default class Markers extends Component {
                 return <MarkerText
                     key={markerListId + "-markertext-outer" + i}
                     outerKey={markerListId + "-markertext-" + i}
-                    className={' markersText marker-text-' + markerListId}
+                    className={' markersText marker-' + markerListId + "-" + d.key}
                     x={d.x + (d.dx / 2)}
                     y={configuration.genomeView.verticalPositions[markerListId] + 5}
-                    text={d.key} />
+                    text={d.key}
+                    onMarkerClick={this.onMarkerClick} />
 
             });
             markerElements.push(markerTextUnits);
@@ -72,4 +89,15 @@ export default class Markers extends Component {
             </g>
         );
     }
-}  
+}
+
+
+function mapStateToProps(state) {
+    return { configuration: state.oracle.configuration };
+}
+
+function mapDispatchToProps(dispatch) {
+    return { refineAlignmentList: bindActionCreators(refineAlignmentList, dispatch) };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Markers);

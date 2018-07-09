@@ -1,0 +1,36 @@
+.panelViewRoot {
+    display: inline-block;
+    .panel-label {
+        fill: white;
+        font-weight: bold;
+        font-size: 1em;
+        &.label-y {
+            transform-origin: 0px 0px 0px;
+            transform: rotate(-90deg);
+        }
+    }
+    .panel-axis {
+        stroke: #3a3a3a;
+        stroke-width: 3px;
+        &.filter-level-line {
+            stroke-dasharray: 5;
+        }
+    }
+    .toggle-container {
+        display: inline-block;
+        vertical-align: bottom;
+        .slider-label-container {
+            position: relative;
+            .slider-top-label {
+                position: absolute;
+                top: 0px;
+                margin: 0px;
+            }
+            .slider-bottom-label {
+                position: absolute;
+                bottom: 0px;
+                margin: 0px;
+            }
+        }
+    }
+}
