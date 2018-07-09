@@ -11,26 +11,27 @@ class PanelView extends Component {
 
     constructor(props) {
         super(props);
-
         this.optionLabels = {
             'count': 'Count',
             'score': 'Match Score',
             'e_value': 'E value'
         };
-
         this.state = {
             selectedRadio: 'count'
         };
-
         this.scales = {};
-
         this.radioChange = this.radioChange.bind(this);
         this.onSliderChange = this.onSliderChange.bind(this);
-
+        this.onReset = this.onReset.bind(this);
     }
 
     radioChange(event) {
         this.setState({ selectedRadio: event.target.value });
+    }
+
+    onReset(event) {
+        const { configuration, refineAlignmentList } = this.props;
+        refineAlignmentList({}, configuration.alignmentList);
     }
 
     onSliderChange(value) {
@@ -167,6 +168,9 @@ class PanelView extends Component {
                             onChange={this.radioChange}
                             checked={this.state.selectedRadio == key} />
                     })}
+                    <button className="btn btn-danger-outline m-t-md" onClick={this.onReset}>
+                        Reset <span className="icon icon-cycle"></span>
+                    </button>
                 </div>
                 <div className='toggle-container' style={sliderStyle}>
                     <Slider min={0} max={9} defaultValue={filterLevel.sliderValue} vertical={true} onAfterChange={this.onSliderChange} />
