@@ -19,18 +19,18 @@
     .toggle-container {
         display: inline-block;
         vertical-align: bottom;
-        .slider-label-container {
-            position: relative;
-            .slider-top-label {
-                position: absolute;
-                top: 0px;
-                margin: 0px;
-            }
-            .slider-bottom-label {
-                position: absolute;
-                bottom: 0px;
-                margin: 0px;
-            }
+    }
+    .slider-label-container {
+        position: relative;
+        .slider-top-label {
+            position: absolute;
+            top: 0px;
+            margin: 0px;
+        }
+        .slider-bottom-label {
+            position: absolute;
+            bottom: 0px;
+            margin: 0px;
         }
     }
 }
