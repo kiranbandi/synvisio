@@ -49,7 +49,7 @@ export function refineAlignmentList(filterLevel, alignmentList) {
         else if (filterLevel.score != undefined && filterLevel.score.nominalValue > o.score) {
             o.hidden = true;
         }
-        else if (filterLevel.e_value != undefined && filterLevel.e_value.nominalValue > o.e_value) {
+        else if (filterLevel.e_value != undefined && filterLevel.e_value.nominalValue > o.e_value && !filterLevel.e_value.adjustToZero) {
             o.hidden = true;
         }
         else {
