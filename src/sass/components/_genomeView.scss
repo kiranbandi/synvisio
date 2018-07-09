@@ -13,8 +13,18 @@
 
 .link-polygon {
     stroke: none;
-    fill-opacity: .5;
+    fill-opacity: .6;
     cursor: pointer;
+}
+
+.link.hidden-link {
+    stroke-opacity: 0;
+    pointer-events: none;
+}
+
+.link-polygon.hidden-link {
+    fill-opacity: 0;
+    pointer-events: none;
 }
 
 .dot-view-line {

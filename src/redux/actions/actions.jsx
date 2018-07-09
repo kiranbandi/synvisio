@@ -39,11 +39,29 @@ export function setALignmentList(alignmentList) {
     return { type: types.SET_ALIGNMENT_LIST, alignmentList };
 }
 
-export function refineAlignmentList(alignmentList) {
+export function refineAlignmentList(filterLevel, alignmentList) {
 
-    // return dispatch => {
-    //     dispatch(setALignmentList(alignmentList));
-    // };
+    let updatedAlignmentList = _.map(alignmentList, (o) => {
+
+        if (filterLevel.count != undefined && filterLevel.count.nominalValue > o.count) {
+            o.hidden = true;
+        }
+        else if (filterLevel.score != undefined && filterLevel.score.nominalValue > o.score) {
+            o.hidden = true;
+        }
+        else if (filterLevel.e_value != undefined && filterLevel.e_value.nominalValue > o.e_value) {
+            o.hidden = true;
+        }
+        else {
+            o.hidden = false;
+        }
+        return o;
+    });
+
+    return dispatch => {
+        dispatch(setFilterLevel(filterLevel));
+        dispatch(setALignmentList(updatedAlignmentList));
+    };
 }
 
 export function filterData(sourceMarkers = [], targetMarkers = []) {
@@ -52,6 +70,8 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
         updatedAlignmentList = processAlignment(markers, alignmentList);
     return dispatch => {
         dispatch(setRootMarkers(markers));
+        //reset filter level
+        dispatch(setFilterLevel({}));
         dispatch(setALignmentList(updatedAlignmentList));
     };
 }
