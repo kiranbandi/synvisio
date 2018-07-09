@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { scaleLinear, scaleLog, schemeCategory10 } from 'd3';
 import _ from 'lodash';
-import { RadioButton } from '../';
+import RadioButton from './RadioButton';
 import Slider from 'rc-slider';
 import { bindActionCreators } from 'redux';
-import { refineAlignmentList } from '../../redux/actions/actions';
+import { refineAlignmentList } from '../redux/actions/actions';
 
 class PanelView extends Component {
 

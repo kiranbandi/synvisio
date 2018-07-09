@@ -7,6 +7,10 @@
         font-weight: bold;
         font-size: 1.0em;
     }
+    .chromosomeMarkers,
+    .markersText {
+        cursor: pointer;
+    }
     .link {
         fill: none;
         stroke-opacity: .5;
