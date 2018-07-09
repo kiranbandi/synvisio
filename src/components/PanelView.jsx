@@ -38,7 +38,7 @@ class PanelView extends Component {
         const { min_height, max_height, y } = this.scales,
             { selectedRadio } = this.state,
             { configuration, refineAlignmentList } = this.props;
-        let line_pos_value = y.invert(((value * (max_height - min_height)) / 9) + min_height);
+        let line_pos_value = y.invert(((value * (max_height - min_height)) / 19) + min_height);
         let { filterLevel = {} } = this.props.configuration;
 
         let adjustToZero = false;
@@ -173,7 +173,7 @@ class PanelView extends Component {
                     </button>
                 </div>
                 <div className='toggle-container' style={sliderStyle}>
-                    <Slider min={0} max={9} defaultValue={filterLevel.sliderValue} vertical={true} onAfterChange={this.onSliderChange} />
+                    <Slider min={0} max={19} defaultValue={filterLevel.sliderValue} vertical={true} onAfterChange={this.onSliderChange} />
                 </div>
                 <div className='toggle-container slider-label-container' style={labelContainerStyle}>
                     <p className='slider-top-label'>MAX</p>

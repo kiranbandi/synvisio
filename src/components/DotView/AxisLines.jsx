@@ -1,11 +1,25 @@
 import React, { Component } from 'react';
 import AxisLineLabel from './AxisLineLabel';
+import { refineAlignmentList } from '../../redux/actions/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-export default class AxisLines extends Component {
+class AxisLines extends Component {
 
     constructor(props) {
         super(props);
+        this.onMarkerClick = this.onMarkerClick.bind(this);
     }
+
+    onMarkerClick(event) {
+        const markerIndicator = event.target.className.baseVal.split(" ")[2],
+            { refineAlignmentList, configuration } = this.props,
+            markerId = markerIndicator.indexOf('x-lines') > -1 ? 'source' : 'target';
+        let { filterLevel = {} } = configuration;
+        filterLevel[markerId] = markerIndicator.split("-")[4];
+        refineAlignmentList(filterLevel, configuration.alignmentList);
+    }
+
 
     generateaxisLines(configuration, axisLinePositions) {
         // Lots of repetitions happening here but can be changed later 
@@ -40,7 +54,8 @@ export default class AxisLines extends Component {
                 text={d.key}
                 type='x'
                 x={d.x1 + ((d.x2 - d.x1) / 2)}
-                y={d.y1 - 10} />;
+                y={d.y1 - 10}
+                onMarkerClick={this.onMarkerClick} />;
         }));
 
         // Add all horizontal lines
@@ -58,7 +73,8 @@ export default class AxisLines extends Component {
                 text={d.key}
                 type='y'
                 x={d.x1 - 45}
-                y={d.y1 + ((d.y2 - d.y1) / 2)} />;
+                y={d.y1 + ((d.y2 - d.y1) / 2)}
+                onMarkerClick={this.onMarkerClick} />;
         }));
 
         return axisLineElements;
@@ -76,4 +92,14 @@ export default class AxisLines extends Component {
             </g>
         );
     }
-}  
+}
+
+function mapStateToProps(state) {
+    return { configuration: state.oracle.configuration };
+}
+
+function mapDispatchToProps(dispatch) {
+    return { refineAlignmentList: bindActionCreators(refineAlignmentList, dispatch) };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AxisLines);

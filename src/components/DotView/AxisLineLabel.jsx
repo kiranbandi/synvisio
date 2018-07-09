@@ -28,10 +28,14 @@ export default class AxisLineLabel extends Component {
     }
 
     render() {
-        const { innerKey, x, y, className = '', text = '' } = this.props;
+        const { innerKey, x, y, onMarkerClick, className = '', text = '' } = this.props;
         return (
             <text
-                ref={node => this.node = node} key={innerKey} className={className} x={x} y={y}>
+                ref={node => this.node = node}
+                key={innerKey}
+                className={className}
+                x={x} y={y}
+                onClick={onMarkerClick}>
                 {text}
             </text>
         );
