@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { RadioButton } from '../';
 import Slider from 'rc-slider';
 import { bindActionCreators } from 'redux';
-import { setFilterLevel } from '../../redux/actions/actions';
+import { refineAlignmentList } from '../../redux/actions/actions';
 
 class PanelView extends Component {
 
@@ -35,11 +35,20 @@ class PanelView extends Component {
 
     onSliderChange(value) {
         const { min_height, max_height, y } = this.scales,
-            { selectedRadio } = this.state;
+            { selectedRadio } = this.state,
+            { configuration, refineAlignmentList } = this.props;
         let line_pos_value = y.invert(((value * (max_height - min_height)) / 9) + min_height);
         let { filterLevel = {} } = this.props.configuration.panelView;
-        filterLevel[selectedRadio] = { 'sliderValue': value, 'nominalValue': line_pos_value };
-        this.props.setFilterLevel(filterLevel);
+
+        let adjustToZero = false;
+
+        // For E value since the scale is adjusted the minimum value is pushed to zero 
+        if (selectedRadio == 'e_value' && value == 0) {
+            adjustToZero = true;
+        }
+
+        filterLevel[selectedRadio] = { 'sliderValue': value, 'nominalValue': line_pos_value, adjustToZero };
+        refineAlignmentList(filterLevel, configuration.alignmentList);
     }
 
     render() {
@@ -176,9 +185,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
-        setFilterLevel: bindActionCreators(setFilterLevel, dispatch)
-    };
+    return { refineAlignmentList: bindActionCreators(refineAlignmentList, dispatch) };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelView);

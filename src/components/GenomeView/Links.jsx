@@ -78,7 +78,7 @@ export default class Links extends Component {
             }
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"line-link-" + i}
-                className={'genome-link link hover-link' + " link-source-" + d.alignment.source}
+                className={'genome-link link hover-link' + " link-source-" + d.alignment.source + " " + (d.alignment.hidden ? 'hidden-link' : '')}
                 d={this.createLinkLinePath(d)}
                 style={style}>
                 <title>
@@ -103,7 +103,7 @@ export default class Links extends Component {
             style = { fill }
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"line-link-" + i}
-                className={'genome-link link-polygon hover-link-polygon' + " link-source-" + d.alignment.source}
+                className={'genome-link link-polygon hover-link-polygon' + " link-source-" + d.alignment.source + " " + (d.alignment.hidden ? 'hidden-link' : '')}
                 d={this.createLinkPolygonPath(d)}
                 style={style}>
                 <title>
