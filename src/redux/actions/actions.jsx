@@ -24,10 +24,10 @@ export function setFilterLevel(filterLevel) {
 };
 
 export function setGenomicData(data) {
-    const { genomeLibrary, alignmentList, ...otherData } = data;
+    const { genomeLibrary, alignmentList, snapshotStore = {}, ...otherData } = data;
     //  Treading Dangerous Territory here by polluting the global name space 
     //  But this reduces the load placed on the redux and react global store
-    window.synVisio = { genomeLibrary, alignmentList };
+    window.synVisio = { genomeLibrary, alignmentList, snapshotStore };
     return { type: types.SET_GENOME_DATA, data: otherData };
 }
 
@@ -39,6 +39,9 @@ export function setALignmentList(alignmentList) {
     return { type: types.SET_ALIGNMENT_LIST, alignmentList };
 }
 
+export function setSnapshotList(snapshotList) {
+    return { type: types.SET_SNAPSHOT_LIST, snapshotList };
+}
 
 export function refineAlignmentList(filterLevel, alignmentList) {
 

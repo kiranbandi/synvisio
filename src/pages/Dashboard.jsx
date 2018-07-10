@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
-import { Loader, Information, GenomeView, DotView, PanelView } from '../components';
+import { Loader, Information, GenomeView, DotView, PanelView, SnapshotPanel, SnapshotCapture } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureSourceID, setLoaderState, setGenomicData, setALignmentList } from '../redux/actions/actions';
@@ -55,6 +55,8 @@ class Dashboard extends Component {
                 {!loaderState ?
                     <div className='dashboard-container'>
                         <Information />
+                        <SnapshotPanel />
+                        <SnapshotCapture />
                         {isMarkerListEmpty ?
                             <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
                             areLinksAvailable &&
