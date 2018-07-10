@@ -57,6 +57,7 @@ export default {
       ...configuration,
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
       'alignmentList': [],
+      'filterLevel': {},
       'chromosomeView': {
         'verticalPositions': {
           'source': 50,
