@@ -1,6 +1,7 @@
 import * as types from './actionTypes';
 import sampleSourceMapper from '../../utils/sampleSourceMapper';
 import processAlignment from '../../utils/filterAlignment';
+import initialState from '../reducers/initialState';
 
 export function setLoaderState(loaderState) {
     return { type: types.SET_LOADER_STATE, loaderState };
@@ -9,6 +10,9 @@ export function setLoaderState(loaderState) {
 export function configureSourceID(sourceID) {
     return dispatch => {
         dispatch(setSourceID(sourceID));
+        //reset configuration and snapshot store
+        dispatch(setConfiguration(initialState.oracle.configuration));
+        dispatch(setSnapshotList([]));
         const sampleDataMarkers = sampleSourceMapper[sourceID];
         if (sampleDataMarkers) {
             dispatch(setRootMarkers(sampleDataMarkers));
@@ -17,6 +21,17 @@ export function configureSourceID(sourceID) {
 }
 export function setSourceID(sourceID) {
     return { type: types.SET_SOURCEID, sourceID };
+}
+
+export function setConfiguration(configuration) {
+    return { type: types.SET_CONFIGURATION, configuration };
+}
+
+export function recreateSnapshot(configuration) {
+    return dispatch => {
+        dispatch(setConfiguration(configuration));
+        dispatch(refineAlignmentList(configuration.filterLevel, configuration.alignmentList));
+    };
 }
 
 export function setFilterLevel(filterLevel) {

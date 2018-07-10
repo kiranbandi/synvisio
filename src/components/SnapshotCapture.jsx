@@ -16,7 +16,7 @@ class SnapshotCapture extends Component {
         let { snapshotList, configuration, setSnapshotList } = this.props, uniqueCode = uniqid();
         //  Treading Dangerous Territory here by polluting the global name space 
         //  But this reduces the load placed on the redux and react global store
-        window.synVisio.snapshotStore[uniqueCode] = configuration;
+        window.synVisio.snapshotStore[uniqueCode] = _.cloneDeep(configuration);
         setSnapshotList([...snapshotList, uniqueCode]);
         toastr["info"]("Current state of visualization stored as a local snapshot", "SNAPSHOT STORED");
     }
