@@ -1,0 +1,23 @@
+.Collapsible {
+    .snapshot-header {
+        margin: 10px 10px 0px 10px;
+        h4 {
+            font-weight: bold;
+            background: #1a1c22;
+            padding: 10px;
+            border-radius: 10px 10px 0px 0px;
+        }
+        .icon {
+            margin-left: 10px;
+        }
+    }
+    .snapshot-inner {
+        margin: 0px 10px 10px 10px;
+        background: #1a1c22;
+        border-radius: 0px 0px 10px 10px;
+        padding: 10px;
+        button {
+            margin-left: 10px;
+        }
+    }
+}

@@ -11,6 +11,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
       return Object.assign({}, state, { sourceID: action.sourceID })
     case types.SET_ROOT_MARKERS:
       return Object.assign({}, state, { configuration: { ...state.configuration, markers: action.markers } })
+    case types.SET_SNAPSHOT_LIST:
+      return Object.assign({}, state, { snapshotList: action.snapshotList })
     case types.SET_ALIGNMENT_LIST:
       return Object.assign({}, state, { configuration: { ...state.configuration, alignmentList: action.alignmentList } })
     case types.SET_FILTER_LEVEL:

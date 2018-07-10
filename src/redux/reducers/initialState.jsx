@@ -52,6 +52,7 @@ export default {
   oracle: {
     sourceID: 'bn',
     loaderState: false,
+    snapshotList: [],
     configuration: {
       ...configuration,
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
