@@ -119,7 +119,7 @@ class GenomeView extends Component {
     }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     return { configuration: state.oracle.configuration, genomeData: state.genome };
 }
 

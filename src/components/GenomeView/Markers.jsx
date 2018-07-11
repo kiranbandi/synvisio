@@ -91,13 +91,8 @@ class Markers extends Component {
     }
 }
 
-
-function mapStateToProps(state) {
-    return { configuration: state.oracle.configuration };
-}
-
 function mapDispatchToProps(dispatch) {
     return { refineAlignmentList: bindActionCreators(refineAlignmentList, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Markers);
+export default connect(null, mapDispatchToProps)(Markers);

@@ -58,22 +58,13 @@ export default {
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
       'alignmentList': [],
       'filterLevel': {},
-      'chromosomeView': {
-        'verticalPositions': {
-          'source': 50,
-          'target': 375
-        },
-        'markers': {},
-        'height': 425,
-        'width': 0.95 * window.innerWidth
-      },
       'blockView': {
         'verticalPositions': {
           'source': 50,
           'target': 275
         },
         'height': 325,
-        'width': '500'
+        'width': 500
       }
     }
   }
