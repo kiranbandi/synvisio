@@ -173,7 +173,7 @@ class PanelView extends Component {
                     </button>
                 </div>
                 <div className='toggle-container' style={sliderStyle}>
-                    <Slider min={0} max={19} defaultValue={filterLevel.sliderValue} vertical={true} onAfterChange={this.onSliderChange} />
+                    <Slider min={0} max={19} value={filterLevelValue.sliderValue} vertical={true} onChange={this.onSliderChange} />
                 </div>
                 <div className='toggle-container slider-label-container' style={labelContainerStyle}>
                     <p className='slider-top-label'>MAX</p>
