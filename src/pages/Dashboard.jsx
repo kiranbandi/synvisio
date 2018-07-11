@@ -78,7 +78,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     return {
         sourceID: state.oracle.sourceID,
         alignmentList: state.oracle.configuration.alignmentList,
