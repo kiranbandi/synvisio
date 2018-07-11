@@ -38,9 +38,7 @@ export default class Links extends Component {
             y3 = yi(1 - curvature),
             p0 = d.target.x1,
             p1 = d.source.x1,
-            q0 = d.target.y,
-            q1 = d.source.y,
-            qi = interpolateNumber(q0, q1),
+            qi = interpolateNumber(y1, y),
             q2 = qi(curvature),
             q3 = qi(1 - curvature);
 
@@ -48,10 +46,10 @@ export default class Links extends Component {
             "C" + x + "," + y2 + // 1st curve point 1
             " " + x1 + "," + y3 + // 1st curve point 2
             " " + x1 + "," + y1 + // 1st curve end point
-            "L" + p0 + "," + q0 + // bottom line
+            "L" + p0 + "," + y1 + // bottom line
             "C" + p0 + "," + q2 + // 2nd curve point 1
             " " + p1 + "," + q3 + // 2nd curve point 2
-            " " + p1 + "," + q1 // end point and move back to start
+            " " + p1 + "," + y // end point and move back to start
     }
 
 

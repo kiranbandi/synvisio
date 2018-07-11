@@ -9,8 +9,8 @@ export default {
         'target': ['vv1', 'vv2', 'vv3', 'vv4', 'vv5']
     },
     'bn': {
-        'source': ['bn1', 'bn2', 'bn3', 'bn4', 'bn5', 'bn6'],
-        'target': ['bn11', 'bn12', 'bn13', 'bn14', 'bn15', 'bn16']
+        'source': ['bn1', 'bn2', 'bn3'],
+        'target': ['bn11', 'bn12', 'bn13']
     },
     'os_sb': {
         'source': ['os1', 'os2', 'os3', 'os4', 'os5', 'os6', 'os7', 'os8'],
