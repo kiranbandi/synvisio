@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
+import processAlignment from '../utils/filterAlignment';
 import { hashHistory } from 'react-router';
 import { Loader, Information, GenomeView, DotView, PanelView, SnapshotPanel, SnapshotCapture } from '../components';
 import { connect } from 'react-redux';
@@ -46,9 +47,29 @@ class Dashboard extends Component {
     }
 
     render() {
-        const { loaderState, markers, alignmentList = [] } = this.props,
-            isMarkerListEmpty = markers.source.length == 0 || markers.target.length == 0,
+        let { loaderState, configuration } = this.props,
+            { markers, alignmentList = [] } = configuration;
+
+        const isMarkerListEmpty = markers.source.length == 0 || markers.target.length == 0,
             areLinksAvailable = alignmentList.length > 0;
+
+
+        // if (configuration.isChromosomeModeON) {
+        //     // update markers to only the source and target set in the filter panel
+        //     const filteredMarkers = {
+        //         source: [configuration.filterLevel.source],
+        //         target: [configuration.filterLevel.target],
+        //     },
+        //         // update alignment list for only selected chromosomes
+        //         filteredAlignmentList = processAlignment(filteredMarkers, alignmentList);
+
+        //     configuration = {
+        //         ...configuration,
+        //         markers: filteredMarkers,
+        //         alignmentList: filteredAlignmentList
+        //     }
+        // }
+
 
         return (
             <div className='dashboard-root m-t'>
@@ -61,9 +82,9 @@ class Dashboard extends Component {
                             <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
                             areLinksAvailable &&
                             <div className='anchor-root'>
-                                <GenomeView />
-                                <DotView />
-                                <PanelView />
+                                <GenomeView configuration={configuration} />
+                                <DotView configuration={configuration} />
+                                <PanelView configuration={configuration} />
                             </div>}
                     </div>
                     : <Loader />}
@@ -81,9 +102,8 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
     return {
         sourceID: state.oracle.sourceID,
-        alignmentList: state.oracle.configuration.alignmentList,
-        markers: state.oracle.configuration.markers,
-        loaderState: state.oracle.loaderState
+        loaderState: state.oracle.loaderState,
+        configuration: state.oracle.configuration
     };
 }
 

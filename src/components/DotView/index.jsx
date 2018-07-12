@@ -106,8 +106,8 @@ class DotView extends Component {
     }
 }
 
-function mapStateToProps(state, ownProps) {
-    return { configuration: state.oracle.configuration, genomeData: state.genome };
+function mapStateToProps(state) {
+    return { genomeData: state.genome };
 }
 
 export default connect(mapStateToProps)(DotView);

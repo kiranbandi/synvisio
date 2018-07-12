@@ -53,6 +53,7 @@ export default {
     sourceID: 'bn',
     loaderState: false,
     snapshotList: [],
+    isChromosomeModeON: false,
     configuration: {
       ...configuration,
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
