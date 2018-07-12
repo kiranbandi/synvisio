@@ -7,6 +7,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
   switch (action.type) {
     case types.SET_LOADER_STATE:
       return Object.assign({}, state, { loaderState: action.loaderState })
+    case types.SET_CHROMOSOME_MODE:
+      return Object.assign({}, state, { configuration: { ...state.configuration, isChromosomeModeON: action.isChromosomeModeON } })
     case types.SET_SOURCEID:
       return Object.assign({}, state, { sourceID: action.sourceID })
     case types.SET_CONFIGURATION:

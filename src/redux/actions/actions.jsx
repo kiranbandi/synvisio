@@ -19,6 +19,11 @@ export function configureSourceID(sourceID) {
         }
     }
 }
+
+export function setchromosomeMode(isChromosomeModeON) {
+    return { type: types.SET_CHROMOSOME_MODE, isChromosomeModeON };
+}
+
 export function setSourceID(sourceID) {
     return { type: types.SET_SOURCEID, sourceID };
 }
@@ -86,6 +91,7 @@ export function refineAlignmentList(filterLevel, alignmentList) {
     return dispatch => {
         dispatch(setFilterLevel(filterLevel));
         dispatch(setALignmentList(updatedAlignmentList));
+        dispatch(setchromosomeMode(!!(filterLevel.source && filterLevel.target)));
     };
 }
 
