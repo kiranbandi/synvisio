@@ -54,21 +54,17 @@ class Dashboard extends Component {
             areLinksAvailable = alignmentList.length > 0;
 
 
-        // if (configuration.isChromosomeModeON) {
-        //     // update markers to only the source and target set in the filter panel
-        //     const filteredMarkers = {
-        //         source: [configuration.filterLevel.source],
-        //         target: [configuration.filterLevel.target],
-        //     },
-        //         // update alignment list for only selected chromosomes
-        //         filteredAlignmentList = processAlignment(filteredMarkers, alignmentList);
-
-        //     configuration = {
-        //         ...configuration,
-        //         markers: filteredMarkers,
-        //         alignmentList: filteredAlignmentList
-        //     }
-        // }
+        if (configuration.isChromosomeModeON) {
+            // update markers to only the source and target set in the filter panel
+            const filteredMarkers = {
+                source: [configuration.filterLevel.source],
+                target: [configuration.filterLevel.target],
+            };
+            configuration = {
+                ...configuration,
+                markers: filteredMarkers
+            }
+        }
 
 
         return (

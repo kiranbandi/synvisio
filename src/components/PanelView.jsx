@@ -30,8 +30,14 @@ class PanelView extends Component {
     }
 
     onReset(event) {
-        const { configuration, refineAlignmentList } = this.props;
-        refineAlignmentList({}, configuration.alignmentList);
+        const { configuration, refineAlignmentList, originalAlignmentList } = this.props;
+
+        if (configuration.isChromosomeModeON) {
+            refineAlignmentList({}, originalAlignmentList);
+        }
+        else {
+            refineAlignmentList({}, configuration.alignmentList);
+        }
     }
 
     onSliderChange(value) {
@@ -79,7 +85,15 @@ class PanelView extends Component {
             width = availableWidth - margin.left - margin.right,
             height = configuration.panelView.height - margin.top - margin.bottom;
 
-        let { alignmentList = [] } = configuration;
+        let { alignmentList = [], filterLevel = {} } = configuration;
+
+        // we cannot hide all hidden alignments so we selectively 
+        // remove only the ones not available for the present markers
+        if (configuration.isChromosomeModeON) {
+            alignmentList = _.filter(alignmentList, (o) => {
+                return (filterLevel.source == o.source && filterLevel.target == o.target);
+            })
+        }
 
         let valueList = alignmentList.map((o) => o[selectedRadio]).sort((a, b) => a - b);
 
@@ -101,8 +115,6 @@ class PanelView extends Component {
         this.scales.y = y_scale.domain([min, max]).range(y_range);
         this.scales.min_height = height;
         this.scales.max_height = 0;
-
-        let { filterLevel = {} } = configuration;
 
         let filterLevelValue = filterLevel[selectedRadio] || { 'sliderValue': 0, 'nominalValue': min, 'adjustToZero': (selectedRadio == 'e_value') };
 
@@ -193,4 +205,10 @@ function mapDispatchToProps(dispatch) {
     return { refineAlignmentList: bindActionCreators(refineAlignmentList, dispatch) };
 }
 
-export default connect(null, mapDispatchToProps)(PanelView);
+function mapStateToProps(state) {
+    return {
+        originalAlignmentList: state.oracle.configuration.alignmentList
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PanelView);
