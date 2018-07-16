@@ -55,30 +55,32 @@ class DotView extends Component {
 
     initialiseLines(alignmentList, axisLinePositions, chromosomeCollection) {
 
-        const { genomeLibrary } = window.synVisio;
+        const { genomeLibrary } = window.synVisio, linkList = [];
 
-        return _.map(alignmentList, (alignment) => {
+        _.map(alignmentList, (alignment) => {
+            if (!alignment.hidden) {
+                let firstLink = alignment.links[0],
+                    lastLink = alignment.links[alignment.links.length - 1];
+                let sourceChromosome = chromosomeCollection.get(alignment.source),
+                    targetChromosome = chromosomeCollection.get(alignment.target);
+                let sourceLinePosition = _.find(axisLinePositions.source, (o) => o.key == alignment.source),
+                    targetLinePosition = _.find(axisLinePositions.target, (o) => o.key == alignment.target);
 
-            let firstLink = alignment.links[0],
-                lastLink = alignment.links[alignment.links.length - 1];
-            let sourceChromosome = chromosomeCollection.get(alignment.source),
-                targetChromosome = chromosomeCollection.get(alignment.target);
-            let sourceLinePosition = _.find(axisLinePositions.source, (o) => o.key == alignment.source),
-                targetLinePosition = _.find(axisLinePositions.target, (o) => o.key == alignment.target);
+                let first_link_x = sourceLinePosition.x1 + ((genomeLibrary.get(firstLink.source).start - sourceChromosome.start) / sourceChromosome.width) * (sourceLinePosition.x2 - sourceLinePosition.x1);
+                let last_link_x = sourceLinePosition.x1 + ((genomeLibrary.get(lastLink.source).start - sourceChromosome.start) / sourceChromosome.width) * (sourceLinePosition.x2 - sourceLinePosition.x1);
+                let first_link_y = targetLinePosition.y1 + ((genomeLibrary.get(firstLink.target).start - targetChromosome.start) / targetChromosome.width) * (targetLinePosition.y2 - targetLinePosition.y1);
+                let last_link_y = targetLinePosition.y1 + ((genomeLibrary.get(lastLink.target).start - targetChromosome.start) / targetChromosome.width) * (targetLinePosition.y2 - targetLinePosition.y1);
 
-            let first_link_x = sourceLinePosition.x1 + ((genomeLibrary.get(firstLink.source).start - sourceChromosome.start) / sourceChromosome.width) * (sourceLinePosition.x2 - sourceLinePosition.x1);
-            let last_link_x = sourceLinePosition.x1 + ((genomeLibrary.get(lastLink.source).start - sourceChromosome.start) / sourceChromosome.width) * (sourceLinePosition.x2 - sourceLinePosition.x1);
-            let first_link_y = targetLinePosition.y1 + ((genomeLibrary.get(firstLink.target).start - targetChromosome.start) / targetChromosome.width) * (targetLinePosition.y2 - targetLinePosition.y1);
-            let last_link_y = targetLinePosition.y1 + ((genomeLibrary.get(lastLink.target).start - targetChromosome.start) / targetChromosome.width) * (targetLinePosition.y2 - targetLinePosition.y1);
-
-            return {
-                'x1': first_link_x,
-                'x2': last_link_x,
-                'y1': first_link_y,
-                'y2': last_link_y,
-                alignment
-            };
+                linkList.push({
+                    'x1': first_link_x,
+                    'x2': last_link_x,
+                    'y1': first_link_y,
+                    'y2': last_link_y,
+                    alignment
+                });
+            }
         })
+        return linkList;
     }
 
 

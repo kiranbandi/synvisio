@@ -53,9 +53,9 @@ export default {
     sourceID: 'bn',
     loaderState: false,
     snapshotList: [],
-    isChromosomeModeON: false,
     configuration: {
       ...configuration,
+      isChromosomeModeON: false,
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
       'alignmentList': [],
       'filterLevel': {},
