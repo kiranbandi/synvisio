@@ -2,12 +2,54 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Markers from './Markers';
 import Links from './Links';
+import { ResetIcon } from '../';
+import * as d3 from 'd3';
 
 class GenomeView extends Component {
 
     constructor(props) {
         super(props);
+        this.zoom = d3.zoom()
+            .scaleExtent([1, 4])
+            .filter(() => !(d3.event.type == 'dblclick'))
+            .on("zoom", this.zoomed.bind(this));
+        this.resetZoom = this.resetZoom.bind(this);
+        this.removeZoom = this.removeZoom.bind(this);
+        this.attachZoom = this.attachZoom.bind(this);
     }
+
+    componentDidMount() {
+        this.attachZoom();
+    }
+    componentDidUpdate() {
+        this.attachZoom();
+    }
+
+    attachZoom() {
+        if (this.props.configuration.isChromosomeModeON) {
+            d3.select(this.outerG)
+                .call(this.zoom)
+        }
+        else {
+            this.removeZoom();
+        }
+    }
+
+    resetZoom() {
+        d3.select(this.outerG).call(this.zoom.transform, d3.zoomIdentity.scale(1).translate(0, 0));
+    }
+
+    removeZoom() {
+        this.resetZoom();
+        d3.select(this.outerG).on('.zoom', null);
+    }
+
+    zoomed() {
+        let zoomTransform = d3.event.transform;
+        zoomTransform = zoomTransform || { x: 0, y: 0, k: 1 };
+        d3.select(this.innerG).attr('transform', 'translate(' + zoomTransform.x + "," + zoomTransform.y + ") scale(" + zoomTransform.k + ")")
+    }
+
 
     initialiseMarkers(configuration, chromosomeCollection) {
 
@@ -113,15 +155,24 @@ class GenomeView extends Component {
     render() {
 
         const { configuration, genomeData } = this.props,
+            { isChromosomeModeON = false, genomeView } = configuration,
             markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap),
             linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions);
 
         return (
             <div className='genomeViewRoot' >
-                <svg className='genomeViewSVG' height={configuration.genomeView.height} width={configuration.genomeView.width}>
-                    <Markers configuration={configuration} markerPositions={markerPositions} />
-                    <Links configuration={configuration} linkPositions={linkPositions} />
+                <svg className={'genomeViewSVG ' + (isChromosomeModeON ? 'rounded-corner' : '')} ref={node => this.outerG = node} height={genomeView.height} width={genomeView.width}>
+                    <g ref={node => this.innerG = node} >
+                        <Markers configuration={configuration} markerPositions={markerPositions} />
+                        <Links configuration={configuration} linkPositions={linkPositions} />
+                    </g>
+                    {isChromosomeModeON &&
+                        <ResetIcon
+                            x={genomeView.width - 50}
+                            y={20}
+                            onClick={this.resetZoom} />}
                 </svg>
+
             </div>
         );
     }
