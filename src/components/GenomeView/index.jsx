@@ -50,7 +50,6 @@ class GenomeView extends Component {
         d3.select(this.innerG).attr('transform', 'translate(' + zoomTransform.x + "," + zoomTransform.y + ") scale(" + zoomTransform.k + ")")
     }
 
-
     initialiseMarkers(configuration, chromosomeCollection) {
 
         const maxWidthAvailable = configuration.genomeView.width;
@@ -172,7 +171,6 @@ class GenomeView extends Component {
                             y={20}
                             onClick={this.resetZoom} />}
                 </svg>
-
             </div>
         );
     }
