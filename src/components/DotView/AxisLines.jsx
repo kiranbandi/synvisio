@@ -94,12 +94,9 @@ class AxisLines extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return { configuration: state.oracle.configuration };
-}
 
 function mapDispatchToProps(dispatch) {
     return { refineAlignmentList: bindActionCreators(refineAlignmentList, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AxisLines);
+export default connect(null, mapDispatchToProps)(AxisLines);

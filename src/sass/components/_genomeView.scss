@@ -15,18 +15,10 @@
         fill: none;
         stroke-opacity: .5;
         cursor: pointer;
-        &.hidden-link {
-            stroke-opacity: 0;
-            pointer-events: none;
-        }
     }
     .link-polygon {
         stroke: none;
         fill-opacity: .6;
         cursor: pointer;
-        &.hidden-link {
-            fill-opacity: 0;
-            pointer-events: none;
-        }
     }
 }

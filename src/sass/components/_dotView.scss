@@ -15,9 +15,5 @@
         stroke-width: 2px;
         opacity: 0.5;
         cursor: pointer;
-        &.hidden-alignment-link {
-            opacity: 0;
-            pointer-events: none;
-        }
     }
 }
