@@ -3,11 +3,52 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import AxisLines from './AxisLines';
 import AlignmentLines from './AlignmentLines';
+import { ResetIcon } from '../';
+import * as d3 from 'd3';
 
 class DotView extends Component {
 
     constructor(props) {
         super(props);
+        this.zoom = d3.zoom()
+            .scaleExtent([1, 4])
+            .filter(() => !(d3.event.type == 'dblclick'))
+            .on("zoom", this.zoomed.bind(this));
+        this.resetZoom = this.resetZoom.bind(this);
+        this.removeZoom = this.removeZoom.bind(this);
+        this.attachZoom = this.attachZoom.bind(this);
+    }
+
+    componentDidMount() {
+        this.attachZoom();
+    }
+    componentDidUpdate() {
+        this.attachZoom();
+    }
+
+    attachZoom() {
+        if (this.props.configuration.isChromosomeModeON) {
+            d3.select(this.outerG)
+                .call(this.zoom)
+        }
+        else {
+            this.removeZoom();
+        }
+    }
+
+    resetZoom() {
+        d3.select(this.outerG).call(this.zoom.transform, d3.zoomIdentity.scale(1).translate(0, 0));
+    }
+
+    removeZoom() {
+        this.resetZoom();
+        d3.select(this.outerG).on('.zoom', null);
+    }
+
+    zoomed() {
+        let zoomTransform = d3.event.transform;
+        zoomTransform = zoomTransform || { x: 0, y: 0, k: 1 };
+        d3.select(this.innerG).attr('transform', 'translate(' + zoomTransform.x + "," + zoomTransform.y + ") scale(" + zoomTransform.k + ")")
     }
 
     initialisePostions(configuration, chromosomeCollection) {
@@ -87,21 +128,40 @@ class DotView extends Component {
     render() {
 
         let { configuration, genomeData } = this.props;
-        const side_margin = 57.5;
+        const side_margin = 57.5,
+            { isChromosomeModeON = false } = configuration;
 
-        configuration.dotView.innerWidth = configuration.dotView.width - (2 * side_margin);
-        configuration.dotView.offset = side_margin;
+        configuration = {
+            ...configuration,
+            dotView: {
+                ...configuration.dotView,
+                width: isChromosomeModeON ? configuration.dotView.width - 30 : configuration.dotView.width,
+                innerWidth: configuration.dotView.width - (2 * side_margin),
+                offset: side_margin
+            }
+        }
 
         let axisLinePositions = this.initialisePostions(configuration, genomeData.chromosomeMap),
             alignmentLinePositions = this.initialiseLines(configuration.alignmentList, axisLinePositions, genomeData.chromosomeMap);
 
         return (
             <div className='dotViewRoot'>
-                <svg className='dotViewSVG' height={configuration.dotView.width} width={configuration.dotView.width}>
-                    <g>
+                <svg
+                    className={'dotViewSVG ' + (isChromosomeModeON ? 'rounded-corner' : '')}
+                    ref={node => this.outerG = node}
+                    height={configuration.dotView.width}
+                    width={configuration.dotView.width}>
+
+                    <g ref={node => this.innerG = node}>
                         <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
                         <AlignmentLines alignmentLinePositions={alignmentLinePositions} />
                     </g>
+                    {isChromosomeModeON &&
+                        <ResetIcon
+                            x={configuration.dotView.width - 50}
+                            y={20}
+                            onClick={this.resetZoom} />}
+
                 </svg>
             </div>
         );

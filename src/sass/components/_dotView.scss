@@ -1,5 +1,6 @@
 .dotViewRoot {
     display: inline-block;
+    vertical-align: top;
     .dot-view-line {
         stroke: #3a3a3a;
         stroke-width: 2px;
@@ -15,5 +16,10 @@
         stroke-width: 2px;
         opacity: 0.5;
         cursor: pointer;
+    }
+    .rounded-corner {
+        border: 2px solid grey;
+        border-radius: 25px;
+        margin: 15px 15px 0 15px;
     }
 }
