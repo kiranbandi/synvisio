@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { schemeCategory10, interpolateNumber } from 'd3';
+import { refineAlignmentList } from '../../redux/actions/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-export default class Links extends Component {
+class Links extends Component {
 
     constructor(props) {
         super(props);
+        this.generateLinkElements = this.generateLinkElements.bind(this);
+    }
+
+    onLinkClick(alignment) {
+        let { filterLevel = {}, alignmentList } = this.props.configuration;
+        const { refineAlignmentList } = this.props;
+        filterLevel['alignment'] = { ...alignment };
+        refineAlignmentList(filterLevel, alignmentList);
     }
 
     createLinkLinePath(d) {
@@ -53,11 +64,13 @@ export default class Links extends Component {
     }
 
 
-    generateLinkElements(configuration, linkPositions) {
+    generateLinkElements() {
+
+        const { configuration, linkPositions } = this.props;
 
         let linkElements = [];
 
-        // split links into two parts , the links that have widths of less than 2 px can be drawn as lines 
+        // split links into two parts , the links that have widths of less than 2px can be drawn as lines 
         // and the other are drawn as polygon links
         let link_collection = _.partition(linkPositions, function (link) { return link.width == '2'; });
 
@@ -82,7 +95,9 @@ export default class Links extends Component {
             return <path key={"line-link-" + i}
                 className={'genome-link link hover-link' + " link-source-" + d.alignment.source + " "}
                 d={this.createLinkLinePath(d)}
-                style={style}>
+                style={style}
+                // Not so elegant but since the number of elements are few this is a workable solution
+                onDoubleClick={configuration.isChromosomeModeON ? this.onLinkClick.bind(this, d.alignment) : null}>
                 <title>
                     {d.alignment.source + " => " + d.alignment.target +
                         "\n type : " + d.alignment.type +
@@ -113,7 +128,8 @@ export default class Links extends Component {
             return <path key={"line-link-" + i}
                 className={'genome-link link-polygon hover-link-polygon' + " link-source-" + d.alignment.source + " "}
                 d={this.createLinkPolygonPath(d)}
-                style={style}>
+                style={style}
+                onDoubleClick={configuration.isChromosomeModeON ? this.onLinkClick.bind(this, d.alignment) : null}>
                 <title>
                     {d.alignment.source + " => " + d.alignment.target +
                         "\n type : " + d.alignment.type +
@@ -130,14 +146,16 @@ export default class Links extends Component {
 
 
     render() {
-
-        const { configuration, linkPositions } = this.props,
-            linkElements = this.generateLinkElements(configuration, linkPositions);
-
         return (
             <g className='linkContainer'>
-                {linkElements}
+                {this.generateLinkElements()}
             </g>
         );
     }
-}  
+}
+
+function mapDispatchToProps(dispatch) {
+    return { refineAlignmentList: bindActionCreators(refineAlignmentList, dispatch) };
+}
+
+export default connect(null, mapDispatchToProps)(Links);

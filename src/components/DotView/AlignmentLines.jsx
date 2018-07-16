@@ -1,25 +1,35 @@
 import React, { Component } from 'react';
+import { refineAlignmentList } from '../../redux/actions/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-export default class AlignmentLines extends Component {
+class AlignmentLines extends Component {
 
     constructor(props) {
         super(props);
+        this.onLinkClick = this.onLinkClick.bind(this);
     }
 
+    onLinkClick(alignment) {
+        let { filterLevel = {}, alignmentList } = this.props.configuration;
+        const { refineAlignmentList } = this.props;
+        filterLevel['alignment'] = { ...alignment };
+        refineAlignmentList(filterLevel, alignmentList);
+    }
 
     render() {
-
-        const { alignmentLinePositions } = this.props;
-
+        const { alignmentLinePositions, configuration } = this.props;
         // Titles are displayed in the chromosome view when hovering over a particular element in an svg
-
         return (
             <g className='alignmentLinesContainer'>
                 {alignmentLinePositions.map((d, i) =>
                     <line
                         className={'alignment-link-lines alignment-link-source-' + d.alignment.source + ' alignment-link-target-' + d.alignment.target + " "}
                         key={"alignment-link-line-" + i}
-                        x1={d.x1} y1={d.y1} y2={d.y2} x2={d.x2}>
+                        x1={d.x1} y1={d.y1}
+                        y2={d.y2} x2={d.x2}
+                        // Not so elegant but since the number of elements are few this is a workable solution
+                        onDoubleClick={configuration.isChromosomeModeON ? this.onLinkClick.bind(this, d.alignment) : null}>
                         <title>
                             {d.alignment.source + " => " + d.alignment.target +
                                 "\n type : " + d.alignment.type +
@@ -32,4 +42,10 @@ export default class AlignmentLines extends Component {
             </g>
         );
     }
-}  
+}
+
+function mapDispatchToProps(dispatch) {
+    return { refineAlignmentList: bindActionCreators(refineAlignmentList, dispatch) };
+}
+
+export default connect(null, mapDispatchToProps)(AlignmentLines);

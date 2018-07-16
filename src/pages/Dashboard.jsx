@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
-import processAlignment from '../utils/filterAlignment';
 import { hashHistory } from 'react-router';
-import { Loader, Information, GenomeView, DotView, PanelView, SnapshotPanel, SnapshotCapture } from '../components';
+import { Loader, Information, GenomeView, BlockView, DotView, PanelView, SnapshotPanel, SnapshotCapture } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureSourceID, setLoaderState, setGenomicData, setALignmentList } from '../redux/actions/actions';
@@ -48,13 +47,13 @@ class Dashboard extends Component {
 
     render() {
         let { loaderState, configuration } = this.props,
-            { markers, alignmentList = [] } = configuration;
+            { markers, alignmentList = [], isChromosomeModeON = false, isBlockModeON = false } = configuration;
 
         const isMarkerListEmpty = markers.source.length == 0 || markers.target.length == 0,
             areLinksAvailable = alignmentList.length > 0;
 
 
-        if (configuration.isChromosomeModeON) {
+        if (isChromosomeModeON) {
             // update markers to only the source and target set in the filter panel
             const filteredMarkers = {
                 source: [configuration.filterLevel.source],
@@ -81,6 +80,7 @@ class Dashboard extends Component {
                                 <GenomeView configuration={configuration} />
                                 <DotView configuration={configuration} />
                                 <PanelView configuration={configuration} />
+                                {isBlockModeON && <BlockView />}
                             </div>}
                     </div>
                     : <Loader />}

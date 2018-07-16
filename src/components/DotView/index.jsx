@@ -59,7 +59,7 @@ class DotView extends Component {
             maximumWidthY = _.sumBy(configuration.markers.target, (key) => chromosomeCollection.get(key).width);
 
         let scaleFactorX = maxWidthAvailable / maximumWidthX,
-            scaleFactorY = maxWidthAvailable / maximumWidthY
+            scaleFactorY = maxWidthAvailable / maximumWidthY;
 
         let posistions = {};
         // more padding on the x axis since the labels are horizontal and need more space to the left of the graph
@@ -130,7 +130,7 @@ class DotView extends Component {
         let { configuration, genomeData } = this.props;
         const side_margin = 57.5,
             { isChromosomeModeON = false } = configuration;
-
+        
         configuration = {
             ...configuration,
             dotView: {
@@ -154,7 +154,7 @@ class DotView extends Component {
 
                     <g ref={node => this.innerG = node}>
                         <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
-                        <AlignmentLines alignmentLinePositions={alignmentLinePositions} />
+                        <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions} />
                     </g>
                     {isChromosomeModeON &&
                         <ResetIcon

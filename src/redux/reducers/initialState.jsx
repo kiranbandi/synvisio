@@ -56,6 +56,7 @@ export default {
     configuration: {
       ...configuration,
       isChromosomeModeON: false,
+      isBlockModeON: false,
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
       'alignmentList': [],
       'filterLevel': {},

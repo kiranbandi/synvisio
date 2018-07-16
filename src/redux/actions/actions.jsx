@@ -24,6 +24,10 @@ export function setchromosomeMode(isChromosomeModeON) {
     return { type: types.SET_CHROMOSOME_MODE, isChromosomeModeON };
 }
 
+export function setBlockMode(isBlockModeON) {
+    return { type: types.SET_BLOCK_MODE, isBlockModeON };
+}
+
 export function setSourceID(sourceID) {
     return { type: types.SET_SOURCEID, sourceID };
 }
@@ -82,6 +86,9 @@ export function refineAlignmentList(filterLevel, alignmentList) {
         else if (filterLevel.target && filterLevel.target != o.target) {
             o.hidden = true;
         }
+        else if (filterLevel.alignment && !_.isEqual(o, filterLevel.alignment)) {
+            o.hidden = true;
+        }
         else {
             o.hidden = false;
         }
@@ -92,6 +99,7 @@ export function refineAlignmentList(filterLevel, alignmentList) {
         dispatch(setFilterLevel(filterLevel));
         dispatch(setALignmentList(updatedAlignmentList));
         dispatch(setchromosomeMode(!!(filterLevel.source && filterLevel.target)));
+        dispatch(setBlockMode(!!(filterLevel.alignment)));
     };
 }
 
