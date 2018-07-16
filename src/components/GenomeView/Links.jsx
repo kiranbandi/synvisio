@@ -68,6 +68,11 @@ export default class Links extends Component {
             // Decide on stroke colour
             let sourceIndex = configuration.markers.source.indexOf(d.alignment.source);
             stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
+
+            // For chromosome mode flipped links are shown in red color and regular in blue
+            if (configuration.isChromosomeModeON && d.alignment.type == 'flipped') {
+                stroke = schemeCategory10[3];
+            }
             // Add style to elements
             style = {
                 'strokeWidth': d.width,
@@ -75,7 +80,7 @@ export default class Links extends Component {
             }
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"line-link-" + i}
-                className={'genome-link link hover-link' + " link-source-" + d.alignment.source + " " + (d.alignment.hidden ? 'hidden-link' : '')}
+                className={'genome-link link hover-link' + " link-source-" + d.alignment.source + " "}
                 d={this.createLinkLinePath(d)}
                 style={style}>
                 <title>
@@ -96,11 +101,17 @@ export default class Links extends Component {
             // Decide on stroke colour
             let sourceIndex = configuration.markers.source.indexOf(d.alignment.source);
             fill = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
+
+            // For chromosome mode flipped links are shown in red color and regular in blue
+            if (configuration.isChromosomeModeON && d.alignment.type == 'flipped') {
+                fill = schemeCategory10[3];
+            }
+
             // Add style to elements
             style = { fill }
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"line-link-" + i}
-                className={'genome-link link-polygon hover-link-polygon' + " link-source-" + d.alignment.source + " " + (d.alignment.hidden ? 'hidden-link' : '')}
+                className={'genome-link link-polygon hover-link-polygon' + " link-source-" + d.alignment.source + " "}
                 d={this.createLinkPolygonPath(d)}
                 style={style}>
                 <title>
