@@ -103,6 +103,7 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
         dispatch(setRootMarkers(markers));
         //reset filter level
         dispatch(setFilterLevel({}));
+        dispatch(setchromosomeMode(false));
         dispatch(setALignmentList(updatedAlignmentList));
     };
 }
