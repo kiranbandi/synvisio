@@ -21,4 +21,8 @@
         fill-opacity: .6;
         cursor: pointer;
     }
+    &.rounded-corner {
+        border: 2px solid grey;
+        border-radius: 25px;
+    }
 }
