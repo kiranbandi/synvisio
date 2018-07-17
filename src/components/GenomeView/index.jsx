@@ -103,7 +103,7 @@ class GenomeView extends Component {
         _.map(configuration.alignmentList, (alignment) => {
 
             // only process alignments which are not hidden
-            if (!alignment.hidden) {
+            if (!configuration.isChromosomeModeON || !alignment.hidden) {
                 const { genomeLibrary } = window.synVisio;
 
                 let firstLink = alignment.links[0],

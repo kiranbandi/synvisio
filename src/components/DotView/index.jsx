@@ -95,12 +95,12 @@ class DotView extends Component {
         return posistions;
     }
 
-    initialiseLines(alignmentList, axisLinePositions, chromosomeCollection) {
+    initialiseLines(configuration, axisLinePositions, chromosomeCollection) {
 
         const { genomeLibrary } = window.synVisio, linkList = [];
 
-        _.map(alignmentList, (alignment) => {
-            if (!alignment.hidden) {
+        _.map(configuration.alignmentList, (alignment) => {
+            if (!configuration.isChromosomeModeON || !alignment.hidden) {
                 let firstLink = alignment.links[0],
                     lastLink = alignment.links[alignment.links.length - 1];
                 let sourceChromosome = chromosomeCollection.get(alignment.source),
@@ -143,7 +143,7 @@ class DotView extends Component {
         }
 
         let axisLinePositions = this.initialisePostions(configuration, genomeData.chromosomeMap),
-            alignmentLinePositions = this.initialiseLines(configuration.alignmentList, axisLinePositions, genomeData.chromosomeMap);
+            alignmentLinePositions = this.initialiseLines(configuration, axisLinePositions, genomeData.chromosomeMap);
 
         return (
             <div className='dotViewRoot'>

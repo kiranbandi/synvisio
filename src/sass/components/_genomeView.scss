@@ -15,11 +15,25 @@
         fill: none;
         stroke-opacity: .5;
         cursor: pointer;
+        &:hover {
+            stroke-opacity: .9;
+        }
+        &.hidden-alignment-link {
+            stroke-opacity: 0;
+            pointer-events: none;
+        }
     }
     .link-polygon {
         stroke: none;
         fill-opacity: .6;
         cursor: pointer;
+        &:hover {
+            fill-opacity: .9;
+        }
+        &.hidden-alignment-link {
+            fill-opacity: 0;
+            pointer-events: none;
+        }
     }
     &.rounded-corner {
         border: 2px solid grey;

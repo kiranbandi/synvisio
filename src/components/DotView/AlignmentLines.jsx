@@ -24,7 +24,7 @@ class AlignmentLines extends Component {
             <g className='alignmentLinesContainer'>
                 {alignmentLinePositions.map((d, i) =>
                     <line
-                        className={'alignment-link-lines alignment-link-source-' + d.alignment.source + ' alignment-link-target-' + d.alignment.target + " "}
+                        className={'alignment-link-lines alignment-link-source-' + d.alignment.source + ' alignment-link-target-' + d.alignment.target + " " + (d.alignment.hidden ? 'hidden-alignment-link' : '')}
                         key={"alignment-link-line-" + i}
                         x1={d.x1} y1={d.y1}
                         y2={d.y2} x2={d.x2}
