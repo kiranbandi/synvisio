@@ -7,16 +7,36 @@ class BlockView extends Component {
 
     constructor(props) {
         super(props);
+
+        this.zoom = d3.zoom()
+            .scaleExtent([1, 10])
+            .filter(() => !(d3.event.type == 'mouseover'))
+            .on("zoom", this.zoomed.bind(this));
+
+        this.resetZoom = this.resetZoom.bind(this);
         this.renderAxes = this.renderAxes.bind(this);
     }
 
     componentDidMount() {
         this.renderAxes();
+        d3.select(this.outerG).call(this.zoom);
     }
 
     componentDidUpdate() {
         this.renderAxes();
+        d3.select(this.outerG).call(this.zoom);
     }
+
+    resetZoom() {
+        d3.select(this.outerG).call(this.zoom.transform, d3.zoomIdentity.scale(1).translate(0, 0));
+    }
+
+    zoomed() {
+        let zoomTransform = d3.event.transform;
+        this.gX_top.call(this.xAxis_top.scale(zoomTransform.rescaleX(this.x_top)));
+        this.gX_bottom.call(this.xAxis_bottom.scale(zoomTransform.rescaleX(this.x_bottom)));
+    }
+
 
     renderAxes() {
 
@@ -42,24 +62,24 @@ class BlockView extends Component {
             };
 
 
-        var x_top = d3.scaleLinear()
+        this.x_top = d3.scaleLinear()
             .domain([sourceTrack.start, sourceTrack.end])
             .range([0, innerWidth]);
 
-        var xAxis_top = d3.axisTop(x_top)
-            .ticks(10)
-            .tickPadding(5);
-
-        var x_bottom = d3.scaleLinear()
+        this.x_bottom = d3.scaleLinear()
             .domain([targetTrack.start, targetTrack.end])
             .range([0, innerWidth]);
 
-        var xAxis_bottom = d3.axisBottom(x_bottom)
+        this.xAxis_bottom = d3.axisBottom(this.x_bottom)
             .ticks(10)
             .tickPadding(5);
 
-        this.gX_top = d3.select(this.gxTop).call(xAxis_top);
-        this.gX_bottom = d3.select(this.gxBottom).call(xAxis_bottom);
+        this.xAxis_top = d3.axisTop(this.x_top)
+            .ticks(10)
+            .tickPadding(5);
+
+        this.gX_top = d3.select(this.gxTop).call(this.xAxis_top);
+        this.gX_bottom = d3.select(this.gxBottom).call(this.xAxis_bottom);
 
     }
 
