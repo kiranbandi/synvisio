@@ -6,6 +6,7 @@ import AlignmentLines from './AlignmentLines';
 import { ResetIcon } from '../';
 import * as d3 from 'd3';
 
+
 class DotView extends Component {
 
     constructor(props) {
@@ -41,7 +42,7 @@ class DotView extends Component {
     }
 
     removeZoom() {
-        this.resetZoom();
+        d3.select(this.outerG).call(this.zoom.transform, d3.zoomIdentity.scale(1).translate(0, 0));
         d3.select(this.outerG).on('.zoom', null);
     }
 
@@ -130,7 +131,7 @@ class DotView extends Component {
         let { configuration, genomeData } = this.props;
         const side_margin = 57.5,
             { isChromosomeModeON = false } = configuration;
-        
+
         configuration = {
             ...configuration,
             dotView: {
