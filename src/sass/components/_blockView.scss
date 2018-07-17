@@ -1,0 +1,19 @@
+.blockViewRoot {
+    .blockViewSVG {
+        &.rounded-corner {
+            border: 2px solid grey;
+            margin: 0px auto;
+            display: block;
+            border-radius: 15px;
+        }
+        .axis--x text {
+            fill: grey;
+        }
+        .axis--x path {
+            stroke: grey;
+        }
+        .axis--x line {
+            stroke: grey;
+        }
+    }
+}

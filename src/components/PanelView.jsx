@@ -23,6 +23,7 @@ class PanelView extends Component {
         this.radioChange = this.radioChange.bind(this);
         this.onSliderChange = this.onSliderChange.bind(this);
         this.onReset = this.onReset.bind(this);
+        this.onRemoveBlockView = this.onRemoveBlockView.bind(this);
     }
 
     radioChange(event) {
@@ -31,13 +32,16 @@ class PanelView extends Component {
 
     onReset(event) {
         const { configuration, refineAlignmentList, originalAlignmentList } = this.props;
+        const { isChromosomeModeON, alignmentList } = configuration;
+        refineAlignmentList({}, isChromosomeModeON ? originalAlignmentList : alignmentList);
 
-        if (configuration.isChromosomeModeON) {
-            refineAlignmentList({}, originalAlignmentList);
-        }
-        else {
-            refineAlignmentList({}, configuration.alignmentList);
-        }
+    }
+
+    onRemoveBlockView() {
+        const { configuration, refineAlignmentList, originalAlignmentList } = this.props;
+        let { isChromosomeModeON, alignmentList, filterLevel } = configuration;
+        filterLevel = { ...filterLevel, alignment: false };
+        refineAlignmentList(filterLevel, isChromosomeModeON ? originalAlignmentList : alignmentList);
     }
 
     onSliderChange(value) {
@@ -60,11 +64,10 @@ class PanelView extends Component {
 
     render() {
 
-        let { configuration } = this.props;
-        let { selectedRadio } = this.state;
-
-        let leftWidth = 260;
-        let availableWidth = configuration.panelView.width - leftWidth;
+        let { configuration } = this.props,
+            { selectedRadio } = this.state,
+            leftWidth = 260,
+            availableWidth = configuration.panelView.width - leftWidth;
 
         let style = {
             width: (leftWidth / 2) + 'px',
@@ -183,6 +186,10 @@ class PanelView extends Component {
                     <button className="btn btn-danger-outline m-t-md" onClick={this.onReset}>
                         Reset <span className="icon icon-cycle"></span>
                     </button>
+                    {configuration.isBlockModeON &&
+                        <button className="btn btn-danger-outline m-t-md" onClick={this.onRemoveBlockView}>
+                            Blockview  <span className="icon icon-ccw"></span>
+                        </button>}
                 </div>
                 <div className='toggle-container' style={sliderStyle}>
                     <Slider min={0} max={19} value={filterLevelValue.sliderValue} vertical={true} onChange={this.onSliderChange} />

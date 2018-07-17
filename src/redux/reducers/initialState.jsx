@@ -20,6 +20,14 @@ if (width < 513 || (width < height)) {
     'panelView': {
       'height': 350,
       'width': width
+    },
+    'blockView': {
+      'verticalPositions': {
+        'source': 25,
+        'target': 325
+      },
+      'height': 350,
+      'width': 750
     }
   }
 }
@@ -41,12 +49,18 @@ else {
     'panelView': {
       'height': 0.60 * height,
       'width': width - (0.60 * height)
+    },
+    'blockView': {
+      'verticalPositions': {
+        'source': 25,
+        'target': (0.40 * height) - 25
+      },
+      'height': 0.40 * height,
+      'width': width
     }
   }
 
 }
-
-
 
 export default {
   oracle: {
@@ -59,15 +73,7 @@ export default {
       isBlockModeON: false,
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
       'alignmentList': [],
-      'filterLevel': {},
-      'blockView': {
-        'verticalPositions': {
-          'source': 50,
-          'target': 275
-        },
-        'height': 325,
-        'width': 500
-      }
+      'filterLevel': {}
     }
   }
 };

@@ -80,7 +80,7 @@ class Dashboard extends Component {
                                 <GenomeView configuration={configuration} />
                                 <DotView configuration={configuration} />
                                 <PanelView configuration={configuration} />
-                                {isBlockModeON && <BlockView />}
+                                {isBlockModeON && <BlockView configuration={configuration} />}
                             </div>}
                     </div>
                     : <Loader />}
