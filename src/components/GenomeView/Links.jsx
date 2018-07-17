@@ -93,7 +93,7 @@ class Links extends Component {
             }
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"line-link-" + i}
-                className={'genome-link link hover-link' + " link-source-" + d.alignment.source + " "}
+                className={'genome-link link hover-link' + " link-source-" + d.alignment.source + " " + (d.alignment.hidden ? 'hidden-alignment-link' : '')}
                 d={this.createLinkLinePath(d)}
                 style={style}
                 // Not so elegant but since the number of elements are few this is a workable solution
@@ -126,7 +126,7 @@ class Links extends Component {
             style = { fill }
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"line-link-" + i}
-                className={'genome-link link-polygon hover-link-polygon' + " link-source-" + d.alignment.source + " "}
+                className={'genome-link link-polygon hover-link-polygon' + " link-source-" + d.alignment.source + " " + (d.alignment.hidden ? 'hidden-alignment-link' : '')}
                 d={this.createLinkPolygonPath(d)}
                 style={style}
                 onDoubleClick={configuration.isChromosomeModeON ? this.onLinkClick.bind(this, d.alignment) : null}>
