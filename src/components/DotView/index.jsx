@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import AxisLines from './AxisLines';
 import AlignmentLines from './AlignmentLines';
-import { ResetIcon } from '../';
+import { InlayIcon } from '../';
 import * as d3 from 'd3';
 
 
@@ -147,6 +147,11 @@ class DotView extends Component {
 
         return (
             <div className='dotViewRoot'>
+                {isChromosomeModeON &&
+                    <InlayIcon
+                        x={configuration.dotView.width - 50}
+                        y={20}
+                        onClick={this.resetZoom} />}
                 <svg
                     className={'dotViewSVG ' + (isChromosomeModeON ? 'rounded-corner' : '')}
                     ref={node => this.outerG = node}
@@ -157,12 +162,6 @@ class DotView extends Component {
                         <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
                         <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions} />
                     </g>
-                    {isChromosomeModeON &&
-                        <ResetIcon
-                            x={configuration.dotView.width - 50}
-                            y={20}
-                            onClick={this.resetZoom} />}
-
                 </svg>
             </div>
         );

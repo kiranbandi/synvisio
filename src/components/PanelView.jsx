@@ -187,7 +187,7 @@ class PanelView extends Component {
                         Reset <span className="icon icon-cycle"></span>
                     </button>
                     {configuration.isBlockModeON &&
-                        <button className="btn btn-danger-outline m-t-md" onClick={this.onRemoveBlockView}>
+                        <button className="btn btn-danger-outline m-t" onClick={this.onRemoveBlockView}>
                             Blockview  <span className="icon icon-ccw"></span>
                         </button>}
                 </div>

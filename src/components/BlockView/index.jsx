@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ResetIcon } from '../';
+import { InlayIcon } from '../';
 import * as d3 from 'd3';
 
 export default class BlockView extends Component {
@@ -11,6 +11,8 @@ export default class BlockView extends Component {
             .scaleExtent([1, 10])
             .filter(() => !(d3.event.type == 'mouseover'))
             .on("zoom", this.zoomed.bind(this));
+
+        this.invertState = false;
 
         this.resetZoom = this.resetZoom.bind(this);
         this.renderAxes = this.renderAxes.bind(this);
@@ -34,8 +36,10 @@ export default class BlockView extends Component {
 
         const innerWidth = blockView.width * 0.8;
 
+        this.invertState = !this.invertState;
+
         this.x_bottom = d3.scaleLinear()
-            .domain([targetTrack.end, targetTrack.start])
+            .domain(this.invertState ? [this.targetTrack.end, this.targetTrack.start] : [this.targetTrack.start, this.targetTrack.end])
             .range([0, innerWidth]);
 
         this.xAxis_bottom = d3.axisBottom(this.x_bottom)
@@ -208,6 +212,8 @@ export default class BlockView extends Component {
 
         return (
             <div className='blockViewRoot rounded-corner' style={containerStyle} >
+                <InlayIcon onClick={this.resetZoom} />
+                {alignment.type == 'flipped' && <InlayIcon icon='shuffle' onClick={this.invertTarget} right={80} />}
                 <svg className='blockViewSVG' transform={'translate(' + leftOffset + ',0)'} ref={node => this.outerG = node} height={blockView.height} width={innerWidth}>
                     <g className='axis axis--x' transform='translate(0,40)' ref={node => this.gxTop = node} > </g>
                     <g className='axis axis--x' transform={'translate(0,' + (blockView.height - 40) + ')'} ref={node => this.gxBottom = node} > </g>
