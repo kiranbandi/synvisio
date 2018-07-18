@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Markers from './Markers';
 import Links from './Links';
-import { ResetIcon } from '../';
+import { InlayIcon } from '../';
 import * as d3 from 'd3';
 
 class GenomeView extends Component {
@@ -160,16 +160,16 @@ class GenomeView extends Component {
 
         return (
             <div className='genomeViewRoot' >
+                {isChromosomeModeON &&
+                    <InlayIcon
+                        x={genomeView.width - 50}
+                        y={20}
+                        onClick={this.resetZoom} />}
                 <svg className={'genomeViewSVG ' + (isChromosomeModeON ? 'rounded-corner' : '')} ref={node => this.outerG = node} height={genomeView.height} width={genomeView.width}>
                     <g ref={node => this.innerG = node} >
                         <Markers configuration={configuration} markerPositions={markerPositions} />
                         <Links configuration={configuration} linkPositions={linkPositions} />
                     </g>
-                    {isChromosomeModeON &&
-                        <ResetIcon
-                            x={genomeView.width - 50}
-                            y={20}
-                            onClick={this.resetZoom} />}
                 </svg>
             </div>
         );

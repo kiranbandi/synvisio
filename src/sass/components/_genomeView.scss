@@ -1,42 +1,45 @@
 @import "~rc-slider/assets/index";
-.genomeViewSVG {
-    display: block;
-    margin: 0 auto;
-    .markersText {
-        fill: white;
-        font-weight: bold;
-        font-size: 1.0em;
-    }
-    .chromosomeMarkers,
-    .markersText {
-        cursor: pointer;
-    }
-    .link {
-        fill: none;
-        stroke-opacity: .5;
-        cursor: pointer;
-        &:hover {
-            stroke-opacity: .9;
+.genomeViewRoot {
+    position: relative;
+    .genomeViewSVG {
+        display: block;
+        margin: 0 auto;
+        .markersText {
+            fill: white;
+            font-weight: bold;
+            font-size: 1.0em;
         }
-        &.hidden-alignment-link {
-            stroke-opacity: 0;
-            pointer-events: none;
+        .chromosomeMarkers,
+        .markersText {
+            cursor: pointer;
         }
-    }
-    .link-polygon {
-        stroke: none;
-        fill-opacity: .6;
-        cursor: pointer;
-        &:hover {
-            fill-opacity: .9;
+        .link {
+            fill: none;
+            stroke-opacity: .5;
+            cursor: pointer;
+            &:hover {
+                stroke-opacity: .9;
+            }
+            &.hidden-alignment-link {
+                stroke-opacity: 0;
+                pointer-events: none;
+            }
         }
-        &.hidden-alignment-link {
-            fill-opacity: 0;
-            pointer-events: none;
+        .link-polygon {
+            stroke: none;
+            fill-opacity: .6;
+            cursor: pointer;
+            &:hover {
+                fill-opacity: .9;
+            }
+            &.hidden-alignment-link {
+                fill-opacity: 0;
+                pointer-events: none;
+            }
         }
-    }
-    &.rounded-corner {
-        border: 2px solid grey;
-        border-radius: 25px;
+        &.rounded-corner {
+            border: 2px solid grey;
+            border-radius: 25px;
+        }
     }
 }
