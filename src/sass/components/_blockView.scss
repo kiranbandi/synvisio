@@ -1,11 +1,11 @@
 .blockViewRoot {
+    &.rounded-corner {
+        border: 2px solid grey;
+        margin: 0px auto;
+        display: block;
+        border-radius: 15px;
+    }
     .blockViewSVG {
-        &.rounded-corner {
-            border: 2px solid grey;
-            margin: 0px auto;
-            display: block;
-            border-radius: 15px;
-        }
         .axis--x text {
             fill: grey;
         }
@@ -14,6 +14,30 @@
         }
         .axis--x line {
             stroke: grey;
+        }
+        .marker-tracks {
+            opacity: 0.5;
+            stroke-width: 20px;
+            stroke: rgb(31, 119, 180);
+            &.target {
+                stroke: grey;
+            }
+        }
+        .blockview-makers {
+            cursor: pointer;
+            stroke-width: 20px;
+            stroke: rgb(31, 119, 180);
+            &.target-marker {
+                stroke: grey;
+            }
+        }
+        .blockview-polylink {
+            opacity: 0.6;
+            fill: rgb(31, 119, 180);
+            cursor: pointer;
+            &:hover {
+                opacity: 0.9;
+            }
         }
     }
 }

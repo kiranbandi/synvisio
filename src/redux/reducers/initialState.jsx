@@ -23,8 +23,8 @@ if (width < 513 || (width < height)) {
     },
     'blockView': {
       'verticalPositions': {
-        'source': 25,
-        'target': 325
+        'source': 50,
+        'target': 300
       },
       'height': 350,
       'width': 750
@@ -52,8 +52,8 @@ else {
     },
     'blockView': {
       'verticalPositions': {
-        'source': 25,
-        'target': (0.40 * height) - 25
+        'source': 50,
+        'target': (0.40 * height) - 50
       },
       'height': 0.40 * height,
       'width': width
