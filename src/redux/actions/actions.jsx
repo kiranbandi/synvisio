@@ -112,6 +112,7 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
         //reset filter level
         dispatch(setFilterLevel({}));
         dispatch(setchromosomeMode(false));
+        dispatch(setBlockMode(false));
         dispatch(setALignmentList(updatedAlignmentList));
     };
 }
