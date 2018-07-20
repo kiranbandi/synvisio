@@ -8,12 +8,12 @@ export default class BlockView extends Component {
         super(props);
 
         this.zoom = d3.zoom()
-            .scaleExtent([1, 10])
+            .scaleExtent([1, 15])
             .filter(() => !(d3.event.type == 'mouseover'))
             .on("zoom", this.zoomed.bind(this));
 
         this.invertState = false;
-
+        this.zoomTransform = d3.zoomIdentity.scale(1).translate(0, 0);
         this.resetZoom = this.resetZoom.bind(this);
         this.renderAxes = this.renderAxes.bind(this);
         this.invertTarget = this.invertTarget.bind(this);
@@ -58,15 +58,11 @@ export default class BlockView extends Component {
         const shiftDistance = type == 'left' ? -10 : 10;
         // reverse target markers
         d3.selectAll(position == 'top' ? '.source-marker' : '.target-marker')
-            .transition()
-            .duration(250)
             .attr('x1', function (d) { return (Number(d3.select(this).attr('x1')) + shiftDistance); })
             .attr('x2', function (d) { return (Number(d3.select(this).attr('x2')) + shiftDistance); })
 
         // reverse actual links
         d3.selectAll('.blockview-polylink')
-            .transition()
-            .duration(250)
             .attr('points', function (d) {
                 let currentPoints = d3.select(this).attr('points').split(" "),
                     first_vertex_coordinates = currentPoints[0].split(","),
@@ -84,6 +80,19 @@ export default class BlockView extends Component {
                 }
                 return `${first_vertex_coordinates.join(',')} ${second_vertex_coordinates.join(',')} ${third_vertex_coordinates.join(',')} ${fourth_vertex_coordinates.join(',')}`;
             })
+
+        if (position == 'bottom') {
+            let currentRange = this.x_bottom.range();
+            this.x_bottom = this.x_bottom.range([currentRange[0] + shiftDistance, currentRange[1] + shiftDistance]);
+            this.xAxis_bottom = d3.axisBottom(this.x_bottom).ticks(10).tickPadding(5);
+            this.gX_bottom = d3.select(this.gxBottom).call(this.xAxis_bottom.scale(this.zoomTransform.rescaleX(this.x_bottom)));
+
+        } else {
+            let currentRange = this.x_top.range();
+            this.x_top = this.x_top.range([currentRange[0] + shiftDistance, currentRange[1] + shiftDistance]);
+            this.xAxis_top = d3.axisTop(this.x_top).ticks(10).tickPadding(5);
+            this.gX_top = d3.select(this.gxTop).call(this.xAxis_top.scale(this.zoomTransform.rescaleX(this.x_top)));
+        }
     }
 
     invertTarget() {
@@ -99,7 +108,8 @@ export default class BlockView extends Component {
             .ticks(10)
             .tickPadding(5);
 
-        this.gX_bottom = d3.select(this.gxBottom).call(this.xAxis_bottom);
+        this.gX_bottom = d3.select(this.gxBottom).call(this.xAxis_bottom.scale(this.zoomTransform.rescaleX(this.x_bottom)));
+
 
         // reverse target markers
         d3.selectAll('.target-marker')
@@ -139,10 +149,10 @@ export default class BlockView extends Component {
     }
 
     zoomed() {
-        let zoomTransform = d3.event.transform;
-        d3.select(this.innerG).style("transform", "translate(" + zoomTransform.x + "px," + "0px) scale(" + zoomTransform.k + ",1)");
-        this.gX_top.call(this.xAxis_top.scale(zoomTransform.rescaleX(this.x_top)));
-        this.gX_bottom.call(this.xAxis_bottom.scale(zoomTransform.rescaleX(this.x_bottom)));
+        this.zoomTransform = d3.event.transform;
+        d3.select(this.innerG).style("transform", "translate(" + this.zoomTransform.x + "px," + "0px) scale(" + this.zoomTransform.k + ",1)");
+        this.gX_top.call(this.xAxis_top.scale(this.zoomTransform.rescaleX(this.x_top)));
+        this.gX_bottom.call(this.xAxis_bottom.scale(this.zoomTransform.rescaleX(this.x_bottom)));
     }
 
     renderAxes() {
