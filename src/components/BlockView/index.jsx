@@ -8,7 +8,7 @@ export default class BlockView extends Component {
         super(props);
 
         this.zoom = d3.zoom()
-            .scaleExtent([1, 15])
+            .scaleExtent([1, 20])
             .filter(() => !(d3.event.type == 'mouseover'))
             .on("zoom", this.zoomed.bind(this));
 
