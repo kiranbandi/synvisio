@@ -55,21 +55,13 @@ export default class BlockView extends Component {
 
     shiftAlignment(type = 'left', position = 'top') {
 
-        const { configuration } = this.props;
-        let { blockView } = configuration;
-
-        const innerWidth = this.innerWidth;
-
+        const shiftDistance = type == 'left' ? -10 : 10;
         // reverse target markers
         d3.selectAll(position == 'top' ? '.source-marker' : '.target-marker')
             .transition()
             .duration(250)
-            .attr('x1', function (d) {
-                return Math.min(innerWidth, Number(d3.select(this).attr('x1')) + 10);
-            })
-            .attr('x2', function (d) {
-                return Math.min(innerWidth, Number(d3.select(this).attr('x2')) + 10);
-            })
+            .attr('x1', function (d) { return (Number(d3.select(this).attr('x1')) + shiftDistance); })
+            .attr('x2', function (d) { return (Number(d3.select(this).attr('x2')) + shiftDistance); })
 
         // reverse actual links
         d3.selectAll('.blockview-polylink')
@@ -82,25 +74,22 @@ export default class BlockView extends Component {
                     third_vertex_coordinates = currentPoints[2].split(","),
                     fourth_vertex_coordinates = currentPoints[3].split(",");
 
-                first_vertex_coordinates[0] = Math.min(innerWidth, Number(first_vertex_coordinates[0]) + 10);
-                second_vertex_coordinates[0] = Math.min(innerWidth, Number(second_vertex_coordinates[0]) + 10);
-
-                return first_vertex_coordinates.join(',') +
-                    " " + second_vertex_coordinates.join(',') +
-                    " " + currentPoints[2] +
-                    " " + currentPoints[3];
+                if (position == 'top') {
+                    first_vertex_coordinates[0] = Number(first_vertex_coordinates[0]) + shiftDistance;
+                    second_vertex_coordinates[0] = Number(second_vertex_coordinates[0]) + shiftDistance;
+                }
+                else {
+                    third_vertex_coordinates[0] = Number(third_vertex_coordinates[0]) + shiftDistance;
+                    fourth_vertex_coordinates[0] = Number(fourth_vertex_coordinates[0]) + shiftDistance;
+                }
+                return `${first_vertex_coordinates.join(',')} ${second_vertex_coordinates.join(',')} ${third_vertex_coordinates.join(',')} ${fourth_vertex_coordinates.join(',')}`;
             })
-
     }
 
     invertTarget() {
-
-        const { configuration } = this.props;
-        let { blockView } = configuration;
+        const innerWidth = this.innerWidth;
 
         this.invertState = !this.invertState;
-
-        const innerWidth = this.innerWidth;
 
         this.x_bottom = d3.scaleLinear()
             .domain(this.invertState ? [this.targetTrack.end, this.targetTrack.start] : [this.targetTrack.start, this.targetTrack.end])
@@ -146,6 +135,7 @@ export default class BlockView extends Component {
     resetZoom() {
         d3.select(this.outerG).call(this.zoom.transform, d3.zoomIdentity.scale(1).translate(0, 0));
         this.resetAllMarkerPositions();
+        this.renderAxes();
     }
 
     zoomed() {
@@ -289,12 +279,12 @@ export default class BlockView extends Component {
                 {alignment.type == 'flipped' && <InlayIcon icon='shuffle' onClick={this.invertTarget} right={blockView.width - 80} />}
 
                 {/* Buttons for moving top strand to left or right */}
-                <InlayIcon onClick={this.shiftAlignment} icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.source - 15} type='info' />
-                <InlayIcon icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.source - 15} type='info' />
+                <InlayIcon onClick={this.shiftAlignment.bind(this, 'right', 'top')} icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.source - 15} type='info' />
+                <InlayIcon onClick={this.shiftAlignment.bind(this, 'left', 'top')} icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.source - 15} type='info' />
 
                 {/* Buttons for moving bottom strand to left or right */}
-                <InlayIcon icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.target - 15} type='info' />
-                <InlayIcon icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.target - 15} type='info' />
+                <InlayIcon onClick={this.shiftAlignment.bind(this, 'right', 'bottom')} icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.target - 15} type='info' />
+                <InlayIcon onClick={this.shiftAlignment.bind(this, 'left', 'bottom')} icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.target - 15} type='info' />
 
 
                 <svg className='blockViewSVG' transform={'translate(' + this.leftOffset + ',0)'} ref={node => this.outerG = node} height={blockView.height} width={this.innerWidth}>

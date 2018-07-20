@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({ top = '20', right = '30', fontSize = '30', type = 'primary', icon = 'cycle', onClick }) => {
+export default ({ top = '20', right = '30', fontSize = '25', type = 'primary', icon = 'cycle', onClick }) => {
 
     const iconStyle = {
         'position': 'absolute',
