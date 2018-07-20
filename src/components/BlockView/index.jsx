@@ -17,6 +17,8 @@ export default class BlockView extends Component {
         this.resetZoom = this.resetZoom.bind(this);
         this.renderAxes = this.renderAxes.bind(this);
         this.invertTarget = this.invertTarget.bind(this);
+        this.shiftAlignment = this.shiftAlignment.bind(this);
+        this.resetAllMarkerPositions = this.resetAllMarkerPositions.bind(this);
     }
 
     componentDidMount() {
@@ -29,14 +31,76 @@ export default class BlockView extends Component {
         d3.select(this.outerG).call(this.zoom);
     }
 
+    resetAllMarkerPositions() {
+        const markerPositionStore = this.markerPositionStore;
+        // Get the id of the element based on which get its marker positions and reset all its attributes
+        d3.selectAll('.source-marker')
+            .attr('x1', function (d) { return markerPositionStore[d3.select(this).attr('id').slice(14)].source.x1; })
+            .attr('x2', function (d) { return markerPositionStore[d3.select(this).attr('id').slice(14)].source.x2; })
+            .attr('y1', function (d) { return markerPositionStore[d3.select(this).attr('id').slice(14)].source.y; })
+            .attr('y2', function (d) { return markerPositionStore[d3.select(this).attr('id').slice(14)].source.y; })
+
+        d3.selectAll('.target-marker')
+            .attr('x1', function (d) { return markerPositionStore[d3.select(this).attr('id').slice(14)].target.x1; })
+            .attr('x2', function (d) { return markerPositionStore[d3.select(this).attr('id').slice(14)].target.x2; })
+            .attr('y1', function (d) { return markerPositionStore[d3.select(this).attr('id').slice(14)].target.y; })
+            .attr('y2', function (d) { return markerPositionStore[d3.select(this).attr('id').slice(14)].target.y; })
+
+        d3.selectAll('.blockview-polylink')
+            .attr('points', function (d) {
+                const markerPosition = markerPositionStore[d3.select(this).attr('id').slice(9)];
+                return markerPosition.source.x1 + "," + (markerPosition.source.y + 10) + " " + markerPosition.source.x2 + "," + (markerPosition.source.y + 10) + " " + markerPosition.target.x2 + "," + (markerPosition.target.y - 10) + " " + markerPosition.target.x1 + "," + (markerPosition.target.y - 10);
+            })
+    }
+
+    shiftAlignment(type = 'left', position = 'top') {
+
+        const { configuration } = this.props;
+        let { blockView } = configuration;
+
+        const innerWidth = this.innerWidth;
+
+        // reverse target markers
+        d3.selectAll(position == 'top' ? '.source-marker' : '.target-marker')
+            .transition()
+            .duration(250)
+            .attr('x1', function (d) {
+                return Math.min(innerWidth, Number(d3.select(this).attr('x1')) + 10);
+            })
+            .attr('x2', function (d) {
+                return Math.min(innerWidth, Number(d3.select(this).attr('x2')) + 10);
+            })
+
+        // reverse actual links
+        d3.selectAll('.blockview-polylink')
+            .transition()
+            .duration(250)
+            .attr('points', function (d) {
+                let currentPoints = d3.select(this).attr('points').split(" "),
+                    first_vertex_coordinates = currentPoints[0].split(","),
+                    second_vertex_coordinates = currentPoints[1].split(","),
+                    third_vertex_coordinates = currentPoints[2].split(","),
+                    fourth_vertex_coordinates = currentPoints[3].split(",");
+
+                first_vertex_coordinates[0] = Math.min(innerWidth, Number(first_vertex_coordinates[0]) + 10);
+                second_vertex_coordinates[0] = Math.min(innerWidth, Number(second_vertex_coordinates[0]) + 10);
+
+                return first_vertex_coordinates.join(',') +
+                    " " + second_vertex_coordinates.join(',') +
+                    " " + currentPoints[2] +
+                    " " + currentPoints[3];
+            })
+
+    }
+
     invertTarget() {
 
         const { configuration } = this.props;
         let { blockView } = configuration;
 
-        const innerWidth = blockView.width * 0.8;
-
         this.invertState = !this.invertState;
+
+        const innerWidth = this.innerWidth;
 
         this.x_bottom = d3.scaleLinear()
             .domain(this.invertState ? [this.targetTrack.end, this.targetTrack.start] : [this.targetTrack.start, this.targetTrack.end])
@@ -48,18 +112,18 @@ export default class BlockView extends Component {
 
         this.gX_bottom = d3.select(this.gxBottom).call(this.xAxis_bottom);
 
-        // draw all source markers
+        // reverse target markers
         d3.selectAll('.target-marker')
             .transition()
             .duration(500)
             .attr('x1', function (d) {
-                return innerWidth - d3.select(this).attr('x1');
+                return innerWidth - Number(d3.select(this).attr('x1'));
             })
             .attr('x2', function (d) {
-                return innerWidth - d3.select(this).attr('x2');
+                return innerWidth - Number(d3.select(this).attr('x2'));
             })
 
-        // draw all source markers
+        // reverse actual links
         d3.selectAll('.blockview-polylink')
             .transition()
             .duration(500)
@@ -68,8 +132,8 @@ export default class BlockView extends Component {
                     third_vertex_coordinates = currentPoints[2].split(","),
                     fourth_vertex_coordinates = currentPoints[3].split(",");
 
-                third_vertex_coordinates[0] = innerWidth - third_vertex_coordinates[0];
-                fourth_vertex_coordinates[0] = innerWidth - fourth_vertex_coordinates[0];
+                third_vertex_coordinates[0] = innerWidth - Number(third_vertex_coordinates[0]);
+                fourth_vertex_coordinates[0] = innerWidth - Number(fourth_vertex_coordinates[0]);
 
                 return currentPoints[0] +
                     " " + currentPoints[1] +
@@ -81,6 +145,7 @@ export default class BlockView extends Component {
 
     resetZoom() {
         d3.select(this.outerG).call(this.zoom.transform, d3.zoomIdentity.scale(1).translate(0, 0));
+        this.resetAllMarkerPositions();
     }
 
     zoomed() {
@@ -95,15 +160,13 @@ export default class BlockView extends Component {
         const { configuration } = this.props;
         let { blockView } = configuration;
 
-        const innerWidth = blockView.width * 0.8;
-
         this.x_top = d3.scaleLinear()
             .domain([this.sourceTrack.start, this.sourceTrack.end])
-            .range([0, innerWidth]);
+            .range([0, this.innerWidth]);
 
         this.x_bottom = d3.scaleLinear()
             .domain([this.targetTrack.start, this.targetTrack.end])
-            .range([0, innerWidth]);
+            .range([0, this.innerWidth]);
 
         this.xAxis_bottom = d3.axisBottom(this.x_bottom)
             .ticks(10)
@@ -124,7 +187,8 @@ export default class BlockView extends Component {
         let { blockView, filterLevel } = configuration;
         const { alignment } = filterLevel;
 
-        const leftOffset = blockView.width * 0.1, innerWidth = blockView.width * 0.8;
+        this.leftOffset = Math.max(blockView.width * 0.075, 135);
+        this.innerWidth = blockView.width - (2 * this.leftOffset);
 
         const { genomeLibrary } = window.synVisio;
 
@@ -145,10 +209,12 @@ export default class BlockView extends Component {
         };
 
 
-        let targetScalingFactor = innerWidth / (this.targetTrack.end - this.targetTrack.start),
-            sourceScalingFactor = innerWidth / (this.sourceTrack.end - this.sourceTrack.start);
+        let targetScalingFactor = this.innerWidth / (this.targetTrack.end - this.targetTrack.start),
+            sourceScalingFactor = this.innerWidth / (this.sourceTrack.end - this.sourceTrack.start);
 
         let sourceMarkers = [], targetMarkers = [], polygonLinks = [];
+
+        this.markerPositionStore = [];
 
         // Find the marker positions 
         _.map(alignment.links, (link, index) => {
@@ -170,9 +236,12 @@ export default class BlockView extends Component {
                 }
             };
 
+            this.markerPositionStore[index] = markerPosition;
+
             sourceMarkers.push(
                 <line
                     key={'source-marker-' + index}
+                    id={'source-marker-' + index}
                     className='blockview-makers source-marker'
                     x1={markerPosition.source.x1}
                     x2={markerPosition.source.x2}
@@ -185,6 +254,7 @@ export default class BlockView extends Component {
             targetMarkers.push(
                 <line
                     key={'target-marker-' + index}
+                    id={'target-marker-' + index}
                     className='blockview-makers target-marker'
                     x1={markerPosition.target.x1}
                     x2={markerPosition.target.x2}
@@ -198,6 +268,7 @@ export default class BlockView extends Component {
                 <polygon
                     className='blockview-polylink'
                     key={'polylink-' + index}
+                    id={'polylink-' + index}
                     points={markerPosition.source.x1 + "," + (markerPosition.source.y + 10) + " " + markerPosition.source.x2 + "," + (markerPosition.source.y + 10) + " " + markerPosition.target.x2 + "," + (markerPosition.target.y - 10) + " " + markerPosition.target.x1 + "," + (markerPosition.target.y - 10)}>
                     <title>{link.source + "==>" + link.target}</title>
                 </polygon>
@@ -212,9 +283,21 @@ export default class BlockView extends Component {
 
         return (
             <div className='blockViewRoot rounded-corner' style={containerStyle} >
-                <InlayIcon onClick={this.resetZoom} />
-                {alignment.type == 'flipped' && <InlayIcon icon='shuffle' onClick={this.invertTarget} right={80} />}
-                <svg className='blockViewSVG' transform={'translate(' + leftOffset + ',0)'} ref={node => this.outerG = node} height={blockView.height} width={innerWidth}>
+
+                {/* Buttons for resetting zoom and inverting alignment */}
+                <InlayIcon onClick={this.resetZoom} right={30} />
+                {alignment.type == 'flipped' && <InlayIcon icon='shuffle' onClick={this.invertTarget} right={blockView.width - 80} />}
+
+                {/* Buttons for moving top strand to left or right */}
+                <InlayIcon onClick={this.shiftAlignment} icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.source - 15} type='info' />
+                <InlayIcon icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.source - 15} type='info' />
+
+                {/* Buttons for moving bottom strand to left or right */}
+                <InlayIcon icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.target - 15} type='info' />
+                <InlayIcon icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.target - 15} type='info' />
+
+
+                <svg className='blockViewSVG' transform={'translate(' + this.leftOffset + ',0)'} ref={node => this.outerG = node} height={blockView.height} width={this.innerWidth}>
                     <g className='axis axis--x' transform='translate(0,40)' ref={node => this.gxTop = node} > </g>
                     <g className='axis axis--x' transform={'translate(0,' + (blockView.height - 40) + ')'} ref={node => this.gxBottom = node} > </g>
 
@@ -222,7 +305,7 @@ export default class BlockView extends Component {
                         <line
                             className='marker-tracks source'
                             x1={0} y1={blockView.verticalPositions.source}
-                            x2={innerWidth} y2={blockView.verticalPositions.source} ></line>
+                            x2={this.innerWidth} y2={blockView.verticalPositions.source} ></line>
 
                         {sourceMarkers}
                         {targetMarkers}
@@ -231,7 +314,7 @@ export default class BlockView extends Component {
                         <line
                             className='marker-tracks target'
                             x1={0} y1={blockView.verticalPositions.target}
-                            x2={innerWidth} y2={blockView.verticalPositions.target} ></line>
+                            x2={this.innerWidth} y2={blockView.verticalPositions.target} ></line>
                     </g>
                 </svg>
             </div>
