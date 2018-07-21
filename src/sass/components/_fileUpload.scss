@@ -1,0 +1,31 @@
+.upload-file-container {
+    margin-top: 15px;
+    .inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+    .icon {
+        padding-left: 10px;
+    }
+    h4 {
+        display: inline-block;
+        margin: 0px 20px 0px 0px;
+    }
+    p {
+        display: inline-block;
+        margin-right: 10px;
+        font-size: 17px;
+        background: #1a1c22;
+        padding: 4px 10px;
+        border-radius: 5px;
+        margin: 0px 20px 0px 0px;
+    }
+    label {
+        vertical-align: inherit;
+        padding: 3px 10px;
+    }
+}

@@ -46,7 +46,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        let { loaderState, configuration } = this.props,
+        let { loaderState, configuration, genome } = this.props,
             { markers, alignmentList = [], isChromosomeModeON = false, isBlockModeON = false } = configuration;
 
         const isMarkerListEmpty = markers.source.length == 0 || markers.target.length == 0,
@@ -65,23 +65,28 @@ class Dashboard extends Component {
             }
         }
 
+        debugger;
 
         return (
             <div className='dashboard-root m-t'>
                 {!loaderState ?
                     <div className='dashboard-container'>
-                        <Information />
-                        <SnapshotPanel />
-                        <SnapshotCapture />
-                        {isMarkerListEmpty ?
-                            <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
-                            areLinksAvailable &&
-                            <div className='anchor-root'>
-                                <GenomeView configuration={configuration} />
-                                <DotView configuration={configuration} />
-                                <PanelView configuration={configuration} />
-                                {isBlockModeON && <BlockView configuration={configuration} />}
-                            </div>}
+                        {genome.chromosomeMap ?
+                            <div>
+                                <Information />
+                                <SnapshotPanel />
+                                <SnapshotCapture />
+                                {isMarkerListEmpty ?
+                                    <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
+                                    areLinksAvailable &&
+                                    <div className='anchor-root'>
+                                        <GenomeView configuration={configuration} />
+                                        <DotView configuration={configuration} />
+                                        <PanelView configuration={configuration} />
+                                        {isBlockModeON && <BlockView configuration={configuration} />}
+                                    </div>}
+                            </div>
+                            : <h2 className='text-danger text-xs-center m-t-lg'>No data found</h2>}
                     </div>
                     : <Loader />}
             </div>
@@ -99,7 +104,8 @@ function mapStateToProps(state) {
     return {
         sourceID: state.oracle.sourceID,
         loaderState: state.oracle.loaderState,
-        configuration: state.oracle.configuration
+        configuration: state.oracle.configuration,
+        genome: state.genome
     };
 }
 

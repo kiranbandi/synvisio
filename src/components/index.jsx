@@ -12,3 +12,4 @@ export { default as PanelView } from './PanelView';
 export { default as RadioButton } from './RadioButton';
 export { default as SnapshotPanel } from './SnapshotPanel';
 export { default as SnapshotCapture } from './SnapshotCapture';
+export { default as FileUpload } from './FileUpload';
