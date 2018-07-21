@@ -7,7 +7,6 @@ import toastr from './toastr';
 var fetchData = {};
 
 fetchData.getGenomicsData = function(sourceID) {
-
     return $.Deferred(function(defer) {
         // Loading the gff file  - Will Eventually be moved into the file loader container
         axios.get('assets/files/' + sourceID + '_coordinate.gff').then((coordinateFile) => {
