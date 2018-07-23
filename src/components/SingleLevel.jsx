@@ -36,13 +36,13 @@ export default class SingleLevel extends Component {
                     <div className='anchor-root'>
                         {plotType == 'dashboard' ?
                             <div>
-                                <GenomeView configuration={configuration} />
-                                <DotView configuration={configuration} />
-                                <PanelView configuration={configuration} />
+                                <GenomeView configuration={configuration} plotType={plotType} />
+                                <DotView configuration={configuration} plotType={plotType} />
+                                <PanelView configuration={configuration} plotType={plotType} />
                             </div> :
                             plotType == 'dotplot' ?
-                                <DotView configuration={configuration} /> :
-                                <GenomeView configuration={configuration} />}
+                                <DotView configuration={configuration} plotType={plotType} /> :
+                                <GenomeView configuration={configuration} plotType={plotType} />}
                         {isBlockModeON && <BlockView configuration={configuration} />}
                     </div>}
             </div>

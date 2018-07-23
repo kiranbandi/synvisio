@@ -128,7 +128,7 @@ class DotView extends Component {
 
     render() {
 
-        let { configuration, genomeData } = this.props;
+        let { configuration, genomeData, plotType } = this.props;
         const side_margin = 57.5,
             { isChromosomeModeON = false } = configuration;
 
@@ -146,23 +146,25 @@ class DotView extends Component {
             alignmentLinePositions = this.initialiseLines(configuration, axisLinePositions, genomeData.chromosomeMap);
 
         return (
-            <div className='dotViewRoot'>
-                {isChromosomeModeON &&
-                    <InlayIcon
-                        x={configuration.dotView.width - 50}
-                        y={20}
-                        onClick={this.resetZoom} />}
-                <svg
-                    className={'dotViewSVG ' + (isChromosomeModeON ? 'rounded-corner' : '')}
-                    ref={node => this.outerG = node}
-                    height={configuration.dotView.width}
-                    width={configuration.dotView.width}>
+            <div className={(plotType != 'dashboard' ? 'dotViewWrapper only-dotview' : 'dotViewWrapper')}>
+                <div className='dotViewRoot'>
+                    {isChromosomeModeON &&
+                        <InlayIcon
+                            x={configuration.dotView.width - 50}
+                            y={20}
+                            onClick={this.resetZoom} />}
+                    <svg
+                        className={'dotViewSVG ' + (isChromosomeModeON ? 'rounded-corner' : '')}
+                        ref={node => this.outerG = node}
+                        height={configuration.dotView.width}
+                        width={configuration.dotView.width}>
 
-                    <g ref={node => this.innerG = node}>
-                        <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
-                        <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions} />
-                    </g>
-                </svg>
+                        <g ref={node => this.innerG = node}>
+                            <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
+                            <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions} />
+                        </g>
+                    </svg>
+                </div>
             </div>
         );
     }

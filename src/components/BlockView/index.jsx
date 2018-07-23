@@ -183,7 +183,7 @@ export default class BlockView extends Component {
 
     render() {
 
-        const { configuration } = this.props;
+        const { configuration, plotType } = this.props;
         let { blockView, filterLevel } = configuration;
         const { alignment } = filterLevel;
 
@@ -282,7 +282,7 @@ export default class BlockView extends Component {
         }
 
         return (
-            <div className='blockViewRoot rounded-corner' style={containerStyle} >
+            <div className={'blockViewRoot rounded-corner' + (plotType != 'dashboard' ? ' m-t' : '')} style={containerStyle} >
 
                 {/* Buttons for resetting zoom and inverting alignment */}
                 <InlayIcon onClick={this.resetZoom} right={30} />
