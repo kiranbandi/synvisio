@@ -1,27 +1,44 @@
-/*global $ */
 import React, { Component } from 'react';
-import { FileUpload, Loader } from '../components';
+import { FileUpload, RadioButton } from '../components';
 import getFile from '../utils/getFile';
 import processGFF from '../utils/processGFF';
 import processCollinear from '../utils/processCollinear';
 import toastr from '../utils/toastr';
-import { configureSourceID, setGenomicData, setALignmentList } from '../redux/actions/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { configureSourceID, setGenomicData, setPlotProps } from '../redux/actions/actions';
 
-export default class Configuration extends Component {
+class Configuration extends Component {
 
   constructor(props) {
     super(props);
-    this.onUpload = this.onUpload.bind(this);
     this.state = {
       loading: false
     };
+    this.onUpload = this.onUpload.bind(this);
+    this.radioChange = this.radioChange.bind(this);
+  }
+
+  radioChange(event) {
+    const value = event.target.value;
+    if (value.indexOf('level') > -1) {
+      this.props.actions.setPlotProps('level', value == 'level-multi');
+    }
+    else {
+      this.props.actions.setPlotProps('type', value);
+    }
   }
 
   onUpload() {
 
     let dataStore = {};
+    const { configureSourceID, setGenomicData } = this.props.actions;
+
     // Turn on loader to indicate file uploading and processing 
     this.setState({ loading: true });
+    // update the sourceID set in the state with the new sourceID
+    configureSourceID('bn');
+
 
     getFile('coordinate-file').then((data) => {
       const { genomeLibrary, chromosomeMap } = processGFF(data);
@@ -33,27 +50,61 @@ export default class Configuration extends Component {
     }).fail(() => {
       toastr["error"]("Failed to upload the files , Please try again.", "ERROR");
     }).done(() => {
-
+      // update the sourceID set in the state with the new sourceID
+      configureSourceID('uploaded-source');
+      // set the genomic data
+      setGenomicData(dataStore);
     }).always(() => {
       // turn off loader
       this.setState({ loading: false });
     });
-
   }
 
-
-
-
   render() {
+
+    const { sourceID = '', multiLevel, plotType } = this.props;
     return (
       <div className="configuration-container">
         <div className="container">
 
           <div className='upload-panel'>
-            <h2 className='text-primary m-t-lg'>Upload Collinearity Files</h2>
+            <h2 className='text-primary m-t-lg configuration-sub-title'>Upload Collinearity Files</h2>
             <FileUpload id='collinear-file' label='MCScanX Collinearity File' />
             <FileUpload id='coordinate-file' label='GFF File' />
-            {this.state.loading ? <Loader /> : <button className="btn btn-primary-outline m-t-md" onClick={this.onUpload}> UPLOAD </button>}
+            {this.state.loading ? <h4 className='loading-text'>Loading data...</h4> : <button className="btn btn-primary-outline m-t" onClick={this.onUpload}> UPLOAD </button>}
+          </div>
+
+          {sourceID == 'uploaded-source' && <div className="alert alert-success m-t m-b">
+            <strong>Upload Complete !</strong> Your files have been processed . Head over to the <strong>dashboard</strong> to view the results.
+          </div>}
+
+          <div className='plot-type-panel'>
+            <h2 className='text-primary m-t-lg configuration-sub-title'>Plot Characterisitics</h2>
+            <RadioButton value={'level-multi'} id={'level-multi'} className='conf-radio' name='level-select'
+              label={"Multi-Level Analysis"}
+              onChange={this.radioChange}
+              checked={multiLevel} />
+            <RadioButton value={'level-single'} id={'level-single'} className='conf-radio' name='level-select'
+              label={"Single Analysis"}
+              onChange={this.radioChange}
+              checked={!multiLevel} />
+
+            {
+              !multiLevel && <div>
+                <RadioButton value={'dashboard'} id={'dashboard'} className='conf-radio' name='plot-select'
+                  label={"Default"}
+                  onChange={this.radioChange}
+                  checked={plotType == 'dashboard'} />
+                <RadioButton value={'barplot'} id={'barplot'} className='conf-radio' name='plot-select'
+                  label={"Bar Plot"}
+                  onChange={this.radioChange}
+                  checked={plotType == 'barplot'} />
+                <RadioButton value={'linearplot'} id={'linearplot'} className='conf-radio' name='plot-select'
+                  label={"Linear PLot"}
+                  onChange={this.radioChange}
+                  checked={plotType == 'linearplot'} />
+              </div>
+            }
           </div>
 
         </div>
@@ -63,4 +114,19 @@ export default class Configuration extends Component {
 };
 
 
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({ configureSourceID, setGenomicData, setPlotProps }, dispatch)
+  };
+}
+
+function mapStateToProps(state) {
+  return {
+    sourceID: state.oracle.sourceID,
+    multiLevel: state.oracle.multiLevel,
+    plotType: state.oracle.plotType
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Configuration);
 

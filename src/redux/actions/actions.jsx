@@ -117,6 +117,16 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
     };
 }
 
+export function setPlotProps(levelOrType, value) {
+    if (levelOrType == 'level') {
+        return { type: types.SET_PLOT_LEVEL, value };
+    }
+    else {
+        return { type: types.SET_PLOT_TYPE, value };
+    }
+}
+
+
 
 
 

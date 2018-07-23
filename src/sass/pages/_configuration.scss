@@ -1,6 +1,19 @@
 .configuration-container {
-    h2 {
+    .configuration-sub-title {
         padding-bottom: 10px;
         border-bottom: 2px solid #09a6e3;
+    }
+    .loading-text {
+        margin-top: 30px;
+        text-transform: capitalize;
+        font-style: oblique;
+    }
+    p.conf-radio>label {
+        font-weight: 100;
+    }
+    p.conf-radio {
+        display: inline-block;
+        margin-right: 15px;
+        margin-top: 10px;
     }
 }

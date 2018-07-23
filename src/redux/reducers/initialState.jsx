@@ -65,6 +65,8 @@ else {
 export default {
   oracle: {
     sourceID: 'bn',
+    multiLevel: false,
+    plotType: 'dashboard',
     loaderState: false,
     snapshotList: [],
     configuration: {
