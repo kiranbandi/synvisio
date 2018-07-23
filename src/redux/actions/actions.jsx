@@ -2,6 +2,7 @@ import * as types from './actionTypes';
 import sampleSourceMapper from '../../utils/sampleSourceMapper';
 import processAlignment from '../../utils/filterAlignment';
 import initialState from '../reducers/initialState';
+import getPlotDimensions from '../../utils/getPlotDimensions';
 
 export function setLoaderState(loaderState) {
     return { type: types.SET_LOADER_STATE, loaderState };
@@ -11,7 +12,9 @@ export function configureSourceID(sourceID) {
     return dispatch => {
         dispatch(setSourceID(sourceID));
         //reset configuration and snapshot store
-        dispatch(setConfiguration(initialState.oracle.configuration));
+        dispatch(setFilterLevel({}));
+        dispatch(setchromosomeMode(false));
+        dispatch(setBlockMode(false));
         dispatch(setSnapshotList([]));
         const sampleDataMarkers = sampleSourceMapper[sourceID];
         if (sampleDataMarkers) {
@@ -109,7 +112,6 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
         updatedAlignmentList = processAlignment(markers, alignmentList);
     return dispatch => {
         dispatch(setRootMarkers(markers));
-        //reset filter level
         dispatch(setFilterLevel({}));
         dispatch(setchromosomeMode(false));
         dispatch(setBlockMode(false));
@@ -118,12 +120,32 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
 }
 
 export function setPlotProps(levelOrType, value) {
-    if (levelOrType == 'level') {
-        return { type: types.SET_PLOT_LEVEL, value };
-    }
-    else {
-        return { type: types.SET_PLOT_TYPE, value };
-    }
+
+    return dispatch => {
+
+        let configurationStore = getPlotDimensions(value);
+
+        const configuration = {
+            ...configurationStore,
+            filterLevel: {},
+            isChromosomeModeON: false,
+            isBlockModeON: false,
+            'markers': { 'source': [], 'target': [] },
+            'alignmentList': [],
+            'filterLevel': {}
+        }
+
+        dispatch(setSnapshotList([]));
+        dispatch(setConfiguration(configurationStore));
+
+        if (levelOrType == 'level') {
+            dispatch({ type: types.SET_PLOT_LEVEL, value });
+        }
+        else {
+            dispatch({ type: types.SET_PLOT_TYPE, value });
+        }
+    };
+
 }
 
 

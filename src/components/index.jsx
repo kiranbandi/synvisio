@@ -13,3 +13,5 @@ export { default as RadioButton } from './RadioButton';
 export { default as SnapshotPanel } from './SnapshotPanel';
 export { default as SnapshotCapture } from './SnapshotCapture';
 export { default as FileUpload } from './FileUpload';
+export { default as HiveView } from './HiveView';
+export { default as SingleLevel } from './SingleLevel';
