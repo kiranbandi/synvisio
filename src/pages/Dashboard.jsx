@@ -18,26 +18,27 @@ class Dashboard extends Component {
         let { sourceID } = this.props.params;
         const { configureSourceID, setLoaderState, setGenomicData } = this.props.actions;
 
-        // Turn on loader
-        setLoaderState(true);
+        if (sourceID != 'uploaded-source') {
+            // Turn on loader
+            setLoaderState(true);
+            if (!sourceID) {
+                // If sourceID is not set then fetch default that is set in the initial state of the application
+                hashHistory.push('Dashboard/' + this.props.sourceID);
+                sourceID = this.props.sourceID;
+            }
+            else {
+                // update the sourceID set in the state with the new sourceID
+                configureSourceID(sourceID);
+            }
 
-        if (!sourceID) {
-            // If sourceID is not set then fetch default that is set in the initial state of the application
-            hashHistory.push('Dashboard/' + this.props.sourceID);
-            sourceID = this.props.sourceID;
+            getGenomicsData(sourceID).then((data) => {
+                // set the genomic data
+                setGenomicData(data);
+            }).always(() => {
+                // Turn off the loader
+                setLoaderState(false);
+            });
         }
-        else {
-            // update the sourceID set in the state with the new sourceID
-            configureSourceID(sourceID);
-        }
-
-        getGenomicsData(sourceID).then((data) => {
-            // set the genomic data
-            setGenomicData(data);
-        }).always(() => {
-            // Turn off the loader
-            setLoaderState(false);
-        });
     }
 
     componentWillUnmount() {
@@ -64,8 +65,6 @@ class Dashboard extends Component {
                 markers: filteredMarkers
             }
         }
-
-        debugger;
 
         return (
             <div className='dashboard-root m-t'>

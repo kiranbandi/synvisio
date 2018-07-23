@@ -7,16 +7,17 @@ export default class RadioButton extends Component {
     }
 
     render() {
+        const { id = 'radio-default', name = 'radio-group', value = '', checked = false, onChange, label = '', className = '' } = this.props;
         return (
-            <p>
+            <p className={className}>
                 <input type="radio"
-                    id={this.props.id}
-                    value={this.props.value}
-                    name="radio-group"
-                    checked={this.props.checked}
-                    onChange={this.props.onChange} />
-                <label htmlFor={this.props.id}>
-                    {this.props.label}
+                    id={id}
+                    value={value}
+                    name={name}
+                    checked={checked}
+                    onChange={onChange} />
+                <label htmlFor={id}>
+                    {label}
                 </label>
             </p>
         );

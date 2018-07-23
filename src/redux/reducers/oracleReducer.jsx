@@ -7,6 +7,10 @@ export default function oracleReducer(state = initialState.oracle, action) {
   switch (action.type) {
     case types.SET_LOADER_STATE:
       return Object.assign({}, state, { loaderState: action.loaderState })
+    case types.SET_PLOT_LEVEL:
+      return Object.assign({}, state, { multiLevel: action.value })
+    case types.SET_PLOT_TYPE:
+      return Object.assign({}, state, { plotType: action.value })
     case types.SET_BLOCK_MODE:
       return Object.assign({}, state, { configuration: { ...state.configuration, isBlockModeON: action.isBlockModeON } })
     case types.SET_CHROMOSOME_MODE:
