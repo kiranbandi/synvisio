@@ -1,33 +1,42 @@
-.dotViewRoot {
+.dotViewWrapper {
+    &.only-dotview {
+        text-align: center;
+        display: block;
+    }
     display: inline-block;
     vertical-align: top;
     position: relative;
-    .dot-view-line {
-        stroke: #3a3a3a;
-        stroke-width: 2px;
-    }
-    .dot-plot-markers {
-        fill: white;
-        font-weight: bold;
-        font-size: 1em;
-        cursor: pointer;
-    }
-    .alignment-link-lines {
-        stroke: #00deff;
-        stroke-width: 2px;
-        opacity: 0.5;
-        cursor: pointer;
-        &:hover {
-            opacity: 0.9;
+    .dotViewRoot {
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+        .dot-view-line {
+            stroke: #3a3a3a;
+            stroke-width: 2px;
         }
-        &.hidden-alignment-link {
-            opacity: 0;
-            pointer-events: none;
+        .dot-plot-markers {
+            fill: white;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
         }
-    }
-    .rounded-corner {
-        border: 2px solid grey;
-        border-radius: 25px;
-        margin: 10px 15px 0 15px;
+        .alignment-link-lines {
+            stroke: #00deff;
+            stroke-width: 2px;
+            opacity: 0.5;
+            cursor: pointer;
+            &:hover {
+                opacity: 0.9;
+            }
+            &.hidden-alignment-link {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+        .rounded-corner {
+            border: 2px solid grey;
+            border-radius: 25px;
+            margin: 10px 15px 0 15px;
+        }
     }
 }

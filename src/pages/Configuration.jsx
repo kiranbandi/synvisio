@@ -74,10 +74,6 @@ class Configuration extends Component {
             {this.state.loading ? <h4 className='loading-text'>Loading data...</h4> : <button className="btn btn-primary-outline m-t" onClick={this.onUpload}> UPLOAD </button>}
           </div>
 
-          {sourceID == 'uploaded-source' && <div className="alert alert-success m-t m-b">
-            <strong>Upload Complete !</strong> Your files have been processed . Head over to the <strong>dashboard</strong> to view the results.
-          </div>}
-
           <div className='plot-type-panel'>
             <h2 className='text-primary m-t-lg configuration-sub-title'>Plot Characterisitics</h2>
             <RadioButton value={'level-multi'} id={'level-multi'} className='conf-radio' name='level-select'
@@ -106,6 +102,10 @@ class Configuration extends Component {
               </div>
             }
           </div>
+
+          {sourceID == 'uploaded-source' && <div className="alert alert-success m-t m-b">
+            <strong>Upload Complete !</strong> Your files have been processed . Head over to the <strong>dashboard</strong> to view the results.
+          </div>}
 
         </div>
       </div>
