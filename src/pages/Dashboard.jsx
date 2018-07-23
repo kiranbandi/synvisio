@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
-import { Loader, Information, GenomeView, BlockView, DotView, PanelView, SnapshotPanel, SnapshotCapture } from '../components';
+import { Loader, HiveView, SingleLevel, SnapshotPanel, SnapshotCapture } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureSourceID, setLoaderState, setGenomicData, setALignmentList } from '../redux/actions/actions';
@@ -30,7 +30,6 @@ class Dashboard extends Component {
                 // update the sourceID set in the state with the new sourceID
                 configureSourceID(sourceID);
             }
-
             getGenomicsData(sourceID).then((data) => {
                 // set the genomic data
                 setGenomicData(data);
@@ -47,24 +46,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        let { loaderState, configuration, genome } = this.props,
-            { markers, alignmentList = [], isChromosomeModeON = false, isBlockModeON = false } = configuration;
-
-        const isMarkerListEmpty = markers.source.length == 0 || markers.target.length == 0,
-            areLinksAvailable = alignmentList.length > 0;
-
-
-        if (isChromosomeModeON) {
-            // update markers to only the source and target set in the filter panel
-            const filteredMarkers = {
-                source: [configuration.filterLevel.source],
-                target: [configuration.filterLevel.target],
-            };
-            configuration = {
-                ...configuration,
-                markers: filteredMarkers
-            }
-        }
+        let { loaderState, configuration, genome = {}, multiLevel, plotType } = this.props;
 
         return (
             <div className='dashboard-root m-t'>
@@ -72,18 +54,12 @@ class Dashboard extends Component {
                     <div className='dashboard-container'>
                         {genome.chromosomeMap ?
                             <div>
-                                <Information />
                                 <SnapshotPanel />
                                 <SnapshotCapture />
-                                {isMarkerListEmpty ?
-                                    <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
-                                    areLinksAvailable &&
-                                    <div className='anchor-root'>
-                                        <GenomeView configuration={configuration} />
-                                        <DotView configuration={configuration} />
-                                        <PanelView configuration={configuration} />
-                                        {isBlockModeON && <BlockView configuration={configuration} />}
-                                    </div>}
+                                {multiLevel ? <HiveView /> :
+                                    <SingleLevel
+                                        plotType={plotType}
+                                        configuration={configuration} />}
                             </div>
                             : <h2 className='text-danger text-xs-center m-t-lg'>No data found</h2>}
                     </div>
@@ -104,6 +80,8 @@ function mapStateToProps(state) {
         sourceID: state.oracle.sourceID,
         loaderState: state.oracle.loaderState,
         configuration: state.oracle.configuration,
+        multiLevel: state.oracle.multiLevel,
+        plotType: state.oracle.plotType,
         genome: state.genome
     };
 }

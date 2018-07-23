@@ -95,10 +95,10 @@ class Configuration extends Component {
                   label={"Default"}
                   onChange={this.radioChange}
                   checked={plotType == 'dashboard'} />
-                <RadioButton value={'barplot'} id={'barplot'} className='conf-radio' name='plot-select'
-                  label={"Bar Plot"}
+                <RadioButton value={'dotplot'} id={'dotplot'} className='conf-radio' name='plot-select'
+                  label={"Dot Plot"}
                   onChange={this.radioChange}
-                  checked={plotType == 'barplot'} />
+                  checked={plotType == 'dotplot'} />
                 <RadioButton value={'linearplot'} id={'linearplot'} className='conf-radio' name='plot-select'
                   label={"Linear PLot"}
                   onChange={this.radioChange}
