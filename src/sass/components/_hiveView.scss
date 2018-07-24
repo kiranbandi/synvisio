@@ -1,0 +1,19 @@
+.hiveView-root {
+    margin: 10px;
+    form.filter-panel-hive {
+        text-align: center;
+        .filter-row {
+            width: 400px;
+            display: inline-block;
+            margin: 10px;
+            label {
+                padding-right: 15px;
+            }
+        }
+        .add-source {
+            margin-right: 15px;
+            font-size: 20px;
+            padding: 1px 12px;
+        }
+    }
+}

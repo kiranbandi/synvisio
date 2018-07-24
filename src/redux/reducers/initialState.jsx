@@ -5,7 +5,7 @@ const configuration = getPlotDimensions();
 export default {
   oracle: {
     sourceID: 'bn',
-    multiLevel: false,
+    multiLevel: true,
     plotType: 'dashboard',
     loaderState: false,
     snapshotList: [],

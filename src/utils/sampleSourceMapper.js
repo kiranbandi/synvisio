@@ -15,5 +15,9 @@ export default {
     'os_sb': {
         'source': ['os1', 'os2', 'os3', 'os4', 'os5', 'os6', 'os7', 'os8'],
         'target': ['sb1', 'sb2', 'sb3', 'sb4']
+    },
+    'lccamt': {
+        'source': [],
+        'target': []
     }
 }
