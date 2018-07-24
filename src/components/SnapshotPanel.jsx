@@ -30,7 +30,7 @@ class SnapshotPanel extends Component {
             <div>
                 <div className='snapshot-header'>
                     <h4>
-                        Snaphot Store
+                        Snapshot Store
                         <span className="icon icon-chevron-right"></span>
                     </h4>
                 </div>
