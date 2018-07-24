@@ -16,7 +16,7 @@ export function configureSourceID(sourceID, multiLevel = false) {
         dispatch(setchromosomeMode(false));
         dispatch(setBlockMode(false));
         dispatch(setSnapshotList([]));
-        const sampleDataMarkers = sampleSourceMapper[sourceID];
+        const sampleDataMarkers = { ...sampleSourceMapper[sourceID] };
         if (sampleDataMarkers) {
             if (multiLevel) {
                 sampleDataMarkers[0] = sampleDataMarkers.source;
@@ -156,20 +156,21 @@ export function setPlotProps(levelOrType, value) {
 
     return dispatch => {
 
-        let configurationStore = getPlotDimensions(value);
+        let configurationStore = getPlotDimensions(value),
+            markers = (isLevel && value) ? {} : { 'source': [], 'target': [] };
 
         const configuration = {
             ...configurationStore,
             filterLevel: {},
             isChromosomeModeON: false,
             isBlockModeON: false,
-            'markers': ((isLevel && value) ? {} : { 'source': [], 'target': [] }),
+            markers,
             'alignmentList': [],
             'filterLevel': {}
         }
 
         dispatch(setSnapshotList([]));
-        dispatch(setConfiguration(configurationStore));
+        dispatch(setConfiguration(configuration));
 
         if (isLevel) {
             dispatch({ type: types.SET_PLOT_LEVEL, value });
