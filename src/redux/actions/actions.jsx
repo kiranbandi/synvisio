@@ -1,14 +1,14 @@
 import * as types from './actionTypes';
 import sampleSourceMapper from '../../utils/sampleSourceMapper';
 import processAlignment from '../../utils/filterAlignment';
-import initialState from '../reducers/initialState';
 import getPlotDimensions from '../../utils/getPlotDimensions';
+import _ from 'lodash';
 
 export function setLoaderState(loaderState) {
     return { type: types.SET_LOADER_STATE, loaderState };
 }
 
-export function configureSourceID(sourceID) {
+export function configureSourceID(sourceID, multiLevel = false) {
     return dispatch => {
         dispatch(setSourceID(sourceID));
         //reset configuration and snapshot store
@@ -18,6 +18,12 @@ export function configureSourceID(sourceID) {
         dispatch(setSnapshotList([]));
         const sampleDataMarkers = sampleSourceMapper[sourceID];
         if (sampleDataMarkers) {
+            if (multiLevel) {
+                sampleDataMarkers[0] = sampleDataMarkers.source;
+                sampleDataMarkers[1] = sampleDataMarkers.target;
+                delete sampleDataMarkers.source;
+                delete sampleDataMarkers.target;
+            }
             dispatch(setRootMarkers(sampleDataMarkers));
         }
     }
@@ -119,7 +125,34 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
     };
 }
 
+export function hiveFilterData(markers) {
+
+    let alignmentList = window.synVisio.alignmentList,
+        updatedAlignmentList = [],
+        noOfMarkers = Object.keys(markers).length;
+
+    // if there are more than 2 markers go round calling alignments 
+    // in sets of two with each with the one after it except for the last one which loops back to the first
+    if (noOfMarkers > 2) {
+        _.each(markers, (value, keyIndex) => {
+            const nextIndex = ((noOfMarkers - 1) == keyIndex) ? 0 : (Number(keyIndex) + 1),
+                tempMarkers = { 'source': markers[keyIndex], 'target': markers[nextIndex] };
+            updatedAlignmentList.push(processAlignment(tempMarkers, alignmentList));
+        });
+    }
+    else if (noOfMarkers == 2) {
+        const tempMarkers = { 'source': markers[0], 'target': markers[1] };
+        updatedAlignmentList.push(processAlignment(tempMarkers, alignmentList));
+    }
+    return dispatch => {
+        dispatch(setRootMarkers(markers));
+        dispatch(setALignmentList(updatedAlignmentList));
+    };
+}
+
 export function setPlotProps(levelOrType, value) {
+
+    const isLevel = (levelOrType == 'level');
 
     return dispatch => {
 
@@ -130,7 +163,7 @@ export function setPlotProps(levelOrType, value) {
             filterLevel: {},
             isChromosomeModeON: false,
             isBlockModeON: false,
-            'markers': { 'source': [], 'target': [] },
+            'markers': ((isLevel && value) ? {} : { 'source': [], 'target': [] }),
             'alignmentList': [],
             'filterLevel': {}
         }
@@ -138,7 +171,7 @@ export function setPlotProps(levelOrType, value) {
         dispatch(setSnapshotList([]));
         dispatch(setConfiguration(configurationStore));
 
-        if (levelOrType == 'level') {
+        if (isLevel) {
             dispatch({ type: types.SET_PLOT_LEVEL, value });
         }
         else {

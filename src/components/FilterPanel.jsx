@@ -30,7 +30,7 @@ class FilterPanel extends Component {
                 'tickIcon': 'icon-check',
                 'selectedTextFormat': 'count > 2'
             })
-            .selectpicker('val', markers.target);;
+            .selectpicker('val', markers.target);
     }
 
     componentDidUpdate() {
@@ -97,8 +97,7 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state, ownProps) {
     return {
         chromosomeMap: state.genome.chromosomeMap,
-        markers: state.oracle.configuration.markers,
-        alignmentList: state.genome.alignmentList
+        markers: state.oracle.configuration.markers
     };
 }
 

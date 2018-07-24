@@ -32,12 +32,13 @@ class Configuration extends Component {
   onUpload() {
 
     let dataStore = {};
-    const { configureSourceID, setGenomicData } = this.props.actions;
+    const { actions, multiLevel } = this.props,
+      { configureSourceID, setGenomicData } = actions;
 
     // Turn on loader to indicate file uploading and processing 
     this.setState({ loading: true });
     // update the sourceID set in the state with the new sourceID
-    configureSourceID('bn');
+    configureSourceID('bn', multiLevel);
 
 
     getFile('coordinate-file').then((data) => {
@@ -51,7 +52,7 @@ class Configuration extends Component {
       toastr["error"]("Failed to upload the files , Please try again.", "ERROR");
     }).done(() => {
       // update the sourceID set in the state with the new sourceID
-      configureSourceID('uploaded-source');
+      configureSourceID('uploaded-source', multiLevel);
       // set the genomic data
       setGenomicData(dataStore);
     }).always(() => {

@@ -16,7 +16,8 @@ class Dashboard extends Component {
     componentDidMount() {
         // get the source name based on window query params
         let { sourceID } = this.props.params;
-        const { configureSourceID, setLoaderState, setGenomicData } = this.props.actions;
+        const { multiLevel, actions } = this.props,
+            { configureSourceID, setLoaderState, setGenomicData } = actions;
 
         if (sourceID != 'uploaded-source') {
             // Turn on loader
@@ -28,7 +29,7 @@ class Dashboard extends Component {
             }
             else {
                 // update the sourceID set in the state with the new sourceID
-                configureSourceID(sourceID);
+                configureSourceID(sourceID, multiLevel);
             }
             getGenomicsData(sourceID).then((data) => {
                 // set the genomic data
@@ -56,7 +57,7 @@ class Dashboard extends Component {
                             <div>
                                 <SnapshotPanel />
                                 <SnapshotCapture />
-                                {multiLevel ? <HiveView /> :
+                                {multiLevel ? <HiveView configuration={configuration} /> :
                                     <SingleLevel
                                         plotType={plotType}
                                         configuration={configuration} />}

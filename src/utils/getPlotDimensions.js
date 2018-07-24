@@ -19,6 +19,10 @@ export default (plotType = 'dashboard') => {
             'dotView': {
                 'width': 750
             },
+            'hiveView': {
+                'width': 500,
+                'height': 500
+            },
             'panelView': {
                 'height': 350,
                 'width': 750
@@ -44,10 +48,6 @@ export default (plotType = 'dashboard') => {
             },
             'dotView': {
                 'width': Math.min(width, height)
-            },
-            'panelView': {
-                'height': 350,
-                'width': width
             },
             'blockView': {
                 'verticalPositions': {
@@ -83,7 +83,11 @@ export default (plotType = 'dashboard') => {
                 },
                 'height': 0.40 * height,
                 'width': width
-            }
+            },
+            'hiveView': {
+                'width': width,
+                'height': height
+            },
         }
     }
 

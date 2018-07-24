@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import HiveFilterPanel from './HiveFilterPanel';
 
 export default class HiveView extends Component {
 
@@ -8,10 +9,9 @@ export default class HiveView extends Component {
 
     render() {
         return (
-            <div className='upload-file-container'>
-                Hive View Placeholder
+            <div className='hiveView-root'>
+                <HiveFilterPanel configuration={this.props.configuration} />
             </div>
         );
     }
-}
-
+}  
