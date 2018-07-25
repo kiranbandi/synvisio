@@ -11,7 +11,7 @@ export default class HiveLinks extends Component {
 
     generateLinkElements() {
 
-        const { linkStore } = this.props;
+        const { linkStore = { links: [], polygons: [] } } = this.props;
 
         let linkElements = [];
 
