@@ -85,8 +85,8 @@ export default (plotType = 'dashboard') => {
                 'width': width
             },
             'hiveView': {
-                'width': width,
-                'height': height
+                'width': width * 0.75,
+                'height': height * 0.75
             },
         }
     }
