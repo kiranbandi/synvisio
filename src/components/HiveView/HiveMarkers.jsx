@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { schemeCategory10 } from 'd3';
+import hiveAngles from './hiveAngles';
 
 export default class HiveMarkers extends Component {
 
@@ -12,7 +13,7 @@ export default class HiveMarkers extends Component {
     generateMarkerElements(configuration, markerPositions) {
 
         let markerElements = [];
-        const angleFactor = (2 * Math.PI) / Object.keys(configuration.markers).length;
+        const angles = hiveAngles(Object.keys(configuration.markers).length);
 
         _.map(markerPositions, (markerList, markerListId) => {
             // create marker lines
@@ -35,9 +36,8 @@ export default class HiveMarkers extends Component {
                     style={style}>
                 </line>
             });
-            markerElements.push(<g transform={"rotate(" + degrees(angleFactor * markerListId) + ")"} key={"marker-container-" + markerListId}>{markerLines}</g>);
+            markerElements.push(<g transform={"rotate(" + degrees(angles[markerListId]) + ")"} key={"marker-container-" + markerListId}>{markerLines}</g>);
         });
-
         return markerElements;
     }
 
