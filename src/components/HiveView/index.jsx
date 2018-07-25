@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import HiveFilterPanel from './HiveFilterPanel';
 import HiveMarkers from './HiveMarkers';
+import HiveLinks from './HiveLinks';
 import { connect } from 'react-redux';
 
 class HiveView extends Component {
@@ -8,6 +9,7 @@ class HiveView extends Component {
     constructor(props) {
         super(props);
         this.initialiseMarkerPositions = this.initialiseMarkerPositions.bind(this);
+        this.initialiseLinks = this.initialiseLinks.bind(this);
     }
 
     initialiseMarkerPositions() {
@@ -48,9 +50,81 @@ class HiveView extends Component {
         return markerPositions;
     }
 
+    initialiseLinks(markerPositions) {
+
+        const { configuration, chromosomeMap } = this.props,
+            { genomeLibrary } = window.synVisio;
+
+        let linkStore = { links: [], polygons: [] };
+
+        _.map(configuration.alignmentList, (alignmentDetails) => {
+
+            _.map(alignmentDetails.alignmentList, (alignment) => {
+
+                let firstLink = alignment.links[0],
+                    lastLink = alignment.links[alignment.links.length - 1];
+
+                let sourceGenes = genomeLibrary.get(firstLink.source).start < genomeLibrary.get(lastLink.source).start ? [firstLink.source, lastLink.source] : [lastLink.source, firstLink.source];
+                let targetGenes = genomeLibrary.get(firstLink.target).start < genomeLibrary.get(lastLink.target).start ? [firstLink.target, lastLink.target] : [lastLink.target, firstLink.target];
+
+                _.each([0, 1], (value) => {
+                    sourceGenes[value] = genomeLibrary.get(sourceGenes[value]).start;
+                    targetGenes[value] = genomeLibrary.get(targetGenes[value]).start;
+                })
+
+                let sourceChromosome = chromosomeMap.get(alignment.source),
+                    targetChromosome = chromosomeMap.get(alignment.target);
+
+                let sourceMarker = _.find(markerPositions[alignmentDetails.source], (o) => o.key == alignment.source),
+                    targetMarker = _.find(markerPositions[alignmentDetails.target], (o) => o.key == alignment.target);
+
+                let sourceGeneWidth = ((sourceGenes[1] - sourceGenes[0]) / (sourceChromosome.width)) * (sourceMarker.dx),
+                    targetGeneWidth = ((targetGenes[1] - targetGenes[0]) / (targetChromosome.width)) * (targetMarker.dx),
+                    sourceX = ((sourceGenes[0] - sourceChromosome.start) / (sourceChromosome.width)) * (sourceMarker.dx),
+                    targetX = ((targetGenes[0] - targetChromosome.start) / (targetChromosome.width)) * (targetMarker.dx),
+                    // pick the one with the smaller width and ensure the minimum is 2px
+                    linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
+
+
+                if (linkWidth == 2) {
+                    linkStore.links.push({
+                        source: {
+                            'radius': sourceMarker.x + sourceX,
+                            'angle': sourceMarker.angle
+                        },
+                        target: {
+                            'radius': targetMarker.x + targetX,
+                            'angle': targetMarker.angle
+                        },
+                        alignment
+                    })
+                }
+                else {
+                    linkStore.polygons.push({
+                        source: {
+                            'startRadius': sourceMarker.x + sourceX,
+                            'angle': sourceMarker.angle,
+                            'endRadius': sourceMarker.x + sourceX + sourceGeneWidth
+                        },
+                        target: {
+                            'startRadius': targetMarker.x + targetX,
+                            'angle': targetMarker.angle,
+                            'endRadius': targetMarker.x + targetX + targetGeneWidth
+                        },
+                        alignment
+                    });
+                }
+            });
+        });
+        return linkStore;
+    }
+
+
+
     render() {
-        const { configuration, chromosomeMap } = this.props, { alignmentList, hiveView } = configuration;
-        const markerPositions = this.initialiseMarkerPositions();
+        const { configuration, chromosomeMap } = this.props, { alignmentList, hiveView, markers } = configuration,
+            markerPositions = (Object.keys(markers).length > 1) && this.initialiseMarkerPositions(),
+            linkStore = markerPositions && this.initialiseLinks(markerPositions);
 
         return (
             <div className='hiveView-root text-xs-center'>
@@ -60,6 +134,7 @@ class HiveView extends Component {
                     <svg className='hiveViewSVG' height={hiveView.height} width={hiveView.width}>
                         <g ref={node => this.innerG = node} transform={'translate(' + (hiveView.width / 2) + ',' + (hiveView.height / 2) + ')'} >
                             <HiveMarkers configuration={configuration} markerPositions={markerPositions} />
+                            <HiveLinks configuration={configuration} linkStore={linkStore} />
                         </g>
                     </svg>}
             </div>

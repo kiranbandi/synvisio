@@ -20,5 +20,13 @@
         border: 2px solid grey;
         border-radius: 10px;
         margin: 10px auto;
+        .hive-link-line {
+            fill: none;
+            stroke-opacity: 0.5;
+        }
+        .hive-link-polygon {
+            stroke: none;
+            fill-opacity: 0.5;
+        }
     }
 }
