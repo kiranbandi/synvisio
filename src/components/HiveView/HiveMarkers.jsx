@@ -23,7 +23,7 @@ export default class HiveMarkers extends Component {
                 stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
                 // Add style to elements
                 style = {
-                    'strokeWidth': '10px',
+                    'strokeWidth': '5px',
                     stroke
                 }
                 return <line key={markerListId + "-line-" + i}

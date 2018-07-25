@@ -137,12 +137,12 @@ export function hiveFilterData(markers) {
         _.each(markers, (value, keyIndex) => {
             const nextIndex = ((noOfMarkers - 1) == keyIndex) ? 0 : (Number(keyIndex) + 1),
                 tempMarkers = { 'source': markers[keyIndex], 'target': markers[nextIndex] };
-            updatedAlignmentList.push(processAlignment(tempMarkers, alignmentList));
+            updatedAlignmentList.push({ source: keyIndex, target: nextIndex, 'alignmentList': processAlignment(tempMarkers, alignmentList) });
         });
     }
     else if (noOfMarkers == 2) {
         const tempMarkers = { 'source': markers[0], 'target': markers[1] };
-        updatedAlignmentList.push(processAlignment(tempMarkers, alignmentList));
+        updatedAlignmentList.push({ source: 0, target: 1, 'alignmentList': processAlignment(tempMarkers, alignmentList) });
     }
     return dispatch => {
         dispatch(setRootMarkers(markers));
