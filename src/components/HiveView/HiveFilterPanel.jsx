@@ -125,10 +125,4 @@ function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators({ hiveFilterData, setRootMarkers }, dispatch) };
 }
 
-function mapStateToProps(state) {
-    return {
-        chromosomeMap: state.genome.chromosomeMap
-    };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HiveFilterPanel);
+export default connect(null, mapDispatchToProps)(HiveFilterPanel);
