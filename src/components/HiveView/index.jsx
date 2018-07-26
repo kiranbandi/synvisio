@@ -14,7 +14,7 @@ class HiveView extends Component {
     }
 
     initialiseMarkerPositions() {
-        const { configuration, chromosomeMap } = this.props, { markers, hiveView } = configuration;
+        const { configuration, chromosomeMap } = this.props, { markers, hiveView, isNormalized = false } = configuration;
         const innerRadius = 10;
         const outerRadius = (hiveView.height / 2) - 25;
         const angles = hiveAngles(Object.keys(markers).length);
@@ -27,10 +27,18 @@ class HiveView extends Component {
 
         // find the marker list that has the maximum width
         let maxGeneticWidthMarkerList = _.maxBy(widthCollection, (o) => o.width);
-        let scaleFactor = (outerRadius) / maxGeneticWidthMarkerList.width;
+        let scaleFactor = outerRadius / maxGeneticWidthMarkerList.width;
 
         let markerPositions = {};
         _.each(markers, (chromosomeList, markerId) => {
+
+            if (isNormalized) {
+                // find the marker list that has the maximum width
+                maxGeneticWidthMarkerList = _.find(widthCollection, (o) => o.markerId == markerId);
+                scaleFactor = outerRadius / maxGeneticWidthMarkerList.width;
+            }
+
+
             let widthUsedSoFar = innerRadius,
                 markerList = _.map(chromosomeList, (key, index) => {
                     let marker = {

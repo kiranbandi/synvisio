@@ -41,11 +41,12 @@ export default class HiveLinks extends Component {
             // Add style to elements
             style = { fill }
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
-            return <path key={"polygon-link-" + i}
-                className='hive-link-polygon'
-                d={radialLink().angle((d) => d.angle).startRadius((d) => d.startRadius).endRadius((d) => d.endRadius)(d)}
-                style={style}>
-            </path>
+            return (
+                <path key={"polygon-link-" + i}
+                    className='hive-link-polygon'
+                    d={radialLink().angle((d) => d.angle).startRadius((d) => d.startRadius).endRadius((d) => d.endRadius)(d)}
+                    style={style}>
+                </path>);
 
         });
         linkElements.push(genomicPolygonLinks);

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sortAlphaNum from '../../utils/sortAlphaNum';
-import { hiveFilterData, setRootMarkers } from '../../redux/actions/actions';
+import { hiveFilterData, setRootMarkers, setNormalizedState } from '../../redux/actions/actions';
 import _ from 'lodash';
 
 class HiveFilterPanel extends Component {
@@ -12,6 +12,7 @@ class HiveFilterPanel extends Component {
         this.onSubmit = this.onSubmit.bind(this);
         this.onAddSource = this.onAddSource.bind(this);
         this.onRemoveSource = this.onRemoveSource.bind(this);
+        this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
     }
 
     componentDidMount() {
@@ -67,6 +68,11 @@ class HiveFilterPanel extends Component {
         setRootMarkers(markers);
     }
 
+    toggleCheckboxChange(e) {
+        const { isNormalized = false } = this.props.configuration;
+        this.props.actions.setNormalizedState(!isNormalized);
+    }
+
     onRemoveSource(e) {
         e.preventDefault();
         const { setRootMarkers } = this.props.actions;
@@ -90,7 +96,7 @@ class HiveFilterPanel extends Component {
         const options = chromosomeMapList.map((value, index) => {
             return <option key={index} value={value[0]}>{value[0]}</option>;
         }),
-            { markers = {} } = configuration;
+            { markers = {}, isNormalized = false } = configuration;
 
         let markerFilterElements = _.map(markers, (value, keyIndex) => {
             return (
@@ -102,10 +108,15 @@ class HiveFilterPanel extends Component {
                 </div>);
         })
 
-
         return (
             <form className="filter-panel-hive">
                 {markerFilterElements}
+                <div className="checkbox">
+                    <label>
+                        <input type="checkbox" checked={isNormalized} onChange={this.toggleCheckboxChange} />
+                        {"Normalized Length"}
+                    </label>
+                </div>
                 <button className="btn btn-primary-outline add-source" onClick={this.onAddSource}>
                     <span className="icon icon-circle-with-plus"></span>
                 </button>
@@ -122,7 +133,7 @@ class HiveFilterPanel extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({ hiveFilterData, setRootMarkers }, dispatch) };
+    return { actions: bindActionCreators({ hiveFilterData, setRootMarkers, setNormalizedState }, dispatch) };
 }
 
 export default connect(null, mapDispatchToProps)(HiveFilterPanel);

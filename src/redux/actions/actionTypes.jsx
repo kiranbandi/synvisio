@@ -10,6 +10,7 @@ export const SET_CHROMOSOME_MODE = 'SET_CHROMOSOME_MODE';
 export const SET_BLOCK_MODE = 'SET_BLOCK_MODE';
 export const SET_PLOT_LEVEL = 'SET_PLOT_LEVEL';
 export const SET_PLOT_TYPE = 'SET_PLOT_TYPE';
+export const SET_NORMALIZED = 'SET_NORMALIZED';
 
 
 
