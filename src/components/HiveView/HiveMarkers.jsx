@@ -10,57 +10,44 @@ export default class HiveMarkers extends Component {
         this.generateMarkerElements = this.generateMarkerElements.bind(this);
     }
 
-    generateMarkerElements(configuration, markerPositions) {
+    generateMarkerElements() {
 
-        let markerElements = [];
-        const angles = hiveAngles(Object.keys(configuration.markers).length);
+        const { markerPositions } = this.props, angles = hiveAngles(Object.keys(markerPositions).length);
 
-        _.map(markerPositions, (markerList, markerListId) => {
+        return _.map(markerPositions, (markerList, markerListId) => {
             // create marker lines
             let markerLines = markerList.map((d, i) => {
-                let stroke, style;
-                // Decide on stroke colour
-                let sourceIndex = configuration.markers[markerListId].indexOf(d.key);
-                stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
+                let style;
                 // Add style to elements
-                style = {
-                    'strokeWidth': '5px',
-                    stroke
-                }
-                return <line key={markerListId + "-line-" + i}
-                    className={'chromosomeMarkers marker-' + markerListId + " marker-" + markerListId + "-" + d.key}
-                    x1={d.x}
-                    y1={0}
-                    x2={d.x + d.dx}
-                    y2={0}
-                    style={style}>
-                </line>
+                style = { 'strokeWidth': '5px', 'stroke': schemeCategory10[markerListId % 10] };
+                return (
+                    <line key={markerListId + "-line-" + i}
+                        className={'chromosomeMarkers marker-' + markerListId + " marker-" + markerListId + "-" + d.key}
+                        x1={d.x}
+                        y1={0}
+                        x2={d.x + d.dx}
+                        y2={0}
+                        style={style}>
+                    </line>)
             });
-
-            markerElements.push(
+            return (
                 <g
                     transform={"rotate(" + degrees(angles[markerListId]) + ")"}
                     key={"marker-container-" + markerListId}>
                     {markerLines}
                 </g>);
         });
-        return markerElements;
     }
 
-
     render() {
-
-        const { configuration, markerPositions } = this.props,
-            markerElements = this.generateMarkerElements(configuration, markerPositions);
-
         return (
             <g className='markerContainer'>
-                {markerElements}
+                {this.generateMarkerElements()}
             </g>
         );
     }
 }
 
 function degrees(radians) {
-    return radians / Math.PI * 180 - 90;
+    return ((radians / Math.PI) * 180) - 90;
 }

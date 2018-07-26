@@ -13,8 +13,6 @@ export default class HiveLinks extends Component {
 
         const { linkStore = { links: [], polygons: [] } } = this.props;
 
-        let linkElements = [];
-
         // Draw links lines for small links
         let genomicLinks = linkStore.links.map((d, i) => {
             let stroke, style;
@@ -31,7 +29,6 @@ export default class HiveLinks extends Component {
                 style={style}> </path>
 
         });
-        linkElements.push(genomicLinks);
 
         // Draw links Polygons for large links
         let genomicPolygonLinks = linkStore.polygons.map((d, i) => {
@@ -49,10 +46,8 @@ export default class HiveLinks extends Component {
                 </path>);
 
         });
-        linkElements.push(genomicPolygonLinks);
 
-
-        return linkElements;
+        return [...genomicLinks, ...genomicPolygonLinks];
     }
 
 

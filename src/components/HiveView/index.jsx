@@ -9,15 +9,18 @@ class HiveView extends Component {
 
     constructor(props) {
         super(props);
+        // set default inner and outer radius values 
+        this.innerRadius = 10;
+        this.outerRadius = 500;
         this.initialiseMarkerPositions = this.initialiseMarkerPositions.bind(this);
         this.initialiseLinks = this.initialiseLinks.bind(this);
     }
 
     initialiseMarkerPositions() {
-        const { configuration, chromosomeMap } = this.props, { markers, hiveView, isNormalized = false } = configuration;
-        const innerRadius = 10;
-        const outerRadius = (hiveView.height / 2) - 50;
-        const angles = hiveAngles(Object.keys(markers).length);
+        const { configuration, chromosomeMap } = this.props, { markers, hiveView, isNormalized = false } = configuration,
+            angles = hiveAngles(Object.keys(markers).length);
+
+        this.outerRadius = (hiveView.height / 2) - 50;
 
         // find the widths for each marker list 
         let widthCollection = _.map(markers, (chromosomeList, markerId) => {
@@ -27,7 +30,7 @@ class HiveView extends Component {
 
         // find the marker list that has the maximum width
         let maxGeneticWidthMarkerList = _.maxBy(widthCollection, (o) => o.width);
-        let scaleFactor = (outerRadius - innerRadius) / maxGeneticWidthMarkerList.width;
+        let scaleFactor = (this.outerRadius - this.innerRadius) / maxGeneticWidthMarkerList.width;
 
         let markerPositions = {};
         _.each(markers, (chromosomeList, markerId) => {
@@ -35,11 +38,11 @@ class HiveView extends Component {
             if (isNormalized) {
                 // find the marker list that has the maximum width
                 maxGeneticWidthMarkerList = _.find(widthCollection, (o) => o.markerId == markerId);
-                scaleFactor = (outerRadius - innerRadius) / maxGeneticWidthMarkerList.width;
+                scaleFactor = (this.outerRadius - this.innerRadius) / maxGeneticWidthMarkerList.width;
             }
 
 
-            let widthUsedSoFar = innerRadius,
+            let widthUsedSoFar = this.innerRadius,
                 markerList = _.map(chromosomeList, (key, index) => {
                     let marker = {
                         'data': chromosomeMap.get(key),
@@ -144,6 +147,7 @@ class HiveView extends Component {
                         <g ref={node => this.innerG = node} transform={'translate(' + (hiveView.width / 2) + ',' + (hiveView.height / 2) + ')'} >
                             <HiveLinks configuration={configuration} linkStore={linkStore} />
                             <HiveMarkers configuration={configuration} markerPositions={markerPositions} />
+                            <HiveLabels markerPositions={markerPositions} position={this.outerRadius} />
                         </g>
                     </svg>}
             </div>

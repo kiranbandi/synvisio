@@ -8,6 +8,7 @@ import configureStore from './redux/store/configureStore';
 import { Provider } from 'react-redux';
 
 /* BASIC FUNCTIONALITY RULES written by  "He who must not be named" - do not alter ¯\_(ツ)_/¯  */
+
 // Load the Data gff file and syteny collinearity file 
 // Parse the Data and store it in appropriate data structures 
 // Filter it for useful information and mine it to decide on what to represent 

@@ -15,8 +15,7 @@ class HiveFilterPanel extends Component {
         this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
     }
 
-    componentDidMount() {
-        const { markers = {} } = this.props.configuration;
+    initialiseMarkers(markers) {
         _.each(markers, (value, keyIndex) => {
             $(".hive-select-" + keyIndex)
                 .selectpicker({
@@ -27,27 +26,22 @@ class HiveFilterPanel extends Component {
                 })
                 .selectpicker('val', value);
         })
+    }
+
+    componentDidMount() {
+        const { markers = {} } = this.props.configuration;
+        this.initialiseMarkers(markers);
+
     }
 
     componentDidUpdate() {
         const { markers = {} } = this.props.configuration;
-        _.each(markers, (value, keyIndex) => {
-            $(".hive-select-" + keyIndex)
-                .selectpicker({
-                    'actionsBox': true,
-                    'iconBase': 'icon',
-                    'tickIcon': 'icon-check',
-                    'selectedTextFormat': 'count > 2'
-                })
-                .selectpicker('val', value);
-        })
+        this.initialiseMarkers(markers);
     }
 
     componentWillUnmount() {
         const { markers = {} } = this.props.configuration;
-        _.each(markers, (value, keyIndex) => {
-            $(".hive-select-" + keyIndex).selectpicker('destroy');
-        })
+        _.each(markers, (value, keyIndex) => { $(".hive-select-" + keyIndex).selectpicker('destroy'); })
     }
 
     onSubmit(e) {
