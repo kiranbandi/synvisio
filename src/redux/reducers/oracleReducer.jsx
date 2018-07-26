@@ -1,8 +1,7 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState';
 
-// Perils of having a nested tree strucutre in the Redux State
-
+// Perils of having a nested tree strucutre in the Redux State XD XD XD 
 export default function oracleReducer(state = initialState.oracle, action) {
   switch (action.type) {
     case types.SET_LOADER_STATE:
@@ -11,6 +10,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
       return Object.assign({}, state, { multiLevel: action.value })
     case types.SET_PLOT_TYPE:
       return Object.assign({}, state, { plotType: action.value })
+    case types.SET_NORMALIZED:
+      return Object.assign({}, state, { configuration: { ...state.configuration, isNormalized: action.isNormalized } })
     case types.SET_BLOCK_MODE:
       return Object.assign({}, state, { configuration: { ...state.configuration, isBlockModeON: action.isBlockModeON } })
     case types.SET_CHROMOSOME_MODE:

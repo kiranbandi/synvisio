@@ -151,14 +151,10 @@ export function hiveFilterData(markers) {
 }
 
 export function setPlotProps(levelOrType, value) {
-
     const isLevel = (levelOrType == 'level');
-
     return dispatch => {
-
         let configurationStore = getPlotDimensions(value),
             markers = (isLevel && value) ? {} : { 'source': [], 'target': [] };
-
         const configuration = {
             ...configurationStore,
             filterLevel: {},
@@ -168,10 +164,8 @@ export function setPlotProps(levelOrType, value) {
             'alignmentList': [],
             'filterLevel': {}
         }
-
         dispatch(setSnapshotList([]));
         dispatch(setConfiguration(configuration));
-
         if (isLevel) {
             dispatch({ type: types.SET_PLOT_LEVEL, value });
         }
@@ -179,7 +173,10 @@ export function setPlotProps(levelOrType, value) {
             dispatch({ type: types.SET_PLOT_TYPE, value });
         }
     };
+}
 
+export function setNormalizedState(isNormalized = false) {
+    return { type: types.SET_NORMALIZED, isNormalized };
 }
 
 
