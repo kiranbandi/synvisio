@@ -36,7 +36,13 @@ export default class HiveMarkers extends Component {
                     style={style}>
                 </line>
             });
-            markerElements.push(<g transform={"rotate(" + degrees(angles[markerListId]) + ")"} key={"marker-container-" + markerListId}>{markerLines}</g>);
+
+            markerElements.push(
+                <g
+                    transform={"rotate(" + degrees(angles[markerListId]) + ")"}
+                    key={"marker-container-" + markerListId}>
+                    {markerLines}
+                </g>);
         });
         return markerElements;
     }
