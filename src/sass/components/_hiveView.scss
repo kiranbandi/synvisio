@@ -34,5 +34,15 @@
             stroke: none;
             fill-opacity: 0.5;
         }
+        text.hive-label {
+            fill: white;
+            font-size: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transform: translate(-8px, 8px);
+            &.active {
+                fill: cyan;
+            }
+        }
     }
 }

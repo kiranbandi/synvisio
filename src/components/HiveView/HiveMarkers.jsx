@@ -11,7 +11,6 @@ export default class HiveMarkers extends Component {
     }
 
     generateMarkerElements() {
-
         const { markerPositions } = this.props, angles = hiveAngles(Object.keys(markerPositions).length);
 
         return _.map(markerPositions, (markerList, markerListId) => {
@@ -19,15 +18,11 @@ export default class HiveMarkers extends Component {
             let markerLines = markerList.map((d, i) => {
                 let style;
                 // Add style to elements
-                style = { 'strokeWidth': '5px', 'stroke': schemeCategory10[markerListId % 10] };
+                style = { 'strokeWidth': '7.5px', 'stroke': schemeCategory10[i % 10] };
                 return (
                     <line key={markerListId + "-line-" + i}
                         className={'chromosomeMarkers marker-' + markerListId + " marker-" + markerListId + "-" + d.key}
-                        x1={d.x}
-                        y1={0}
-                        x2={d.x + d.dx}
-                        y2={0}
-                        style={style}>
+                        x1={d.x} y1={0} x2={d.x + d.dx} y2={0} style={style}>
                     </line>)
             });
             return (
