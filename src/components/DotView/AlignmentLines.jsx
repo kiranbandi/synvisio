@@ -30,13 +30,13 @@ class AlignmentLines extends Component {
                         y2={d.y2} x2={d.x2}
                         // Not so elegant but since the number of elements are few this is a workable solution
                         onDoubleClick={configuration.isChromosomeModeON ? this.onLinkClick.bind(this, d.alignment) : null}>
-                        <title>
+                        {configuration.isChromosomeModeON && <title>
                             {d.alignment.source + " => " + d.alignment.target +
                                 "\n type : " + d.alignment.type +
                                 "\n E value : " + d.alignment.e_value +
                                 "\n score : " + d.alignment.score +
                                 "\n count : " + d.alignment.count}
-                        </title>
+                        </title>}
                     </line>
                 )}
             </g>
