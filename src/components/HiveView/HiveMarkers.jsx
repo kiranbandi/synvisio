@@ -18,7 +18,7 @@ export default class HiveMarkers extends Component {
             let markerLines = markerList.map((d, i) => {
                 let style;
                 // Add style to elements
-                style = { 'strokeWidth': '7.5px', 'stroke': schemeCategory10[i % 10] };
+                style = { 'strokeWidth': '7px', 'stroke': schemeCategory10[i % 10] };
                 return (
                     <line key={markerListId + "-line-" + i}
                         className={'chromosomeMarkers marker-' + markerListId + " marker-" + markerListId + "-" + d.key}
