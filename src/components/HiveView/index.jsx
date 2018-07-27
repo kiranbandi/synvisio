@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import HiveFilterPanel from './HiveFilterPanel';
+import { bindActionCreators } from 'redux';
 import HiveMarkers from './HiveMarkers';
 import HiveLinks from './HiveLinks';
+import HiveLabels from './HiveLabels';
 import hiveAngles from './hiveAngles';
 import { connect } from 'react-redux';
+import { setHiveViewSelectedMarker } from '../../redux/actions/actions';
+import { schemeCategory10 } from 'd3';
 
 class HiveView extends Component {
 
@@ -14,6 +18,13 @@ class HiveView extends Component {
         this.outerRadius = 500;
         this.initialiseMarkerPositions = this.initialiseMarkerPositions.bind(this);
         this.initialiseLinks = this.initialiseLinks.bind(this);
+        this.onMarkerSelect = this.onMarkerSelect.bind(this);
+    }
+
+    onMarkerSelect(e) {
+        // 11 characters to remove 'hive-label-'
+        const markerID = e.target.id.slice(11);
+        this.props.actions.setHiveViewSelectedMarker(markerID);
     }
 
     initialiseMarkerPositions() {
@@ -65,7 +76,10 @@ class HiveView extends Component {
     initialiseLinks(markerPositions) {
 
         const { configuration, chromosomeMap } = this.props,
+            { selectedMarker = -1 } = configuration.hiveView,
             { genomeLibrary } = window.synVisio;
+
+        let color;
 
         let linkStore = { links: [], polygons: [] };
 
@@ -87,7 +101,7 @@ class HiveView extends Component {
                 let sourceChromosome = chromosomeMap.get(alignment.source),
                     targetChromosome = chromosomeMap.get(alignment.target);
 
-                let sourceMarker = _.find(markerPositions[alignmentDetails.source], (o) => o.key == alignment.source),
+                const sourceMarker = _.find(markerPositions[alignmentDetails.source], (o) => o.key == alignment.source),
                     targetMarker = _.find(markerPositions[alignmentDetails.target], (o) => o.key == alignment.target);
 
                 if (sourceMarker && targetMarker) {
@@ -98,6 +112,15 @@ class HiveView extends Component {
                         // pick the one with the smaller width and ensure the minimum is 2px
                         linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
 
+                    if (Number(alignmentDetails.source) == Number(selectedMarker)) {
+                        color = schemeCategory10[_.findIndex(markerPositions[alignmentDetails.source], (o) => o.key == alignment.source) % 10];
+                    }
+                    else if (Number(alignmentDetails.target) == Number(selectedMarker)) {
+                        color = schemeCategory10[_.findIndex(markerPositions[alignmentDetails.target], (o) => o.key == alignment.target) % 10];
+                    }
+                    else {
+                        color = 'grey';
+                    }
 
                     if (linkWidth == 2) {
                         linkStore.links.push({
@@ -109,7 +132,7 @@ class HiveView extends Component {
                                 'radius': targetMarker.x + targetX,
                                 'angle': targetMarker.angle
                             },
-                            alignment
+                            color
                         })
                     }
                     else {
@@ -124,7 +147,7 @@ class HiveView extends Component {
                                 'angle': targetMarker.angle,
                                 'endRadius': targetMarker.x + targetX + targetGeneWidth
                             },
-                            alignment
+                            color
                         });
                     }
                 }
@@ -145,9 +168,9 @@ class HiveView extends Component {
                 {alignmentList.length > 0 &&
                     <svg className='hiveViewSVG' height={hiveView.height} width={hiveView.width}>
                         <g ref={node => this.innerG = node} transform={'translate(' + (hiveView.width / 2) + ',' + (hiveView.height / 2) + ')'} >
-                            <HiveLinks configuration={configuration} linkStore={linkStore} />
-                            <HiveMarkers configuration={configuration} markerPositions={markerPositions} />
-                            <HiveLabels markerPositions={markerPositions} position={this.outerRadius} />
+                            <HiveLinks hiveView={hiveView} linkStore={linkStore} />
+                            <HiveMarkers markerPositions={markerPositions} />
+                            <HiveLabels markerPositions={markerPositions} onMarkerSelect={this.onMarkerSelect} />
                         </g>
                     </svg>}
             </div>
@@ -162,4 +185,8 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(HiveView);
+function mapDispatchToProps(dispatch) {
+    return { actions: bindActionCreators({ setHiveViewSelectedMarker }, dispatch) };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HiveView);

@@ -28,6 +28,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
       return Object.assign({}, state, { configuration: { ...state.configuration, alignmentList: action.alignmentList } })
     case types.SET_FILTER_LEVEL:
       return Object.assign({}, state, { configuration: { ...state.configuration, filterLevel: action.filterLevel } })
+    case types.SET_HIVE_VIEW_SELECTED:
+      return Object.assign({}, state, { configuration: { ...state.configuration, hiveView: { ...state.configuration.hiveView, selectedMarker: action.markerID } } })
     default:
       return state;
   }

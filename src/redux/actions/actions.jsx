@@ -146,6 +146,7 @@ export function hiveFilterData(markers) {
     }
     return dispatch => {
         dispatch(setRootMarkers(markers));
+        dispatch(setHiveViewSelectedMarker(-1));
         dispatch(setALignmentList(updatedAlignmentList));
     };
 }
@@ -179,6 +180,9 @@ export function setNormalizedState(isNormalized = false) {
     return { type: types.SET_NORMALIZED, isNormalized };
 }
 
+export function setHiveViewSelectedMarker(markerID) {
+    return { type: types.SET_HIVE_VIEW_SELECTED, markerID };
+}
 
 
 

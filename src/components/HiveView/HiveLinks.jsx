@@ -12,16 +12,11 @@ export default class HiveLinks extends Component {
     generateLinkElements() {
 
         const { linkStore = { links: [], polygons: [] } } = this.props;
-
         // Draw links lines for small links
         let genomicLinks = linkStore.links.map((d, i) => {
-            let stroke, style;
-            stroke = schemeCategory10[7];
+            let style;
             // Add style to elements
-            style = {
-                'strokeWidth': d.width,
-                stroke
-            }
+            style = { 'strokeWidth': d.width, stroke: d.color };
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"hive-link-line-" + i}
                 className='hive-link-line'
@@ -32,11 +27,9 @@ export default class HiveLinks extends Component {
 
         // Draw links Polygons for large links
         let genomicPolygonLinks = linkStore.polygons.map((d, i) => {
-            let fill, style;
-            // Decide on stroke colour
-            fill = schemeCategory10[7];
+            let style;
             // Add style to elements
-            style = { fill }
+            style = { fill: d.color };
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return (
                 <path key={"polygon-link-" + i}
@@ -49,7 +42,6 @@ export default class HiveLinks extends Component {
 
         return [...genomicLinks, ...genomicPolygonLinks];
     }
-
 
     render() {
         return (
