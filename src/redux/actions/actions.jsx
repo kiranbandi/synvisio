@@ -16,8 +16,8 @@ export function configureSourceID(sourceID, multiLevel = false) {
         dispatch(setchromosomeMode(false));
         dispatch(setBlockMode(false));
         dispatch(setSnapshotList([]));
-        const sampleDataMarkers = { ...sampleSourceMapper[sourceID] };
-        if (sampleDataMarkers) {
+        if (sampleSourceMapper[sourceID]) {
+            const sampleDataMarkers = { ...sampleSourceMapper[sourceID] };
             if (multiLevel) {
                 sampleDataMarkers[0] = sampleDataMarkers.source;
                 sampleDataMarkers[1] = sampleDataMarkers.target;
