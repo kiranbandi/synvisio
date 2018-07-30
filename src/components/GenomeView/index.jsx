@@ -165,7 +165,7 @@ class GenomeView extends Component {
                         x={genomeView.width - 50}
                         y={20}
                         onClick={this.resetZoom} />}
-                <svg className={'genomeViewSVG ' + (isChromosomeModeON ? 'rounded-corner' : '')} ref={node => this.outerG = node} height={genomeView.height} width={genomeView.width}>
+                <svg className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode' : '')} ref={node => this.outerG = node} height={genomeView.height} width={genomeView.width}>
                     <g ref={node => this.innerG = node} >
                         <Markers configuration={configuration} markerPositions={markerPositions} />
                         <Links configuration={configuration} linkPositions={linkPositions} />

@@ -24,19 +24,22 @@
             stroke: #00deff;
             stroke-width: 2px;
             opacity: 0.5;
+            pointer-events: none;
+            &.hidden-alignment-link {
+                opacity: 0;
+            }
+        }
+    }
+    .chrom-mode {
+        border: 2px solid grey;
+        border-radius: 25px;
+        margin: 10px 15px 0 15px;
+        .alignment-link-lines {
             cursor: pointer;
+            pointer-events: all;
             &:hover {
                 opacity: 0.9;
             }
-            &.hidden-alignment-link {
-                opacity: 0;
-                pointer-events: none;
-            }
-        }
-        .rounded-corner {
-            border: 2px solid grey;
-            border-radius: 25px;
-            margin: 10px 15px 0 15px;
         }
     }
 }

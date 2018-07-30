@@ -37,9 +37,6 @@ class Configuration extends Component {
 
     // Turn on loader to indicate file uploading and processing 
     this.setState({ loading: true });
-    // update the sourceID set in the state with the new sourceID
-    configureSourceID('bn', multiLevel);
-
 
     getFile('coordinate-file').then((data) => {
       const { genomeLibrary, chromosomeMap } = processGFF(data);

@@ -154,7 +154,7 @@ class DotView extends Component {
                             y={20}
                             onClick={this.resetZoom} />}
                     <svg
-                        className={'dotViewSVG ' + (isChromosomeModeON ? 'rounded-corner' : '')}
+                        className={'dotViewSVG ' + (isChromosomeModeON ? 'chrom-mode' : '')}
                         ref={node => this.outerG = node}
                         height={configuration.dotView.width}
                         width={configuration.dotView.width}>
