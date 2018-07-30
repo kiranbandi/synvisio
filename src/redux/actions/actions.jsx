@@ -116,10 +116,17 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
     const markers = { 'source': sourceMarkers, 'target': targetMarkers },
         alignmentList = window.synVisio.alignmentList,
         updatedAlignmentList = processAlignment(markers, alignmentList);
+
     return dispatch => {
+        let filterLevel = {}, isChromosomeModeON = false;
+        // when only one marker is selected in source and target , directly enter chromosome mode
+        if (markers.source.length == 1 && markers.target.length == 1) {
+            filterLevel = { source: markers.source[0], target: markers.target[0] };
+            isChromosomeModeON = true;
+        };
         dispatch(setRootMarkers(markers));
-        dispatch(setFilterLevel({}));
-        dispatch(setchromosomeMode(false));
+        dispatch(setFilterLevel(filterLevel));
+        dispatch(setchromosomeMode(isChromosomeModeON));
         dispatch(setBlockMode(false));
         dispatch(setALignmentList(updatedAlignmentList));
     };
