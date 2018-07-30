@@ -144,7 +144,6 @@ class Links extends Component {
         return linkElements;
     }
 
-
     render() {
         return (
             <g className='linkContainer'>
