@@ -26,6 +26,9 @@ export function configureSourceID(sourceID, multiLevel = false) {
             }
             dispatch(setRootMarkers(sampleDataMarkers));
         }
+        else {
+            dispatch(setRootMarkers(multiLevel ? {} : { 'source': [], 'target': [] }));
+        }
     }
 }
 
