@@ -26,6 +26,8 @@ class AxisLines extends Component {
 
         const { offset = 0, innerWidth = 0 } = configuration.dotView;
 
+
+
         // First add basic axis lines
         let axisLineElements = [
             // vertical line
@@ -65,14 +67,14 @@ class AxisLines extends Component {
                 x1={d.x1} y1={d.y2} y2={d.y2} x2={d.x2}></line>;
         }));
 
-        // Add all vertical line text labels
+        // Add all horizontal line text labels
         axisLineElements.push(axisLinePositions.target.map((d, i) => {
             return <AxisLineLabel className={'marker-y-lines-text dot-plot-markers marker-y-lines-text-' + d.key}
                 key={"horizontal-line-text-outer" + d.key}
                 innerKey={"horizontal-line-text-" + d.key}
                 text={d.key}
                 type='y'
-                x={d.x1 - 45}
+                x={d.x1 - 25}
                 y={d.y1 + ((d.y2 - d.y1) / 2)}
                 onMarkerClick={this.onMarkerClick} />;
         }));
