@@ -26,8 +26,6 @@ class AxisLines extends Component {
 
         const { offset = 0, innerWidth = 0 } = configuration.dotView;
 
-
-
         // First add basic axis lines
         let axisLineElements = [
             // vertical line

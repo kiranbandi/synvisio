@@ -78,7 +78,7 @@ class GenomeView extends Component {
             let remainingWidth = (maxWidthAvailable - (_.find(widthCollection, (o) => o.markerId == markerId).width * scaleFactor)),
                 markerPadding = remainingWidth / (chromosomeList.length),
                 widthUsedSoFar = 0,
-                markerList = _.map(chromosomeList, (key, index) => {
+                markerList = _.map(chromosomeList, (key) => {
                     let marker = {
                         'data': chromosomeCollection.get(key),
                         'key': key,
