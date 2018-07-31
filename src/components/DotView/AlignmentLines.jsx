@@ -25,7 +25,7 @@ class AlignmentLines extends Component {
                 {alignmentLinePositions.map((d, i) =>
                     <line
                         className={'alignment-link-lines alignment-link-source-' + d.alignment.source + ' alignment-link-target-' + d.alignment.target + " " + (d.alignment.hidden ? 'hidden-alignment-link' : '')}
-                        key={"alignment-link-line-" + i}
+                        key={"alignment-link-line-" + String(d.x1) + '-' + String(d.y1) + '-' + String(d.y2) + '-' + String(d.x2)}
                         x1={d.x1} y1={d.y1}
                         y2={d.y2} x2={d.x2}
                         // Not so elegant but since the number of elements are few this is a workable solution
