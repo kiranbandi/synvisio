@@ -6,15 +6,12 @@ import processCollinear from '../utils/processCollinear';
 import toastr from '../utils/toastr';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { configureSourceID, setGenomicData, setPlotProps } from '../redux/actions/actions';
+import { configureSourceID, setGenomicData, setPlotProps, setLoaderState } from '../redux/actions/actions';
 
 class Configuration extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      loading: false
-    };
     this.onUpload = this.onUpload.bind(this);
     this.radioChange = this.radioChange.bind(this);
   }
@@ -33,10 +30,10 @@ class Configuration extends Component {
 
     let dataStore = {};
     const { actions, multiLevel } = this.props,
-      { configureSourceID, setGenomicData } = actions;
+      { configureSourceID, setGenomicData, setLoaderState } = actions;
 
     // Turn on loader to indicate file uploading and processing 
-    this.setState({ loading: true });
+    setLoaderState(true);
 
     getFile('coordinate-file').then((data) => {
       const { genomeLibrary, chromosomeMap } = processGFF(data);
@@ -54,13 +51,13 @@ class Configuration extends Component {
       setGenomicData(dataStore);
     }).always(() => {
       // turn off loader
-      this.setState({ loading: false });
+      setLoaderState(false);
     });
   }
 
   render() {
 
-    const { sourceID = '', multiLevel, plotType } = this.props;
+    const { sourceID = '', multiLevel, plotType, loaderState = false } = this.props;
     return (
       <div className="configuration-container">
         <div className="container">
@@ -69,7 +66,8 @@ class Configuration extends Component {
             <h2 className='text-primary m-t-lg configuration-sub-title'>Upload Collinearity Files</h2>
             <FileUpload id='collinear-file' label='MCScanX Collinearity File' />
             <FileUpload id='coordinate-file' label='GFF File' />
-            {this.state.loading ? <h4 className='loading-text'>Loading data...</h4> : <button className="btn btn-primary-outline m-t" onClick={this.onUpload}> UPLOAD </button>}
+            {loaderState && <h4 className='loading-text'>Loading data...</h4>}
+            <button className="btn btn-primary-outline m-t" onClick={this.onUpload}> UPLOAD </button>
           </div>
 
           <div className='plot-type-panel'>
@@ -114,7 +112,7 @@ class Configuration extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ configureSourceID, setGenomicData, setPlotProps }, dispatch)
+    actions: bindActionCreators({ configureSourceID, setGenomicData, setPlotProps, setLoaderState }, dispatch)
   };
 }
 
@@ -122,7 +120,8 @@ function mapStateToProps(state) {
   return {
     sourceID: state.oracle.sourceID,
     multiLevel: state.oracle.multiLevel,
-    plotType: state.oracle.plotType
+    plotType: state.oracle.plotType,
+    loaderState: state.oracle.loaderState
   };
 }
 
