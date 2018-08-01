@@ -25,6 +25,7 @@ export default class HiveMarkers extends Component {
                         x1={d.x} y1={0} x2={d.x + d.dx} y2={0} style={style}>
                     </line>)
             });
+
             return (
                 <g
                     transform={"rotate(" + degrees(angles[markerListId]) + ")"}

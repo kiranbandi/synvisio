@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sortAlphaNum from '../../utils/sortAlphaNum';
-import { hiveFilterData, setRootMarkers, setNormalizedState } from '../../redux/actions/actions';
+import { hiveFilterData, setRootMarkers, setNormalizedState, setChromosomeLabelsState } from '../../redux/actions/actions';
 import _ from 'lodash';
 
 class HiveFilterPanel extends Component {
@@ -63,8 +63,13 @@ class HiveFilterPanel extends Component {
     }
 
     toggleCheckboxChange(e) {
-        const { isNormalized = false } = this.props.configuration;
-        this.props.actions.setNormalizedState(!isNormalized);
+        const { isNormalized = false, chromosomeLabelsON = false } = this.props.configuration;
+        if (e.target.id == 'isNormalized') {
+            this.props.actions.setNormalizedState(!isNormalized);
+        }
+        else {
+            this.props.actions.setChromosomeLabelsState(!chromosomeLabelsON);
+        }
     }
 
     onRemoveSource(e) {
@@ -90,7 +95,7 @@ class HiveFilterPanel extends Component {
         const options = chromosomeMapList.map((value, index) => {
             return <option key={index} value={value[0]}>{value[0]}</option>;
         }),
-            { markers = {}, isNormalized = false } = configuration;
+            { markers = {}, isNormalized = false, chromosomeLabelsON = false } = configuration;
 
         let markerFilterElements = _.map(markers, (value, keyIndex) => {
             return (
@@ -107,8 +112,14 @@ class HiveFilterPanel extends Component {
                 {markerFilterElements}
                 <div className="checkbox">
                     <label>
-                        <input type="checkbox" checked={isNormalized} onChange={this.toggleCheckboxChange} />
+                        <input type="checkbox" id='isNormalized' checked={isNormalized} onChange={this.toggleCheckboxChange} />
                         {"Normalized Length"}
+                    </label>
+                </div>
+                <div className="checkbox">
+                    <label>
+                        <input type="checkbox" id='chromosomeLabelsON' checked={chromosomeLabelsON} onChange={this.toggleCheckboxChange} />
+                        {"Chromosome Labels"}
                     </label>
                 </div>
                 <button className="btn btn-primary-outline add-source" onClick={this.onAddSource}>
@@ -127,7 +138,7 @@ class HiveFilterPanel extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({ hiveFilterData, setRootMarkers, setNormalizedState }, dispatch) };
+    return { actions: bindActionCreators({ hiveFilterData, setRootMarkers, setNormalizedState, setChromosomeLabelsState }, dispatch) };
 }
 
 export default connect(null, mapDispatchToProps)(HiveFilterPanel);

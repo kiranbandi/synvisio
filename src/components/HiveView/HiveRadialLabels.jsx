@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import hiveAngles from './hiveAngles';
 
-export default class HiveLabels extends Component {
+export default class HiveRadialLabels extends Component {
 
     constructor(props) {
         super(props);
@@ -27,7 +27,7 @@ export default class HiveLabels extends Component {
 
         // to go from polar coordinates to cartesian we use rcos(@) and rsin(@) and we shift the angle by 90 degree
         return (
-            <g className='hive-label-container'>
+            <g className='hive-radial-label-container'>
                 {elements}
             </g>
         );

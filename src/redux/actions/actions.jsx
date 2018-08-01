@@ -190,6 +190,10 @@ export function setNormalizedState(isNormalized = false) {
     return { type: types.SET_NORMALIZED, isNormalized };
 }
 
+export function setChromosomeLabelsState(chromosomeLabelsON = false) {
+    return { type: types.SET_CHROMOSOME_LABELS_STATE, chromosomeLabelsON };
+}
+
 export function setHiveViewSelectedMarker(markerID) {
     return { type: types.SET_HIVE_VIEW_SELECTED, markerID };
 }
