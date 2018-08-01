@@ -3,7 +3,8 @@ import HiveFilterPanel from './HiveFilterPanel';
 import { bindActionCreators } from 'redux';
 import HiveMarkers from './HiveMarkers';
 import HiveLinks from './HiveLinks';
-import HiveLabels from './HiveLabels';
+import HiveRadialLabels from './HiveRadialLabels';
+import HiveMarkerLabels from './HiveMarkerLabels';
 import hiveAngles from './hiveAngles';
 import { connect } from 'react-redux';
 import { setHiveViewSelectedMarker } from '../../redux/actions/actions';
@@ -158,6 +159,7 @@ class HiveView extends Component {
 
     render() {
         const { configuration, chromosomeMap } = this.props, { alignmentList, hiveView, markers } = configuration,
+            { chromosomeLabelsON } = configuration,
             markerPositions = (Object.keys(markers).length > 1) && this.initialiseMarkerPositions(),
             linkStore = markerPositions ? this.initialiseLinks(markerPositions) : { links: [], polygons: [] };
 
@@ -170,7 +172,8 @@ class HiveView extends Component {
                         <g ref={node => this.innerG = node} transform={'translate(' + (hiveView.width / 2) + ',' + (hiveView.height / 2) + ')'} >
                             <HiveLinks hiveView={hiveView} linkStore={linkStore} />
                             <HiveMarkers markerPositions={markerPositions} />
-                            <HiveLabels markerPositions={markerPositions} onMarkerSelect={this.onMarkerSelect} />
+                            <HiveRadialLabels markerPositions={markerPositions} onMarkerSelect={this.onMarkerSelect} />
+                            {chromosomeLabelsON && <HiveMarkerLabels markerPositions={markerPositions} />}
                         </g>
                     </svg>}
             </div>

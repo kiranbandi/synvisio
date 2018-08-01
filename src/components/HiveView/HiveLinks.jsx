@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import radialLink from './radialLink';
-import { schemeCategory10 } from 'd3';
 
 export default class HiveLinks extends Component {
 
