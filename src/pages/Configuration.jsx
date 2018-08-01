@@ -34,6 +34,7 @@ class Configuration extends Component {
 
     // Turn on loader to indicate file uploading and processing 
     setLoaderState(true);
+    configureSourceID('bn', multiLevel);
 
     getFile('coordinate-file').then((data) => {
       const { genomeLibrary, chromosomeMap } = processGFF(data);
