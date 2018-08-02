@@ -19,6 +19,7 @@ class FilterPanel extends Component {
                 'actionsBox': true,
                 'iconBase': 'icon',
                 'tickIcon': 'icon-check',
+                'maxOptions': 10,
                 'selectedTextFormat': 'count > 2'
             })
             .selectpicker('val', markers.source);
@@ -28,6 +29,7 @@ class FilterPanel extends Component {
                 'actionsBox': true,
                 'iconBase': 'icon',
                 'tickIcon': 'icon-check',
+                'maxOptions': 10,
                 'selectedTextFormat': 'count > 2'
             })
             .selectpicker('val', markers.target);
