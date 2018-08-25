@@ -12,6 +12,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123324097-1"></script>
     <script type="text/javascript">
+        // Analytics applied only in production
         if (document.location.hostname.indexOf("kiranbandi") != -1) {
             window.dataLayer = window.dataLayer || [];
 
@@ -44,7 +45,7 @@
 
     <!-- Assets for Bootstrap Multi Select-->
     <script src="assets/js/bootstrap-select.min.js"></script>
-
+    <!-- Loading webpack code bundle-->
     <script src="assets/bundle/bundle.js"></script>
 </body>
 
