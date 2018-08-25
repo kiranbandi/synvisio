@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sortAlphaNum from '../utils/sortAlphaNum';
-import { filterData } from '../redux/actions/actions';
+import { filterData, toggleTracks } from '../redux/actions/actions';
 
 class FilterPanel extends Component {
 
     constructor(props) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onToggleTrack = this.onToggleTrack.bind(this);
     }
 
     componentDidMount() {
@@ -53,6 +54,11 @@ class FilterPanel extends Component {
         this.props.filterData(!!sourceMarkers ? sourceMarkers : [], !!targetMarkers ? targetMarkers : []);
     }
 
+    onToggleTrack(e) {
+        e.preventDefault();
+        this.props.toggleTracks();
+    }
+
     render() {
 
         let { chromosomeMap = {} } = this.props,
@@ -86,6 +92,11 @@ class FilterPanel extends Component {
                     <button type="submit" className="btn btn-primary-outline" onClick={this.onSubmit}>
                         GO <span className="icon icon-cw"></span>
                     </button>
+
+                    {window.synVisio.trackData && this.props.plotType == 'linearplot' && <button type="submit" id='track-btn' className="btn btn-primary-outline" onClick={this.onToggleTrack}>
+                        Toggle Tracks
+                    </button>}
+
                 </form>
             </div>
         );
@@ -93,13 +104,17 @@ class FilterPanel extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { filterData: bindActionCreators(filterData, dispatch) };
+    return {
+        filterData: bindActionCreators(filterData, dispatch),
+        toggleTracks: bindActionCreators(toggleTracks, dispatch)
+    };
 }
 
 function mapStateToProps(state, ownProps) {
     return {
         chromosomeMap: state.genome.chromosomeMap,
-        markers: state.oracle.configuration.markers
+        markers: state.oracle.configuration.markers,
+        plotType: state.oracle.plotType
     };
 }
 

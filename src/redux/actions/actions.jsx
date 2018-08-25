@@ -60,10 +60,10 @@ export function setFilterLevel(filterLevel) {
 };
 
 export function setGenomicData(data) {
-    const { genomeLibrary, alignmentList, snapshotStore = {}, ...otherData } = data;
+    const { genomeLibrary, alignmentList, snapshotStore = {}, trackData = false, ...otherData } = data;
     //  Treading Dangerous Territory here by polluting the global name space 
     //  But this reduces the load placed on the redux and react global store
-    window.synVisio = { genomeLibrary, alignmentList, snapshotStore };
+    window.synVisio = { genomeLibrary, alignmentList, snapshotStore, trackData };
     return { type: types.SET_GENOME_DATA, data: otherData };
 }
 
@@ -73,6 +73,10 @@ export function setRootMarkers(markers) {
 
 export function setALignmentList(alignmentList) {
     return { type: types.SET_ALIGNMENT_LIST, alignmentList };
+}
+
+export function toggleTracks() {
+    return { type: types.TOGGLE_TRACKS };
 }
 
 export function setSnapshotList(snapshotList) {

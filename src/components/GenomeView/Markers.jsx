@@ -48,9 +48,9 @@ class Markers extends Component {
                 return <line key={markerListId + "-line-" + i}
                     className={'chromosomeMarkers marker-' + markerListId + " marker-" + markerListId + "-" + d.key}
                     x1={d.x}
-                    y1={configuration.genomeView.verticalPositions[markerListId]}
+                    y1={d.y}
                     x2={d.x + d.dx}
-                    y2={configuration.genomeView.verticalPositions[markerListId]}
+                    y2={d.y}
                     style={style}
                     onClick={this.onMarkerClick}>
                 </line>
@@ -66,7 +66,7 @@ class Markers extends Component {
                     outerKey={markerListId + "-markertext-" + i}
                     className={' markersText marker-' + markerListId + "-" + d.key}
                     x={d.x + (d.dx / 2)}
-                    y={configuration.genomeView.verticalPositions[markerListId] + 5}
+                    y={d.y + 5}
                     text={d.key}
                     onMarkerClick={this.onMarkerClick} />
 

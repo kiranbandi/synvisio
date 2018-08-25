@@ -84,6 +84,7 @@ class GenomeView extends Component {
                         'key': key,
                         // marker start point = used space + half marker padding 
                         'x': widthUsedSoFar + (markerPadding / 2),
+                        'y': configuration.genomeView.verticalPositions[markerId],
                         // width of the marker
                         'dx': (scaleFactor * chromosomeCollection.get(key).width)
                     }
@@ -147,16 +148,29 @@ class GenomeView extends Component {
                 });
             }
         })
-
         return linkList;
     }
 
+    initialiseTracks(configuration, markerPositions, plotType) {
+
+        if (window.synVisio.trackData && configuration.showTracks && plotType == 'linearplot') {
+            debugger;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+
     render() {
 
-        const { configuration, genomeData } = this.props,
+        const { configuration, genomeData, plotType } = this.props,
             { isChromosomeModeON = false, genomeView } = configuration,
             markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap),
-            linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions);
+            linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions),
+            trackPositions = this.initialiseTracks(configuration, markerPositions, plotType);
+
 
         return (
             <div className='genomeViewRoot' >
@@ -177,7 +191,10 @@ class GenomeView extends Component {
 }
 
 function mapStateToProps(state) {
-    return { genomeData: state.genome };
+    return {
+        genomeData: state.genome,
+        plotType: state.oracle.plotType
+    };
 }
 
 export default connect(mapStateToProps)(GenomeView);

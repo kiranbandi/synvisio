@@ -3,10 +3,12 @@ import { FileUpload, RadioButton } from '../components';
 import getFile from '../utils/getFile';
 import processGFF from '../utils/processGFF';
 import processCollinear from '../utils/processCollinear';
+import processTrackFile from '../utils/processTrackFile';
 import toastr from '../utils/toastr';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureSourceID, setGenomicData, setPlotProps, setLoaderState } from '../redux/actions/actions';
+import { setTimeout } from 'timers';
 
 class Configuration extends Component {
 
@@ -36,24 +38,44 @@ class Configuration extends Component {
     setLoaderState(true);
     configureSourceID('bn', multiLevel);
 
-    getFile('coordinate-file').then((data) => {
-      const { genomeLibrary, chromosomeMap } = processGFF(data);
-      dataStore = { genomeLibrary, chromosomeMap };
-      return getFile('collinear-file');
-    }).then((data) => {
-      const { information, alignmentList } = processCollinear(data);
-      dataStore = { ...dataStore, information, alignmentList }
-    }).fail(() => {
-      toastr["error"]("Failed to upload the files , Please try again.", "ERROR");
-    }).done(() => {
-      // update the sourceID set in the state with the new sourceID
-      configureSourceID('uploaded-source', multiLevel);
-      // set the genomic data
-      setGenomicData(dataStore);
-    }).always(() => {
-      // turn off loader
-      setLoaderState(false);
-    });
+    // Trigger loading after 1 second delay to - Temp Bug Fix
+    setTimeout(() => {
+      getFile('coordinate-file').then((data) => {
+        // coordinate file
+        const { genomeLibrary, chromosomeMap } = processGFF(data);
+        dataStore = { genomeLibrary, chromosomeMap };
+        return getFile('collinear-file');
+      }).then((data) => {
+        // collinear file
+        const { information, alignmentList } = processCollinear(data);
+        dataStore = { ...dataStore, information, alignmentList };
+        // If track file is provided load it up too
+        if (document.getElementById('track-file').files.length > 0) {
+          return getFile('track-file');
+        }
+        else {
+          return $.Deferred(function (defer) { defer.resolve(false); }).promise();
+        }
+      }).then((data) => {
+        // track file if provided 
+        if (data) {
+          dataStore.trackData = processTrackFile(data);
+        }
+      })
+        .fail(() => {
+          toastr["error"]("Failed to upload the files , Please try again.", "ERROR");
+        }).done(() => {
+          // update the sourceID set in the state with the new sourceID
+          configureSourceID('uploaded-source', multiLevel);
+          // set the genomic data
+          setGenomicData(dataStore);
+        }).always(() => {
+          // turn off loader
+          setLoaderState(false);
+        });
+    }, 1000);
+
+
   }
 
   render() {
@@ -67,6 +89,7 @@ class Configuration extends Component {
             <h2 className='text-primary m-t-lg configuration-sub-title'>Upload Collinearity Files</h2>
             <FileUpload id='collinear-file' label='MCScanX Collinearity File' />
             <FileUpload id='coordinate-file' label='GFF File' />
+            <FileUpload id='track-file' label='Track File (optional)' />
             {loaderState && <h4 className='loading-text'>Loading data...</h4>}
             <button className="btn btn-primary-outline m-t" onClick={this.onUpload}> UPLOAD </button>
           </div>
@@ -85,7 +108,7 @@ class Configuration extends Component {
             {
               !multiLevel && <div>
                 <RadioButton value={'dashboard'} id={'dashboard'} className='conf-radio' name='plot-select'
-                  label={"Default"}
+                  label={"Default Dashboard"}
                   onChange={this.radioChange}
                   checked={plotType == 'dashboard'} />
                 <RadioButton value={'dotplot'} id={'dotplot'} className='conf-radio' name='plot-select'
