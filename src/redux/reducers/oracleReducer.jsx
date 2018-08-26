@@ -10,6 +10,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
       return Object.assign({}, state, { multiLevel: action.value })
     case types.SET_PLOT_TYPE:
       return Object.assign({}, state, { plotType: action.value })
+    case types.SET_TRACK_TYPE:
+      return Object.assign({}, state, { trackType: action.trackType })
     case types.TOGGLE_TRACKS:
       return Object.assign({}, state, { configuration: { ...state.configuration, showTracks: !state.configuration.showTracks } })
     case types.SET_CHROMOSOME_LABELS_STATE:

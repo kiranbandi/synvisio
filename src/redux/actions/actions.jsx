@@ -190,6 +190,10 @@ export function setPlotProps(levelOrType, value) {
     };
 }
 
+export function setTrackType(trackType){
+    return { type: types.SET_TRACK_TYPE, trackType };
+}
+
 export function setNormalizedState(isNormalized = false) {
     return { type: types.SET_NORMALIZED, isNormalized };
 }

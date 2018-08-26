@@ -7,6 +7,7 @@ export default {
     sourceID: 'bn',
     multiLevel: false,
     plotType: 'linearplot',
+    trackType: 'track-heatmap',
     loaderState: false,
     snapshotList: [],
     configuration: {
