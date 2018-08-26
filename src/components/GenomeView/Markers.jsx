@@ -42,7 +42,6 @@ class Markers extends Component {
                 // Add style to elements
                 style = {
                     'strokeWidth': '20px',
-                    'strokeLinecap': 'round',
                     stroke
                 }
                 return <line key={markerListId + "-line-" + i}

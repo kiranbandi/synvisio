@@ -51,7 +51,7 @@ class GenomeView extends Component {
         d3.select(this.innerG).attr('transform', 'translate(' + zoomTransform.x + "," + zoomTransform.y + ") scale(" + zoomTransform.k + ")")
     }
 
-    initialiseMarkers(configuration, chromosomeCollection) {
+    initialiseMarkers(configuration, chromosomeCollection, areTracksVisible) {
 
         const maxWidthAvailable = configuration.genomeView.width;
         // To arrange the markers in a proper way we find the marker List that has the maximum genome width
@@ -85,7 +85,7 @@ class GenomeView extends Component {
                         'key': key,
                         // marker start point = used space + half marker padding 
                         'x': widthUsedSoFar + (markerPadding / 2),
-                        'y': configuration.genomeView.verticalPositions[markerId],
+                        'y': configuration.genomeView.verticalPositions[markerId] + (areTracksVisible ? 40 : 0),
                         // width of the marker
                         'dx': (scaleFactor * chromosomeCollection.get(key).width)
                     }
@@ -136,12 +136,12 @@ class GenomeView extends Component {
                 linkList.push({
                     source: {
                         'x': sourceMarker.x + sourceX,
-                        'y': configuration.genomeView.verticalPositions.source + 10,
+                        'y': sourceMarker.y + 10,
                         'x1': sourceMarker.x + sourceX + sourceGeneWidth
                     },
                     target: {
                         'x': targetMarker.x + targetX,
-                        'y': configuration.genomeView.verticalPositions.target - 10,
+                        'y': targetMarker.y - 10,
                         'x1': targetMarker.x + targetX + targetGeneWidth
                     },
                     alignment,
@@ -158,13 +158,13 @@ class GenomeView extends Component {
         if (trackData && configuration.showTracks && plotType == 'linearplot') {
 
             _.each(markerPositions, (markerList, markerListId) => {
-                let multiplier = markerListId == 'source' ? -1 : 1;
+                let multiplier = markerListId == 'source' ? -28 : 13;
                 _.each(markerList, (marker) => {
                     let tracksPerMarker = _.map(trackData.chromosomeMap[marker.key], (trackDataFragment) => {
                         return {
                             x: ((trackDataFragment.start / marker.data.width) * marker.dx) + marker.x,
                             dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * marker.dx,
-                            y: marker.y + (multiplier * 20),
+                            y: marker.y + (multiplier),
                             value: (trackDataFragment.value - trackData.min) / (trackData.max - trackData.min)
                         }
                     });
@@ -176,14 +176,21 @@ class GenomeView extends Component {
         else { return false; }
     }
 
+    areTracksVisible(configuration, plotType) {
+        return (window.synVisio.trackData && configuration.showTracks && plotType == 'linearplot');
+    }
+
 
     render() {
 
         const { configuration, genomeData, plotType } = this.props,
             { isChromosomeModeON = false, genomeView } = configuration,
-            markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap),
+            areTracksVisible = this.areTracksVisible(configuration, plotType),
+            markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible),
             linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions),
-            trackPositions = this.initialiseTracks(configuration, markerPositions, plotType);
+            trackPositions = areTracksVisible ? this.initialiseTracks(configuration, markerPositions, plotType) : false;
+
+        const height = genomeView.height + (areTracksVisible ? 50 : 0);
 
         return (
             <div className='genomeViewRoot' >
@@ -192,11 +199,11 @@ class GenomeView extends Component {
                         x={genomeView.width - 50}
                         y={20}
                         onClick={this.resetZoom} />}
-                <svg className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode' : '')} ref={node => this.outerG = node} height={genomeView.height} width={genomeView.width}>
+                <svg className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')} ref={node => this.outerG = node} height={height} width={genomeView.width}>
                     <g ref={node => this.innerG = node} >
                         <Markers configuration={configuration} markerPositions={markerPositions} />
                         <Links configuration={configuration} linkPositions={linkPositions} />
-                        {trackPositions && <Tracks configuration={configuration} trackPositions={trackPositions} />}
+                        {areTracksVisible && <Tracks configuration={configuration} trackPositions={trackPositions} />}
                     </g>
                 </svg>
             </div>
