@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Markers from './Markers';
 import Links from './Links';
 import Tracks from './Tracks';
+import TrackTrails from './TrackTrails';
 import { InlayIcon } from '../';
 import * as d3 from 'd3';
 
@@ -153,7 +154,7 @@ class GenomeView extends Component {
     }
 
     initialiseTracks(markerPositions, trackType) {
-        let trackPositions = [],
+        let trackPositions = {},
             trackValue,
             trackData = window.synVisio.trackData;
 
@@ -167,14 +168,37 @@ class GenomeView extends Component {
                         dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * marker.dx,
                         dy: (trackType == 'track-heatmap') ? 50 : (50 * trackValue),
                         y: marker.y + (multiplier) + ((trackType == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
-                        value: trackValue
+                        value: trackValue,
+                        trackKey: marker.key
                     }
                 });
-                trackPositions.push(...tracksPerMarker);
+                trackPositions[marker.key] = tracksPerMarker;
             });
         });
         return trackPositions;
 
+    }
+
+    initialiseTrackTrails(markerPositions, trackType) {
+        let trackTrailPostions = [];
+        // For heatmap style tracks we dont have y axis trails 
+        if (trackType == 'track-heatmap') { return false }
+        // The track height is hardcoded to 50px so the lines are at 10 ,20,30,40 and 50px respectively 
+        else {
+            _.each(markerPositions, (markerList, markerListId) => {
+                let multiplier = markerListId == 'source' ? -66 : 16;
+                _.each(markerList, (marker) => {
+                    for (let looper = 0; looper <= 5; looper++) {
+                        trackTrailPostions.push({
+                            x: marker.x,
+                            dx: marker.dx,
+                            y: marker.y + multiplier + (looper * 10)
+                        });
+                    }
+                });
+            });
+            return trackTrailPostions;
+        }
     }
 
     areTracksVisible(configuration, plotType) {
@@ -189,7 +213,8 @@ class GenomeView extends Component {
             areTracksVisible = this.areTracksVisible(configuration, plotType),
             markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible),
             linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions),
-            trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType) : false;
+            trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType) : false,
+            trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(markerPositions, trackType) : false;
 
         const height = genomeView.height + (areTracksVisible ? 90 : 0);
 
@@ -204,7 +229,8 @@ class GenomeView extends Component {
                     <g ref={node => this.innerG = node} >
                         <Markers configuration={configuration} markerPositions={markerPositions} />
                         <Links configuration={configuration} linkPositions={linkPositions} />
-                        {areTracksVisible && <Tracks configuration={configuration} trackPositions={trackPositions} />}
+                        {areTracksVisible && <Tracks trackPositions={trackPositions} trackType={trackType} />}
+                        {trackTrailPositions && <TrackTrails trackTrailPositions={trackTrailPositions} />}
                     </g>
                 </svg>
             </div>
