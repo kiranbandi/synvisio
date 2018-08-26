@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default function(trackData) {
 
     let trackStore = {
@@ -17,22 +19,28 @@ export default function(trackData) {
         if (chromosomeId.length >= 3 && chromosomeId.length <= 4) {
             // if there is an entry for the chromosome simply add to it , if not create a new one
             if (trackStore.chromosomeMap.hasOwnProperty(chromosomeId)) {
-                trackStore.chromosomeMap[chromosomeId][trackStart] = {
+                trackStore.chromosomeMap[chromosomeId].push({
                     'value': trackValue,
-                    'end': trackEnd
-                };
+                    'end': trackEnd,
+                    'start': trackStart
+                });
             } else {
-                trackStore.chromosomeMap[chromosomeId] = {
-                    trackStart: {
-                        'value': trackValue,
-                        'end': trackEnd
-                    }
-                };
+                trackStore.chromosomeMap[chromosomeId] = [{
+                    'value': trackValue,
+                    'end': trackEnd,
+                    'start': trackStart
+                }];
             };
             //  push max and min values to the store
             if (trackValue > trackStore.max) { trackStore.max = trackValue; }
             if (trackValue < trackStore.min) { trackStore.min = trackValue; }
         }
     });
+
+    // sort track values for each chromosome
+    _.each(trackStore.chromosomeMap, (value) => {
+        value.sort(function(a, b) { return a.start - b.start })
+    });
+
     return trackStore;
 };
