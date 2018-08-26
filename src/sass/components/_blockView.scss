@@ -1,10 +1,10 @@
 .blockViewRoot {
     position: relative;
     &.rounded-corner {
-        border: 2px solid grey;
+        border-radius: 10px;
+        background: #1a1c22;
         margin: 0px auto;
         display: block;
-        border-radius: 15px;
     }
     .blockViewSVG {
         .axis--x text {

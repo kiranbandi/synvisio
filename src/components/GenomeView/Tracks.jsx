@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { schemeCategory10, interpolateReds } from 'd3';
+import { schemeCategory10, interpolateBlues } from 'd3';
 
 export default class Tracks extends Component {
 
@@ -11,7 +11,7 @@ export default class Tracks extends Component {
 
     generateTracks(configuration, trackPositions) {
         return _.map(trackPositions, (track, index) => {
-            return <rect x={track.x} y={track.y} key={'track-' + index} width={track.dx} height={10} style={{ 'fill': interpolateReds(track.value) }}>
+            return <rect x={track.x} y={track.y} key={'track-' + index} width={track.dx} height={15} style={{ 'fill': interpolateBlues(track.value) }}>
             </rect>
         });
     }
