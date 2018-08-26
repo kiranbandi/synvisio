@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Markers from './Markers';
 import Links from './Links';
+import Tracks from './Tracks';
 import { InlayIcon } from '../';
 import * as d3 from 'd3';
 
@@ -152,14 +153,27 @@ class GenomeView extends Component {
     }
 
     initialiseTracks(configuration, markerPositions, plotType) {
+        let trackPositions = [],
+            trackData = window.synVisio.trackData;
+        if (trackData && configuration.showTracks && plotType == 'linearplot') {
 
-        if (window.synVisio.trackData && configuration.showTracks && plotType == 'linearplot') {
-            debugger;
+            _.each(markerPositions, (markerList, markerListId) => {
+                let multiplier = markerListId == 'source' ? -1 : 1;
+                _.each(markerList, (marker) => {
+                    let tracksPerMarker = _.map(trackData.chromosomeMap[marker.key], (trackDataFragment) => {
+                        return {
+                            x: ((trackDataFragment.start / marker.data.width) * marker.dx) + marker.x,
+                            dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * marker.dx,
+                            y: marker.y + (multiplier * 20),
+                            value: (trackDataFragment.value - trackData.min) / (trackData.max - trackData.min)
+                        }
+                    });
+                    trackPositions.push(...tracksPerMarker);
+                });
+            });
+            return trackPositions;
         }
-        else {
-            return false;
-        }
-
+        else { return false; }
     }
 
 
@@ -170,7 +184,6 @@ class GenomeView extends Component {
             markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap),
             linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions),
             trackPositions = this.initialiseTracks(configuration, markerPositions, plotType);
-
 
         return (
             <div className='genomeViewRoot' >
@@ -183,6 +196,7 @@ class GenomeView extends Component {
                     <g ref={node => this.innerG = node} >
                         <Markers configuration={configuration} markerPositions={markerPositions} />
                         <Links configuration={configuration} linkPositions={linkPositions} />
+                        {trackPositions && <Tracks configuration={configuration} trackPositions={trackPositions} />}
                     </g>
                 </svg>
             </div>
