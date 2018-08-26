@@ -7,7 +7,7 @@ import processTrackFile from '../utils/processTrackFile';
 import toastr from '../utils/toastr';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { configureSourceID, setGenomicData, setPlotProps, setLoaderState } from '../redux/actions/actions';
+import { configureSourceID, setGenomicData, setPlotProps, setLoaderState, setTrackType } from '../redux/actions/actions';
 import { setTimeout } from 'timers';
 
 class Configuration extends Component {
@@ -22,6 +22,9 @@ class Configuration extends Component {
     const value = event.target.value;
     if (value.indexOf('level') > -1) {
       this.props.actions.setPlotProps('level', value == 'level-multi');
+    }
+    else if (value.indexOf('track') > -1) {
+      this.props.actions.setTrackType(value);
     }
     else {
       this.props.actions.setPlotProps('type', value);
@@ -80,7 +83,7 @@ class Configuration extends Component {
 
   render() {
 
-    const { sourceID = '', multiLevel, plotType, loaderState = false } = this.props;
+    const { sourceID = '', multiLevel, plotType, trackType, loaderState = false } = this.props;
     return (
       <div className="configuration-container">
         <div className="container">
@@ -121,6 +124,30 @@ class Configuration extends Component {
                   checked={plotType == 'linearplot'} />
               </div>
             }
+
+            {
+              (plotType == 'linearplot' || plotType == 'dotplot') && (!multiLevel) && < div >
+                <h4 className="sub-info">If a track file has been provided choose one of the following options to view tracks , this feature is only available for dotplots and linearplots -</h4>
+                <RadioButton value={'track-heatmap'} id={'track-heatmap'} className='conf-radio' name='track-select'
+                  label={"Heatmap"}
+                  onChange={this.radioChange}
+                  checked={trackType == 'track-heatmap'} />
+                <RadioButton value={'track-histogram'} id={'track-histogram'} className='conf-radio' name='track-select'
+                  label={"Histogram"}
+                  onChange={this.radioChange}
+                  checked={trackType == 'track-histogram'} />
+
+                <RadioButton value={'track-line'} id={'track-line'} className='conf-radio' name='track-select'
+                  label={"Line"}
+                  onChange={this.radioChange}
+                  checked={trackType == 'track-line'} />
+                <RadioButton value={'track-scatter'} id={'track-scatter'} className='conf-radio' name='track-select'
+                  label={"Scatter"}
+                  onChange={this.radioChange}
+                  checked={trackType == 'track-scatter'} />
+              </div>
+            }
+
           </div>
 
           {sourceID == 'uploaded-source' && <div className="alert alert-success m-t m-b">
@@ -136,7 +163,7 @@ class Configuration extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ configureSourceID, setGenomicData, setPlotProps, setLoaderState }, dispatch)
+    actions: bindActionCreators({ configureSourceID, setGenomicData, setPlotProps, setLoaderState, setTrackType }, dispatch)
   };
 }
 
@@ -145,7 +172,8 @@ function mapStateToProps(state) {
     sourceID: state.oracle.sourceID,
     multiLevel: state.oracle.multiLevel,
     plotType: state.oracle.plotType,
-    loaderState: state.oracle.loaderState
+    loaderState: state.oracle.loaderState,
+    trackType: state.oracle.trackType
   };
 }
 

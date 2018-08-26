@@ -85,7 +85,7 @@ class GenomeView extends Component {
                         'key': key,
                         // marker start point = used space + half marker padding 
                         'x': widthUsedSoFar + (markerPadding / 2),
-                        'y': configuration.genomeView.verticalPositions[markerId] + (areTracksVisible ? 40 : 0),
+                        'y': configuration.genomeView.verticalPositions[markerId] + (areTracksVisible ? 45 : 0),
                         // width of the marker
                         'dx': (scaleFactor * chromosomeCollection.get(key).width)
                     }
@@ -152,28 +152,29 @@ class GenomeView extends Component {
         return linkList;
     }
 
-    initialiseTracks(configuration, markerPositions, plotType) {
+    initialiseTracks(markerPositions, trackType) {
         let trackPositions = [],
+            trackValue,
             trackData = window.synVisio.trackData;
-        if (trackData && configuration.showTracks && plotType == 'linearplot') {
 
-            _.each(markerPositions, (markerList, markerListId) => {
-                let multiplier = markerListId == 'source' ? -28 : 13;
-                _.each(markerList, (marker) => {
-                    let tracksPerMarker = _.map(trackData.chromosomeMap[marker.key], (trackDataFragment) => {
-                        return {
-                            x: ((trackDataFragment.start / marker.data.width) * marker.dx) + marker.x,
-                            dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * marker.dx,
-                            y: marker.y + (multiplier),
-                            value: (trackDataFragment.value - trackData.min) / (trackData.max - trackData.min)
-                        }
-                    });
-                    trackPositions.push(...tracksPerMarker);
+        _.each(markerPositions, (markerList, markerListId) => {
+            let multiplier = markerListId == 'source' ? -66 : 16;
+            _.each(markerList, (marker) => {
+                let tracksPerMarker = _.map(trackData.chromosomeMap[marker.key], (trackDataFragment) => {
+                    trackValue = (trackDataFragment.value - trackData.min) / (trackData.max - trackData.min);
+                    return {
+                        x: ((trackDataFragment.start / marker.data.width) * marker.dx) + marker.x,
+                        dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * marker.dx,
+                        dy: (trackType == 'track-heatmap') ? 50 : (50 * trackValue),
+                        y: marker.y + (multiplier) + ((trackType == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
+                        value: trackValue
+                    }
                 });
+                trackPositions.push(...tracksPerMarker);
             });
-            return trackPositions;
-        }
-        else { return false; }
+        });
+        return trackPositions;
+
     }
 
     areTracksVisible(configuration, plotType) {
@@ -183,14 +184,14 @@ class GenomeView extends Component {
 
     render() {
 
-        const { configuration, genomeData, plotType } = this.props,
+        const { configuration, genomeData, plotType, trackType } = this.props,
             { isChromosomeModeON = false, genomeView } = configuration,
             areTracksVisible = this.areTracksVisible(configuration, plotType),
             markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible),
             linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions),
-            trackPositions = areTracksVisible ? this.initialiseTracks(configuration, markerPositions, plotType) : false;
+            trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType) : false;
 
-        const height = genomeView.height + (areTracksVisible ? 50 : 0);
+        const height = genomeView.height + (areTracksVisible ? 90 : 0);
 
         return (
             <div className='genomeViewRoot' >
@@ -214,7 +215,8 @@ class GenomeView extends Component {
 function mapStateToProps(state) {
     return {
         genomeData: state.genome,
-        plotType: state.oracle.plotType
+        plotType: state.oracle.plotType,
+        trackType: state.oracle.trackType
     };
 }
 
