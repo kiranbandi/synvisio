@@ -6,8 +6,8 @@ export default {
   oracle: {
     sourceID: 'bn',
     multiLevel: false,
-    plotType: 'dotplot',
-    trackType: 'track-histogram',
+    plotType: 'dashboard',
+    trackType: 'track-heatmap',
     loaderState: false,
     snapshotList: [],
     configuration: {
