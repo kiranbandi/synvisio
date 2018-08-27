@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import AxisLines from './AxisLines';
 import AlignmentLines from './AlignmentLines';
+import DotTracks from './DotTracks';
+import DotTrackTrails from './DotTrackTrails';
 import { InlayIcon } from '../';
 import * as d3 from 'd3';
 
@@ -125,10 +127,88 @@ class DotView extends Component {
         return linkList;
     }
 
+    areTracksVisible(configuration, plotType) {
+        return (window.synVisio.trackData && configuration.showTracks && plotType == 'dotplot');
+    }
+
+    initialiseTracks(axisLinePositions, trackType) {
+
+        let trackPositions = { source: {}, target: {} },
+            trackValue,
+            trackData = window.synVisio.trackData;
+
+        _.each(axisLinePositions, (axisList, markerListId) => {
+
+            _.each(axisList, (marker) => {
+
+                let tracksPerMarker;
+                if (markerListId == 'target') {
+                    tracksPerMarker = _.map(trackData.chromosomeMap[marker.key], (trackDataFragment) => {
+                        trackValue = (trackDataFragment.value - trackData.min) / (trackData.max - trackData.min);
+                        return {
+                            x: ((trackDataFragment.start / marker.data.width) * (marker.y2 - marker.y1)) + marker.y1,
+                            dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * (marker.y2 - marker.y1),
+                            dy: (trackType == 'track-heatmap') ? 50 : (50 * trackValue),
+                            y: marker.x2 + (55) + ((trackType == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
+                            value: trackValue
+                        }
+                    });
+                    trackPositions.target[marker.key] = tracksPerMarker;
+                }
+                else {
+                    tracksPerMarker = _.map(trackData.chromosomeMap[marker.key], (trackDataFragment) => {
+                        trackValue = (trackDataFragment.value - trackData.min) / (trackData.max - trackData.min);
+                        return {
+                            x: ((trackDataFragment.start / marker.data.width) * (marker.x2 - marker.x1)) + marker.x1,
+                            dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * (marker.x2 - marker.x1),
+                            dy: (trackType == 'track-heatmap') ? 50 : (50 * trackValue),
+                            y: marker.y2 + (10) + ((trackType == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
+                            value: trackValue
+                        }
+                    });
+                    trackPositions.source[marker.key] = tracksPerMarker;
+                }
+
+            });
+        });
+        return trackPositions;
+    }
+
+    initialiseTrackTrails(axisLinePositions, trackType) {
+        let trackTrailPostions = { source: [], target: [] };
+        // For heatmap style tracks we dont have y axis trails 
+        if (trackType == 'track-heatmap') { return false }
+        // The track height is hardcoded to 50px so the lines are at 10 ,20,30,40 and 50px respectively 
+        else {
+            _.each(axisLinePositions, (axisList, axisListId) => {
+                _.each(axisList, (marker) => {
+                    for (let looper = 0; looper <= 5; looper++) {
+                        if (axisListId == 'target') {
+                            trackTrailPostions[axisListId].push({
+                                x: marker.y1,
+                                dx: marker.y2 - marker.y1,
+                                y: marker.x2 + 55 + (looper * 10)
+                            });
+                        }
+                        else {
+                            trackTrailPostions[axisListId].push({
+                                x: marker.x1,
+                                dx: marker.x2 - marker.x1,
+                                y: marker.y2 + 10 + (looper * 10)
+                            });
+                        }
+
+                    }
+                });
+            });
+            return trackTrailPostions;
+        }
+    }
+
 
     render() {
 
-        let { configuration, genomeData, plotType } = this.props;
+        let { configuration, genomeData, plotType, trackType } = this.props;
         const side_margin = 57.5,
             { isChromosomeModeON = false } = configuration;
 
@@ -144,6 +224,10 @@ class DotView extends Component {
 
         let axisLinePositions = this.initialisePostions(configuration, genomeData.chromosomeMap),
             alignmentLinePositions = this.initialiseLines(configuration, axisLinePositions, genomeData.chromosomeMap);
+
+        const areTracksVisible = this.areTracksVisible(configuration, plotType);
+        const trackPositions = areTracksVisible ? this.initialiseTracks(axisLinePositions, trackType) : false,
+            trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(axisLinePositions, trackType) : false;
 
         return (
             <div className={(plotType != 'dashboard' ? 'dotViewWrapper only-dotview' : 'dotViewWrapper')}>
@@ -162,6 +246,10 @@ class DotView extends Component {
                         <g ref={node => this.innerG = node}>
                             <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
                             <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions} />
+                            {areTracksVisible && <DotTracks trackPositions={trackPositions.source} trackType={trackType} />}
+                            {areTracksVisible && <DotTracks trackPositions={trackPositions.target} trackType={trackType} rotate={true} />}
+                            {trackTrailPositions && <DotTrackTrails trackTrailPositions={trackTrailPositions.source} />}
+                            {trackTrailPositions && <DotTrackTrails trackTrailPositions={trackTrailPositions.target} rotate={true} />}
                         </g>
                     </svg>
                 </div>
@@ -171,7 +259,10 @@ class DotView extends Component {
 }
 
 function mapStateToProps(state) {
-    return { genomeData: state.genome };
+    return {
+        genomeData: state.genome,
+        trackType: state.oracle.trackType
+    };
 }
 
 export default connect(mapStateToProps)(DotView);

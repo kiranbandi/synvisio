@@ -205,7 +205,6 @@ class GenomeView extends Component {
         return (window.synVisio.trackData && configuration.showTracks && plotType == 'linearplot');
     }
 
-
     render() {
 
         const { configuration, genomeData, plotType, trackType } = this.props,
@@ -241,7 +240,6 @@ class GenomeView extends Component {
 function mapStateToProps(state) {
     return {
         genomeData: state.genome,
-        plotType: state.oracle.plotType,
         trackType: state.oracle.trackType
     };
 }

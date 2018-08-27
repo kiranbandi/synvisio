@@ -30,6 +30,27 @@
                 opacity: 0;
             }
         }
+        .tracksContainer {
+            path.track-line-path {
+                stroke: #238099;
+                stroke-width: 2px;
+                fill: none;
+            }
+            &.rotate {
+                transform-origin: bottom right;
+                transform: rotate(90deg);
+            }
+        }
+        .tracksTrailsContainer {
+            line.track-trails {
+                stroke-width: 0.5px;
+                stroke: #525765;
+            }
+            &.rotate {
+                transform-origin: bottom right;
+                transform: rotate(90deg);
+            }
+        }
     }
     .chrom-mode {
         border-radius: 10px;
