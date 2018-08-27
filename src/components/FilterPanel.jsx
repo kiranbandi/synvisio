@@ -93,7 +93,7 @@ class FilterPanel extends Component {
                         GO <span className="icon icon-cw"></span>
                     </button>
 
-                    {window.synVisio.trackData && this.props.plotType == 'linearplot' && <button type="submit" id='track-btn' className="btn btn-primary-outline" onClick={this.onToggleTrack}>
+                    {window.synVisio.trackData && (this.props.plotType == 'linearplot' || this.props.plotType == 'dotplot') && <button type="submit" id='track-btn' className="btn btn-primary-outline" onClick={this.onToggleTrack}>
                         Toggle Tracks
                     </button>}
 
@@ -110,7 +110,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     return {
         chromosomeMap: state.genome.chromosomeMap,
         markers: state.oracle.configuration.markers,

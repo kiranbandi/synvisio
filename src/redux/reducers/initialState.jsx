@@ -6,8 +6,8 @@ export default {
   oracle: {
     sourceID: 'bn',
     multiLevel: false,
-    plotType: 'linearplot',
-    trackType: 'track-line',
+    plotType: 'dotplot',
+    trackType: 'track-histogram',
     loaderState: false,
     snapshotList: [],
     configuration: {
