@@ -5,7 +5,6 @@ import sortAlphaNum from '../utils/sortAlphaNum';
 import { filterData, toggleTracks } from '../redux/actions/actions';
 
 class FilterPanel extends Component {
-
     constructor(props) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
@@ -20,7 +19,6 @@ class FilterPanel extends Component {
                 'actionsBox': true,
                 'iconBase': 'icon',
                 'tickIcon': 'icon-check',
-                'maxOptions': 10,
                 'selectedTextFormat': 'count > 2'
             })
             .selectpicker('val', markers.source);
@@ -30,7 +28,6 @@ class FilterPanel extends Component {
                 'actionsBox': true,
                 'iconBase': 'icon',
                 'tickIcon': 'icon-check',
-                'maxOptions': 10,
                 'selectedTextFormat': 'count > 2'
             })
             .selectpicker('val', markers.target);

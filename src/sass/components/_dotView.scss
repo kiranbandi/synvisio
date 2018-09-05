@@ -17,7 +17,7 @@
         .dot-plot-markers {
             fill: white;
             font-weight: bold;
-            font-size: 1em;
+            font-size: 0.75em;
             cursor: pointer;
             text-anchor: middle;
         }
@@ -50,6 +50,10 @@
                 transform-origin: bottom right;
                 transform: rotate(90deg);
             }
+        }
+        text.marker-x-lines-text {
+            transform: rotate(-90deg) translate(-10px);
+            transform-box: fill-box;
         }
     }
     .chrom-mode {

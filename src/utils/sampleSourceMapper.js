@@ -15,5 +15,9 @@ export default {
     'os_sb': {
         'source': ['os1', 'os2', 'os3', 'os4', 'os5', 'os6', 'os7', 'os8'],
         'target': ['sb1', 'sb2', 'sb3', 'sb4']
+    },
+    'hs_pt': {
+        'source': ['hs1', 'hs2', 'hs3', 'hs4', 'hs5', 'hs6', 'hs7', 'hs8', 'hs9', 'hs10', 'hs11', 'hs12', 'hs13', 'hs14', 'hs15', 'hs16', 'hs17', 'hs18', 'hs19', 'hs20', 'hs21', 'hs22', 'hsX', 'hsY'],
+        'target': ['pt1', 'pt2A', 'pt2B', 'pt3', 'pt4', 'pt5', 'pt6', 'pt7', 'pt8', 'pt9', 'pt10', 'pt11', 'pt12', 'pt13', 'pt14', 'pt15', 'pt16', 'pt17', 'pt18', 'pt19', 'pt20', 'pt21', 'pt22', 'ptX', 'ptY']
     }
 }
