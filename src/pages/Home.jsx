@@ -53,6 +53,7 @@ class Home extends Component {
             <li> <Link to={'/Dashboard/bn'}> Bn </Link> - Brassica napus , Canola </li>
             <li> <Link to={'/Dashboard/ta_cs'}> Wheat IWGSC </Link> - Wheat , Chinese Spring </li>
             <li> <Link to={'/Dashboard/ta_hb'}> Wheat  Hybrid </Link> - Wheat Hybrid , Artificial Ancestral Hexaplod </li>
+            <li> <Link to={'/Dashboard/cs_hb'}> Wheat cross way analysis </Link> - Wheat Chinese Spring vs Artificial Ancestral Hexaplod</li>
             <li> <Link to={'/Dashboard/hs_pt'}> Hs vs Pt </Link> - Hs(Homo sapiens Hg38, Human) vs Pt(Pan troglodytes Pan-tro 3, Chimpanzee)</li>
             <li> <Link to={'/Dashboard/at'}> At </Link> - Arabidopsis thaliana ,Thale cress </li>
             <li> <Link to={'/Dashboard/os_sb'}> Os vs Sb </Link> - Os(Oriza sativa, Rice) vs Sb(Sorghum bicolor , Broom-Corn)</li>

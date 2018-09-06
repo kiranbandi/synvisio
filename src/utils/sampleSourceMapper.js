@@ -27,5 +27,9 @@ export default {
     'ta_hb': {
         'source': ['ta1A', 'ta2A', 'ta3A', 'ta4A', 'ta5A', 'ta6A', 'ta7A'],
         'target': ['ta1B', 'ta2B', 'ta3B', 'ta4B', 'ta5B', 'ta6B', 'ta7B']
+    },
+    'cs_hb': {
+        'source': ['cs1A', 'cs1B', 'cs1D'],
+        'target': ['hb1A', 'hb1B', 'hb1D']
     }
 }
