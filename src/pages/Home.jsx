@@ -51,7 +51,7 @@ class Home extends Component {
               own sequences.But for the time being we have loaded up several sample files as listed below :</p>
           <ul>
             <li> <Link to={'/Dashboard/bn'}> Bn </Link> - Brassica napus , Canola </li>
-            <li> <Link to={'/Dashboard/ta_cs'}> Wheat IWGSC </Link> - Wheat , Chinese Spring </li>
+            <li> <Link to={'/Dashboard/ta_cs'}> Wheat IWGSC </Link> - Wheat , Chinese Spring (With SNP tracks) </li>
             <li> <Link to={'/Dashboard/ta_hb'}> Wheat  Hybrid </Link> - Wheat Hybrid , Artificial Ancestral Hexaplod </li>
             <li> <Link to={'/Dashboard/cs_hb'}> Wheat cross way analysis </Link> - Wheat Chinese Spring vs Artificial Ancestral Hexaplod</li>
             <li> <Link to={'/Dashboard/hs_pt'}> Hs vs Pt </Link> - Hs(Homo sapiens Hg38, Human) vs Pt(Pan troglodytes Pan-tro 3, Chimpanzee)</li>
