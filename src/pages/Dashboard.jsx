@@ -34,7 +34,7 @@ class Dashboard extends Component {
             getGenomicsData(sourceID).then((data) => {
                 // set the genomic data
                 setGenomicData(data);
-            }).always(() => {
+            }).finally(() => {
                 // Turn off the loader
                 setLoaderState(false);
             });

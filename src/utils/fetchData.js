@@ -9,6 +9,27 @@ var fetchData = {};
 
 fetchData.getGenomicsData = function(sourceID) {
 
+    return new Promise((resolve, reject) => {
+
+        var datastore = {};
+
+        axios.get('assets/files/' + sourceID + '_coordinate.gff')
+            .catch(() => { errorCallback(defer, sourceID) })
+            .then((response) => { return processGFF(response.data) })
+            .then((data) => {
+                datastore = Object.assign(datastore, {...data });
+                return axios.get('assets/files/' + sourceID + '_collinear.collinearity')
+            })
+            .catch(() => { errorCallback(defer, sourceID) })
+            .then(((response) => { return processCollinear(response.data) }))
+            .then((data) => {
+                datastore = Object.assign({}, datastore, {...data });
+
+            })
+
+
+    });
+
     return $.Deferred(function(defer) {
         // Loading the gff file  - Will Eventually be moved into the file loader container
         axios.get('assets/files/' + sourceID + '_coordinate.gff').then((coordinateFile) => {
@@ -34,6 +55,11 @@ fetchData.getGenomicsData = function(sourceID) {
         });
     }).promise();
 
+}
+
+function errorCallback(defer, sourceID) {
+    defer.reject();
+    toastr["error"]("Failed to fetch the required files for source - " + sourceID, "ERROR");
 }
 
 
