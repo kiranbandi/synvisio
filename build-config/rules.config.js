@@ -4,6 +4,10 @@ module.exports = [{
         loader: 'babel-loader'
     },
     {
+        test: /\.worker\.js$/,
+        use: { loader: 'workerize-loader' }
+    },
+    {
         test: /\.jsx$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
