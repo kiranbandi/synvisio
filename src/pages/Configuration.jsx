@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import { FileUpload, RadioButton } from '../components';
 import getFile from '../utils/getFile';
-import processGFF from '../utils/processGFF';
-import processCollinear from '../utils/processCollinear';
-import processTrackFile from '../utils/processTrackFile';
+import processFile from '../utils/processFile';
 import toastr from '../utils/toastr';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureSourceID, setGenomicData, setPlotProps, setLoaderState, setTrackType } from '../redux/actions/actions';
-import { setTimeout } from 'timers';
 
 class Configuration extends Component {
 
@@ -33,51 +30,49 @@ class Configuration extends Component {
 
   onUpload() {
 
-    let dataStore = {};
+    let datastore = {};
     const { actions, multiLevel } = this.props,
       { configureSourceID, setGenomicData, setLoaderState } = actions;
 
     // Turn on loader to indicate file uploading and processing 
     setLoaderState(true);
     configureSourceID('bn', multiLevel);
+    const isTrackFileAvailable = document.getElementById('track-file').files.length > 0;
 
-    // Trigger loading after 1 second delay to - Temp Bug Fix
-    setTimeout(() => {
-      getFile('coordinate-file').then((data) => {
-        // coordinate file
-        const { genomeLibrary, chromosomeMap } = processGFF(data);
-        dataStore = { genomeLibrary, chromosomeMap };
+
+    // load the coordinate file
+    getFile('coordinate-file')
+      // process the file in a seperate thread
+      .then((response) => { return processFile(response, 'gff') })
+      // store the data and then load the collinear file
+      .then((data) => {
+        datastore = Object.assign(datastore, { ...data });
         return getFile('collinear-file');
-      }).then((data) => {
-        // collinear file
-        const { information, alignmentList } = processCollinear(data);
-        dataStore = { ...dataStore, information, alignmentList };
-        // If track file is provided load it up too
-        if (document.getElementById('track-file').files.length > 0) {
-          return getFile('track-file');
-        }
-        else {
-          return $.Deferred(function (defer) { defer.resolve(false); }).promise();
-        }
-      }).then((data) => {
-        // track file if provided 
-        if (data) {
-          dataStore.trackData = processTrackFile(data);
-        }
       })
-        .fail(() => {
-          toastr["error"]("Failed to upload the files , Please try again.", "ERROR");
-        }).done(() => {
-          // update the sourceID set in the state with the new sourceID
-          configureSourceID('uploaded-source', multiLevel);
-          // set the genomic data
-          setGenomicData(dataStore);
-        }).always(() => {
-          // turn off loader
-          setLoaderState(false);
-        });
-    }, 1000);
-
+      // process the collinear file
+      .then(((response) => { return processFile(response, 'collinear') }))
+      // store the collinear data and load the track file if one is provided
+      .then((data) => {
+        datastore = Object.assign({}, datastore, { ...data });
+        return isTrackFileAvailable ? getFile('track-file') : Promise.resolve('false');
+      })
+      // process trackfile data is present
+      .then((data) => {
+        return isTrackFileAvailable ? processFile(data, 'track') : Promise.resolve('false');
+      })
+      .then((trackData) => {
+        if (isTrackFileAvailable) {
+          datastore.trackData = trackData;
+        }
+        // update the sourceID set in the state with the new sourceID
+        configureSourceID('uploaded-source', multiLevel);
+        // set the genomic data
+        setGenomicData(datastore);
+      })
+      .catch(() => {
+        toastr["error"]("Failed to upload the files , Please try again.", "ERROR");
+      })
+      .finally(() => { setLoaderState(false); });
 
   }
 
