@@ -1,13 +1,11 @@
 // worker written in vanilla javascript 
-export function processCollinear(collinearityData) {
-
+export function process(collinearityData) {
     // The first 11 lines contain information regarding the MCSCANX Parameters
     // and can be processed seperately 
     var FileLines = collinearityData.split('\n'),
         information = parseInformation(FileLines.slice(0, 11)),
         alignmentList = [],
         alignmentBuffer = {};
-
     // remove the first 11 lines and then process the file line by line
     FileLines.slice(11).forEach(function(line, index) {
             if (line.indexOf('Alignment') > -1) {
@@ -26,7 +24,6 @@ export function processCollinear(collinearityData) {
         // push the last alignment still in the buffer
     alignmentList.push(alignmentBuffer);
     return { "information": information, "alignmentList": alignmentList };
-
 };
 
 function parseInformation(informationLines) {

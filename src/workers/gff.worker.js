@@ -1,4 +1,4 @@
-export function processGFF(gffData) {
+export function process(gffData) {
 
     let genomeEntry,
         genomeLibrary = new Map(),
