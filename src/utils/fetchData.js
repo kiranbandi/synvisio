@@ -18,10 +18,20 @@ fetchData.getGenomicsData = function(sourceID) {
             // get the collinear file
             .then((data) => {
                 datastore = Object.assign(datastore, {...data });
-                return axios.get('assets/files/' + sourceID + '_collinear.collinearity');
+                if (sourceID.indexOf('ortho') > -1) {
+                    return axios.get('assets/files/' + sourceID + '.txt');
+                } else {
+                    return axios.get('assets/files/' + sourceID + '_collinear.collinearity');
+                }
             })
             // process the collinear file
-            .then(((response) => { return processFile(response.data, 'collinear') }))
+            .then(((response) => {
+                if (sourceID.indexOf('ortho') > -1) {
+                    return processFile(response.data, 'orthologue');
+                } else {
+                    return processFile(response.data, 'collinear');
+                }
+            }))
             // if there is an error in any of the above paths reject the promise and stop the promise chain below too
             .catch((err) => {
                 toastr["error"]("Failed to fetch and parse required files for source - " + sourceID, "ERROR");

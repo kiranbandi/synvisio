@@ -25,8 +25,6 @@ export default (markers, alignmentList) => {
 
                 flippedAlignment.source = alignment.target;
                 flippedAlignment.target = alignment.source;
-                flippedAlignment.sourceKey = alignment.targetKey;
-                flippedAlignment.targetKey = alignment.sourceKey;
                 flippedAlignment.links = _.map(alignment.links, (link) => {
                     return {
                         'source': link.target,

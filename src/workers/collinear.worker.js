@@ -44,7 +44,6 @@ function parseInformation(informationLines) {
     };
 }
 
-
 function parseAlignmentDetails(alignmentDetails) {
     let alignmentDetailsList = alignmentDetails.split(' ');
     return {
@@ -60,9 +59,7 @@ function parseAlignmentDetails(alignmentDetails) {
 }
 
 function parseLink(link) {
-
     let linkInfo = link.split(":")[1].trim().split(/\s+/);
-
     return {
         'source': linkInfo[0],
         'target': linkInfo[1],
