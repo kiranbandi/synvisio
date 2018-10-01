@@ -34,6 +34,8 @@ class Home extends Component {
           <p>We are working on adding several new features to this tool.The current development progress is documented <a href="https://trello.com/b/ag1Upk33/mcscanx-synteny-visualizer">here</a>.We have loaded up several sample files below that you can play around with :</p>
           <ul>
             <li> <Link to={'/Dashboard/bn'}> Bn </Link> - Brassica napus , Canola </li>
+            <li> <Link to={'/Dashboard/bnigra_bol_brapa_ortho'}> B.nigra vs B.oleracea vs B.rapa </Link> - 3 Way comparision between Brassica nigra , Brassica rapa and Brassica oleracea </li>
+            <li> <Link to={'/Dashboard/ca_lc_mt'}> Ca vs Lc vs Mt </Link> - 3 Way comparision between Chickpea , Lentils and Barrel Meddick </li>
             <li> <Link to={'/Dashboard/ta_cs'}> Wheat IWGSC </Link> - Wheat , Chinese Spring (With SNP tracks) </li>
             <li> <Link to={'/Dashboard/ta_hb'}> Wheat  Hybrid </Link> - Wheat Hybrid , Artificial Ancestral Hexaplod </li>
             <li> <Link to={'/Dashboard/cs_hb'}> Wheat cross way analysis </Link> - Wheat Chinese Spring vs Artificial Ancestral Hexaplod</li>
