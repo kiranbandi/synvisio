@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export function process(trackData) {
     let trackStore = {
             chromosomeMap: {},
@@ -35,10 +33,10 @@ export function process(trackData) {
             if (trackValue < trackStore.min) { trackStore.min = trackValue; }
         }
     });
-
     // sort track values for each chromosome
-    _.forEach(trackStore.chromosomeMap, (value) => {
-        value.sort(function(a, b) { return a.start - b.start })
+    Object.keys(trackStore.chromosomeMap).map((key) => {
+        // inplace sorting thus modifying the original dataset :-D
+        trackStore.chromosomeMap[key].sort(function(a, b) { return a.start - b.start });
     });
 
     return trackStore;

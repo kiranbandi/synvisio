@@ -5,7 +5,10 @@ module.exports = [{
     },
     {
         test: /\.worker\.js$/,
-        use: { loader: 'workerize-loader' }
+        use: {
+            loader: 'workerize-loader',
+            options: { inline: true }
+        }
     },
     {
         test: /\.jsx$/,
