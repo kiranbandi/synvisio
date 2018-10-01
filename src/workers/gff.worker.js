@@ -15,7 +15,7 @@ export function process(gffData) {
                 geneId = genomeEntry[1];
 
             // Taking in only non scafflod entries - unwanted entries end up being parsed as NaN and this filters them
-            if (chromosomeId.length >= 3 && chromosomeId.length <= 4) {
+            if (chromosomeId.length >= 2 && chromosomeId.length <= 4) {
                 genomeLibrary.set(geneId, {
                         'start': geneStart,
                         'end': geneEnd,

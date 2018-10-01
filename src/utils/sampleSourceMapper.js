@@ -31,5 +31,9 @@ export default {
     'cs_hb': {
         'source': ['cs1A', 'cs1B', 'cs1D'],
         'target': ['hb1A', 'hb1B', 'hb1D']
+    },
+    'bnigra_bol_brapa_ortho': {
+        'source': ['C1', 'C2', 'C3'],
+        'target': ['B1', 'B2', 'B3']
     }
 }

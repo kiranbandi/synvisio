@@ -97,7 +97,7 @@ class PanelView extends Component {
                 return (filterLevel.source == o.source && filterLevel.target == o.target);
             })
         }
-
+        
         let valueList = alignmentList.map((o) => o[selectedRadio]).sort((a, b) => a - b);
 
         let min = valueList[0],

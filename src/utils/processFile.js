@@ -1,6 +1,7 @@
 import gffWorker from "../workers/gff.worker";
 import collinearWorker from "../workers/collinear.worker";
 import trackWorker from "../workers/track.worker";
+import orthologueWorker from "../workers/orthologue.worker";
 import toastr from './toastr';
 
 export default function(rawData, typeOfFile) {
@@ -15,6 +16,9 @@ export default function(rawData, typeOfFile) {
                 break;
             case 'track':
                 instance = trackWorker();
+                break;
+            case 'orthologue':
+                instance = orthologueWorker();
         }
         instance.process(rawData).catch(() => {
             toastr["error"]("Error in parsing the " + typeOfFile + " File", "ERROR");
