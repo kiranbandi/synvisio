@@ -35,5 +35,9 @@ export default {
     'bnigra_bol_brapa_ortho': {
         'source': ['C1', 'C2', 'C3'],
         'target': ['B1', 'B2', 'B3']
+    },
+    'pv': {
+        'source': ['pv1', 'pv2', 'pv3', 'pv4', 'pv5', 'pv6', 'pv7', 'pv8', 'pv9', 'pv10', 'pv11'],
+        'target': ['pv1', 'pv2', 'pv3', 'pv4', 'pv5', 'pv6', 'pv7', 'pv8', 'pv9', 'pv10', 'pv11']
     }
 }

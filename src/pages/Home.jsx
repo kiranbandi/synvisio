@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import YouTube from 'react-youtube';
 
 //  Image url handling is convoluted in scss , much easier to set inline and get images from root
 let backgroundStyle = { background: 'url(assets/img/synvisio.jpg)' };
@@ -27,8 +28,18 @@ class Home extends Component {
           </ul>
           <p>
             SynVisio offers three basic types of visualizations a <b>Linear bar plot</b> a <b>Hive plot </b>and a <b>Dot plot</b>. General information regarding the parameters that were set for McScanX and the percetage share of collinear genes, are read from the collinearity
-            file and displayed along with the plots. Users can choose the source and the target chromosomes and the type of the plot using the options panel.Use the link below to watch a demo of the application and its many features.</p>
-          <p><a id='demo-link' href='https://youtu.be/C4fTi9bVHEY'> Video Demonstration Link</a></p>
+            file and displayed along with the plots. Users can choose the source and the target chromosomes and the type of the plot using the options panel.</p>
+          
+          
+          <YouTube videoId="83ep_AuMWak" />
+          
+          <p>Use the following links for other videos and tutorials on using SynVisio.</p>
+          <p><a href='https://youtu.be/bLqeXwFDUbQ'> Multi-Analysis Hive plot</a></p>
+          <p><a href='https://youtu.be/e6CNFLjGFmQ'> Visualizing additional tracks</a></p>
+          <p><a href='https://youtu.be/dkInV2QHGVY'> Support for Revisitation using Snapshot Feature </a></p>
+          <p><a href='https://youtu.be/C4fTi9bVHEY'> Detailed description of all features in SynVisio </a></p>
+
+          <p>SynVisio works best when opened in <b>Google chrome.</b></p>
 
           <h1>What Next ?</h1>
           <p>We are working on adding several new features to this tool.The current development progress is documented <a href="https://trello.com/b/ag1Upk33/mcscanx-synteny-visualizer">here</a>.We have loaded up several sample files below that you can play around with :</p>
