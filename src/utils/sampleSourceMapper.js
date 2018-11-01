@@ -39,5 +39,9 @@ export default {
     'pv': {
         'source': ['pv1', 'pv2', 'pv3', 'pv4', 'pv5', 'pv6', 'pv7', 'pv8', 'pv9', 'pv10', 'pv11'],
         'target': ['pv1', 'pv2', 'pv3', 'pv4', 'pv5', 'pv6', 'pv7', 'pv8', 'pv9', 'pv10', 'pv11']
+    },
+    'cam': {
+        'source': ['cs1', 'cs2', 'cs3', 'cs4', 'cs5'],
+        'target': ['cs11', 'cs12', 'cs13', 'cs14', 'cs15']
     }
 }
