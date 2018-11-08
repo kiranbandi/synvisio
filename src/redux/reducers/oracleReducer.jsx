@@ -8,6 +8,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
       return Object.assign({}, state, { loaderState: action.loaderState })
     case types.SET_PLOT_LEVEL:
       return Object.assign({}, state, { multiLevel: action.value })
+    case types.SET_MULTI_TYPE:
+      return Object.assign({}, state, { multiLevelType: action.value })
     case types.SET_PLOT_TYPE:
       return Object.assign({}, state, { plotType: action.value })
     case types.SET_TRACK_TYPE:
