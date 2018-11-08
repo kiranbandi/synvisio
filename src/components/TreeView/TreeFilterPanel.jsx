@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sortAlphaNum from '../../utils/sortAlphaNum';
-import { hiveFilterData, setRootMarkers } from '../../redux/actions/actions';
+import { treeFilterData, setRootMarkers } from '../../redux/actions/actions';
 import _ from 'lodash';
 
 class TreeFilterPanel extends Component {
@@ -49,7 +49,7 @@ class TreeFilterPanel extends Component {
         _.each(markers, (value, keyIndex) => {
             markers[keyIndex] = $(".tree-select-" + keyIndex).selectpicker('val') || [];
         });
-        this.props.actions.hiveFilterData(markers);
+        this.props.actions.treeFilterData(markers);
     }
 
     onAddSource(e) {
@@ -115,7 +115,7 @@ class TreeFilterPanel extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({ hiveFilterData, setRootMarkers }, dispatch) };
+    return { actions: bindActionCreators({ treeFilterData, setRootMarkers }, dispatch) };
 }
 
 export default connect(null, mapDispatchToProps)(TreeFilterPanel);
