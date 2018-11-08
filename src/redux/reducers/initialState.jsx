@@ -5,8 +5,8 @@ const configuration = getPlotDimensions();
 export default {
   oracle: {
     sourceID: 'bn',
-    multiLevel: false,
-    multiLevelType : 'hive',
+    multiLevel: true,
+    multiLevelType : 'tree',
     plotType: 'dashboard',
     trackType: 'track-heatmap',
     loaderState: false,

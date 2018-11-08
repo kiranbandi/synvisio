@@ -165,6 +165,32 @@ export function hiveFilterData(markers) {
     };
 }
 
+export function treeFilterData(markers) {
+
+    let alignmentList = window.synVisio.alignmentList,
+        updatedAlignmentList = [],
+        noOfMarkers = Object.keys(markers).length;
+
+    // if there are more than 2 markers go round calling alignments 
+    // in sets of two with each with the one after it until we reach the last one
+    // loop runs only till last but one element since there is no mapping for the last row
+    if (noOfMarkers > 2) {
+        for (let keyIndex = 0; keyIndex < Object.keys(markers).length - 1; keyIndex++) {
+            const nextIndex = keyIndex + 1,
+                tempMarkers = { 'source': markers[keyIndex], 'target': markers[nextIndex] };
+            updatedAlignmentList.push({ source: keyIndex, target: nextIndex, 'alignmentList': processAlignment(tempMarkers, alignmentList) });
+        }
+    }
+    else if (noOfMarkers == 2) {
+        const tempMarkers = { 'source': markers[0], 'target': markers[1] };
+        updatedAlignmentList.push({ source: 0, target: 1, 'alignmentList': processAlignment(tempMarkers, alignmentList) });
+    }
+    return dispatch => {
+        dispatch(setRootMarkers(markers));
+        dispatch(setALignmentList(updatedAlignmentList));
+    };
+}
+
 export function setPlotProps(levelOrType, value) {
     const isLevel = (levelOrType == 'level');
     return dispatch => {
