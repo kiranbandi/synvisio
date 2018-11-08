@@ -190,7 +190,27 @@ export function setPlotProps(levelOrType, value) {
     };
 }
 
-export function setTrackType(trackType){
+export function setMultiLevelType(value) {
+
+    return dispatch => {
+        let configurationStore = getPlotDimensions(value);
+        const configuration = {
+            ...configurationStore,
+            filterLevel: {},
+            isChromosomeModeON: false,
+            isBlockModeON: false,
+            markers: {},
+            'alignmentList': [],
+            'filterLevel': {}
+        }
+        dispatch(setSnapshotList([]));
+        dispatch(setConfiguration(configuration));
+        dispatch({ type: types.SET_MULTI_TYPE, value });
+    };
+}
+
+
+export function setTrackType(trackType) {
     return { type: types.SET_TRACK_TYPE, trackType };
 }
 

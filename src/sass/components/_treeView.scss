@@ -1,0 +1,28 @@
+.treeView-root {
+    margin: 10px;
+    form.filter-panel-tree {
+        text-align: center;
+        .filter-row {
+            width: 375px;
+            display: inline-block;
+            margin: 10px 10px;
+            label {
+                padding-right: 10px;
+            }
+        }
+        .add-source {
+            margin-right: 15px;
+            font-size: 20px;
+            padding: 1px 12px;
+        }
+        .checkbox {
+            display: inline-block;
+            width: 150px;
+            margin-right: 15px;
+            label {
+                font-weight: bold;
+            }
+        }
+    }
+
+}

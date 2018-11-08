@@ -6,6 +6,7 @@ export default {
   oracle: {
     sourceID: 'bn',
     multiLevel: false,
+    multiLevelType : 'hive',
     plotType: 'dashboard',
     trackType: 'track-heatmap',
     loaderState: false,

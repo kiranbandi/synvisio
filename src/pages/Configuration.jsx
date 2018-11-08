@@ -5,7 +5,7 @@ import processFile from '../utils/processFile';
 import toastr from '../utils/toastr';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { configureSourceID, setGenomicData, setPlotProps, setLoaderState, setTrackType } from '../redux/actions/actions';
+import { configureSourceID, setGenomicData, setPlotProps, setLoaderState, setTrackType, setMultiLevelType } from '../redux/actions/actions';
 
 class Configuration extends Component {
 
@@ -13,6 +13,7 @@ class Configuration extends Component {
     super(props);
     this.onUpload = this.onUpload.bind(this);
     this.radioChange = this.radioChange.bind(this);
+    this.multiRadioChange = this.multiRadioChange.bind(this);
   }
 
   radioChange(event) {
@@ -26,6 +27,11 @@ class Configuration extends Component {
     else {
       this.props.actions.setPlotProps('type', value);
     }
+  }
+
+  multiRadioChange(event) {
+    const value = event.target.value;
+    this.props.actions.setMultiLevelType(value);
   }
 
   onUpload() {
@@ -78,7 +84,7 @@ class Configuration extends Component {
 
   render() {
 
-    const { sourceID = '', multiLevel, plotType, trackType, loaderState = false } = this.props;
+    const { sourceID = '', multiLevel, multiLevelType = 'hive', plotType, trackType, loaderState = false } = this.props;
     return (
       <div className="configuration-container">
         <div className="container">
@@ -121,6 +127,20 @@ class Configuration extends Component {
             }
 
             {
+              multiLevel && <div>
+                <RadioButton value={'tree'} id={'tree'} className='conf-radio' name='multi-view-select'
+                  label={"Tree View"}
+                  onChange={this.multiRadioChange}
+                  checked={multiLevelType == 'tree'} />
+                <RadioButton value={'hive'} id={'hive'} className='conf-radio' name='multi-view-select'
+                  label={"Hive View"}
+                  onChange={this.multiRadioChange}
+                  checked={multiLevelType == 'hive'} />
+              </div>
+            }
+
+
+            {
               (plotType == 'linearplot' || plotType == 'dotplot') && (!multiLevel) && < div >
                 <h4 className="sub-info">If a track file has been provided choose one of the following options to view tracks , this feature is only available for dotplots and linearplots -</h4>
                 <RadioButton value={'track-heatmap'} id={'track-heatmap'} className='conf-radio' name='track-select'
@@ -158,7 +178,7 @@ class Configuration extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ configureSourceID, setGenomicData, setPlotProps, setLoaderState, setTrackType }, dispatch)
+    actions: bindActionCreators({ configureSourceID, setMultiLevelType, setGenomicData, setPlotProps, setLoaderState, setTrackType }, dispatch)
   };
 }
 
@@ -166,6 +186,7 @@ function mapStateToProps(state) {
   return {
     sourceID: state.oracle.sourceID,
     multiLevel: state.oracle.multiLevel,
+    multiLevelType: state.oracle.multiLevelType,
     plotType: state.oracle.plotType,
     loaderState: state.oracle.loaderState,
     trackType: state.oracle.trackType

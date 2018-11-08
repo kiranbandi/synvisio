@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
-import { Loader, HiveView, SingleLevel, SnapshotPanel, SnapshotCapture } from '../components';
+import { Loader, HiveView, TreeView, SingleLevel, SnapshotPanel, SnapshotCapture } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureSourceID, setLoaderState, setGenomicData, setALignmentList } from '../redux/actions/actions';
@@ -47,7 +47,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        let { loaderState, configuration, genome = {}, multiLevel, plotType } = this.props;
+        let { loaderState, configuration, genome = {}, multiLevel, multiLevelType, plotType } = this.props;
 
         return (
             <div className='dashboard-root m-t'>
@@ -57,8 +57,13 @@ class Dashboard extends Component {
                             <div>
                                 <SnapshotPanel />
                                 <SnapshotCapture />
-                                {multiLevel ? <HiveView configuration={configuration} /> :
-                                    <SingleLevel
+                                {multiLevel ?
+                                    <div>
+                                        {multiLevelType == 'hive' ?
+                                            <HiveView configuration={configuration} /> :
+                                            <TreeView configuration={configuration} />}
+                                    </div>
+                                    : <SingleLevel
                                         plotType={plotType}
                                         configuration={configuration} />}
                             </div>
@@ -82,6 +87,7 @@ function mapStateToProps(state) {
         loaderState: state.oracle.loaderState,
         configuration: state.oracle.configuration,
         multiLevel: state.oracle.multiLevel,
+        multiLevelType: state.oracle.multiLevelType,
         plotType: state.oracle.plotType,
         genome: state.genome
     };
