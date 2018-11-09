@@ -3,6 +3,7 @@ import sampleSourceMapper from '../../utils/sampleSourceMapper';
 import processAlignment from '../../utils/filterAlignment';
 import getPlotDimensions from '../../utils/getPlotDimensions';
 import _ from 'lodash';
+import toastr from '../../utils/toastr';
 
 export function setLoaderState(loaderState) {
     return { type: types.SET_LOADER_STATE, loaderState };
@@ -79,6 +80,10 @@ export function toggleTracks() {
     return { type: types.TOGGLE_TRACKS };
 }
 
+export function setMultiDualFilter(multiDualFilter) {
+    return { type: types.SET_MULTI_DUAL_FILTER, multiDualFilter };
+}
+
 export function setSnapshotList(snapshotList) {
     return { type: types.SET_SNAPSHOT_LIST, snapshotList };
 }
@@ -119,6 +124,41 @@ export function refineAlignmentList(filterLevel, alignmentList) {
     };
 }
 
+export function refineAlignmentListTree(filterLevel, alignmentList) {
+
+    let updatedAlignmentList = _.map(alignmentList, (internalList) => {
+
+        const internalFilterLevel = filterLevel[internalList.source];
+
+
+        let internalListModified;
+
+        if (internalFilterLevel && (internalFilterLevel.source || internalFilterLevel.target)) {
+            internalListModified = _.map(internalList.alignmentList, (o) => {
+
+                if (internalFilterLevel.source && o.source != internalFilterLevel.source) {
+                    o.hidden = true;
+                }
+                else if (internalFilterLevel.target && o.target != internalFilterLevel.target) {
+                    o.hidden = true;
+                }
+                else {
+                    o.hidden = false;
+                }
+                return o;
+            });
+            internalList.alignmentList = internalListModified;
+        }
+        return internalList;
+    });
+
+    return dispatch => {
+        dispatch(setFilterLevel(filterLevel));
+        dispatch(setALignmentList(updatedAlignmentList));
+    };
+}
+
+
 export function filterData(sourceMarkers = [], targetMarkers = []) {
     const markers = { 'source': sourceMarkers, 'target': targetMarkers },
         alignmentList = window.synVisio.alignmentList,
@@ -137,6 +177,33 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
         dispatch(setBlockMode(false));
         dispatch(setALignmentList(updatedAlignmentList));
     };
+}
+
+
+export function findGeneMatch(geneId) {
+    let searchResult = [];
+    if(geneId.length == 0 ){
+        toastr["error"]("Please enter a gene ID", "ERROR");
+    }
+    else if(!window.synVisio.genomeLibrary.get(geneId)){
+        toastr["error"]("No gene found for ID - " + geneId, "ERROR");
+    }
+    else {
+        _.map(window.synVisio.alignmentList, (alignment) => {
+            _.map(alignment.links, (o) => {
+                if (o.source == geneId || o.target == geneId) {
+                    searchResult.push(alignment);
+                }
+            })
+    
+        })
+    }
+
+    if(searchResult.length == 0){
+        toastr["error"]("Gene - " + geneId + " doesnt have any alignments", "ERROR");
+    }
+
+    return { type: types.SET_SEARCH_RESULT, searchResult };
 }
 
 export function hiveFilterData(markers) {
@@ -187,6 +254,7 @@ export function treeFilterData(markers) {
     }
     return dispatch => {
         dispatch(setRootMarkers(markers));
+        dispatch(setFilterLevel({}));
         dispatch(setALignmentList(updatedAlignmentList));
     };
 }
