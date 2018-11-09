@@ -25,4 +25,30 @@
         }
     }
 
+    .treeViewSVG {
+        margin: 10px auto;
+
+        .markersText {
+            fill: white;
+            font-weight: bold;
+            font-size: 1.0em;
+        }
+        .chromosomeMarkers,
+        .markersText {
+            cursor: pointer;
+        }
+        .chromosomeMarkers {
+            stroke-linecap: round;
+        }
+
+        .tree-link-line {
+            fill: none;
+            stroke-opacity: 0.5;
+        }
+        .tree-link-polygon {
+            stroke: none;
+            fill-opacity: 0.5;
+        }
+    }
+
 }

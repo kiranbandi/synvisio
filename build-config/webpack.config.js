@@ -1,3 +1,5 @@
+const path = require('path');
+
 'use strict';
 module.exports = {
     mode: 'development',
@@ -10,7 +12,13 @@ module.exports = {
     devServer: {
         inline: true,
         contentBase: './build',
-        port: 8080
+        port: 8080,
+        watchOptions: {
+            ignored: [
+                path.resolve(__dirname, 'build'),
+                path.resolve(__dirname, 'node_modules')
+            ]
+        }
     },
     module: {
         rules: require("./rules.config"),
