@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import TreeViewMarkers from './TreeViewMarkers';
 import TreeViewLinks from './TreeViewLinks';
+import { schemeCategory10 } from 'd3';
 
 class TreeView extends Component {
 
@@ -32,6 +33,8 @@ class TreeView extends Component {
 
         let markerPositions = {};
 
+        let colorCount = 0;
+
         _.each(markers, (chromosomeList, markerId) => {
 
             // the remaining width is 20% for the maximum width marker list but will change for others
@@ -47,10 +50,12 @@ class TreeView extends Component {
                     'x': widthUsedSoFar + (markerPadding / 2),
                     // width of the marker
                     'dx': (scaleFactor * chromosomeMap.get(key).width),
-                    'y': 150 + (markerId * 300)
+                    'y': 150 + (markerId * 300),
+                    'color': schemeCategory10[colorCount]
                 }
                 // total width used = previous used space + width + half marker padding
                 widthUsedSoFar = marker.x + marker.dx + (markerPadding / 2);
+                colorCount = colorCount == 9 ? 0 : colorCount + 1;
                 return marker;
             })
             markerPositions[markerId] = markerList;
@@ -65,9 +70,9 @@ class TreeView extends Component {
         _.map(configuration.alignmentList, (alignmentDetails) => {
 
             _.map(alignmentDetails.alignmentList, (alignment) => {
-
                 // only process alignments which are not hidden
                 if (!alignment.hidden) {
+                
                     const { genomeLibrary } = window.synVisio;
 
                     let firstLink = alignment.links[0],
@@ -96,38 +101,29 @@ class TreeView extends Component {
                             // pick the one with the smaller width and ensure the minimum is 2px
                             linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
 
+
+                        var linkConfig = {
+                            source: {
+                                'x': sourceMarker.x + sourceX,
+                                'y': sourceMarker.y + 10,
+                                'x1': sourceMarker.x + sourceX + sourceGeneWidth
+                            },
+                            target: {
+                                'x': targetMarker.x + targetX,
+                                'y': targetMarker.y - 10,
+                                'x1': targetMarker.x + targetX + targetGeneWidth
+                            },
+                            alignment,
+                            width: linkWidth,
+                            color: sourceMarker.color
+                        };
+
                         // the marker height is 10 px so we add and reduce that to the y postion for top and bottom
                         if (linkWidth == 2) {
-                            linkStore.links.push({
-                                source: {
-                                    'x': sourceMarker.x + sourceX,
-                                    'y': sourceMarker.y + 10,
-                                    'x1': sourceMarker.x + sourceX + sourceGeneWidth
-                                },
-                                target: {
-                                    'x': targetMarker.x + targetX,
-                                    'y': targetMarker.y - 10,
-                                    'x1': targetMarker.x + targetX + targetGeneWidth
-                                },
-                                alignment,
-                                width: linkWidth
-                            })
+                            linkStore.links.push(linkConfig);
                         }
                         else {
-                            linkStore.polygons.push({
-                                source: {
-                                    'x': sourceMarker.x + sourceX,
-                                    'y': sourceMarker.y + 10,
-                                    'x1': sourceMarker.x + sourceX + sourceGeneWidth
-                                },
-                                target: {
-                                    'x': targetMarker.x + targetX,
-                                    'y': targetMarker.y - 10,
-                                    'x1': targetMarker.x + targetX + targetGeneWidth
-                                },
-                                alignment,
-                                width: linkWidth
-                            });
+                            linkStore.polygons.push(linkConfig);
                         }
                     }
                 }
@@ -150,7 +146,7 @@ class TreeView extends Component {
                 {alignmentList.length > 0 &&
                     <svg className='treeViewSVG' height={treeViewHeight} width={treeView.width}>
                         <g ref={node => this.innerG = node} >
-                            <TreeViewMarkers markerPositions={markerPositions} />
+                            <TreeViewMarkers configuration={configuration} markerPositions={markerPositions} />
                             <TreeViewLinks configuration={configuration} linkStore={linkStore} />
                         </g>
                     </svg>}

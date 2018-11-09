@@ -6,6 +6,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
   switch (action.type) {
     case types.SET_LOADER_STATE:
       return Object.assign({}, state, { loaderState: action.loaderState })
+      case types.SET_SEARCH_RESULT:
+      return Object.assign({}, state, { searchResult: action.searchResult })
     case types.SET_PLOT_LEVEL:
       return Object.assign({}, state, { multiLevel: action.value })
     case types.SET_MULTI_TYPE:
@@ -18,6 +20,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
       return Object.assign({}, state, { configuration: { ...state.configuration, showTracks: !state.configuration.showTracks } })
     case types.SET_CHROMOSOME_LABELS_STATE:
       return Object.assign({}, state, { configuration: { ...state.configuration, chromosomeLabelsON: action.chromosomeLabelsON } })
+    case types.SET_MULTI_DUAL_FILTER:
+      return Object.assign({}, state, { configuration: { ...state.configuration, multiDualFilter: action.multiDualFilter } })
     case types.SET_NORMALIZED:
       return Object.assign({}, state, { configuration: { ...state.configuration, isNormalized: action.isNormalized } })
     case types.SET_BLOCK_MODE:

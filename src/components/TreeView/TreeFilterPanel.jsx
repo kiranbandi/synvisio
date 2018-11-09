@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sortAlphaNum from '../../utils/sortAlphaNum';
-import { treeFilterData, setRootMarkers } from '../../redux/actions/actions';
+import { treeFilterData, setRootMarkers,setMultiDualFilter } from '../../redux/actions/actions';
 import _ from 'lodash';
 
 class TreeFilterPanel extends Component {
@@ -12,6 +12,7 @@ class TreeFilterPanel extends Component {
         this.onSubmit = this.onSubmit.bind(this);
         this.onAddSource = this.onAddSource.bind(this);
         this.onRemoveSource = this.onRemoveSource.bind(this);
+        this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
     }
 
     initialiseMarkers(markers) {
@@ -41,6 +42,11 @@ class TreeFilterPanel extends Component {
     componentWillUnmount() {
         const { markers = {} } = this.props.configuration;
         _.each(markers, (value, keyIndex) => { $(".tree-select-" + keyIndex).selectpicker('destroy'); })
+    }
+
+    toggleCheckboxChange(e) {
+        const { multiDualFilter = false } = this.props.configuration;
+            this.props.actions.setMultiDualFilter(!multiDualFilter);
     }
 
     onSubmit(e) {
@@ -84,7 +90,7 @@ class TreeFilterPanel extends Component {
         const options = chromosomeMapList.map((value, index) => {
             return <option key={index} value={value[0]}>{value[0]}</option>;
         }),
-            { markers = {} } = configuration;
+            { markers = {}, multiDualFilter = false } = configuration;
 
         let markerFilterElements = _.map(markers, (value, keyIndex) => {
             return (
@@ -99,6 +105,12 @@ class TreeFilterPanel extends Component {
         return (
             <form className="filter-panel-tree">
                 {markerFilterElements}
+                <div className="checkbox">
+                    <label>
+                        <input type="checkbox" id='multiDualFilter' checked={multiDualFilter} onChange={this.toggleCheckboxChange} />
+                        {"Dual Filter"}
+                    </label>
+                </div>
                 <button className="btn btn-primary-outline add-source" onClick={this.onAddSource}>
                     <span className="icon icon-circle-with-plus"></span>
                 </button>
@@ -115,7 +127,7 @@ class TreeFilterPanel extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({ treeFilterData, setRootMarkers }, dispatch) };
+    return { actions: bindActionCreators({ treeFilterData, setRootMarkers,setMultiDualFilter }, dispatch) };
 }
 
 export default connect(null, mapDispatchToProps)(TreeFilterPanel);

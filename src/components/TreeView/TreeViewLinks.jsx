@@ -63,17 +63,11 @@ export default class TreeViewLinks extends Component {
         // 0th index has line links and 1st index has polygon links
         // Draw links lines for small links
         let genomicLinks = linkStore.links.map((d, i) => {
-            let stroke, style;
-            // // Decide on stroke colour
-            // let sourceIndex = configuration.markers.source.indexOf(d.alignment.source);
-            // stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
-
-            stroke = '#808080';
-
+            let style;
             // Add style to elements
             style = {
                 'strokeWidth': d.width,
-                stroke
+                stroke: d.color
             }
 
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
@@ -98,19 +92,9 @@ export default class TreeViewLinks extends Component {
         // Draw links Polygons for large links
         let genomicPolygonLinks = linkStore.polygons.map((d, i) => {
             let fill, style;
-            // Decide on stroke colour
-            // let sourceIndex = configuration.markers.source.indexOf(d.alignment.source);
-            // fill = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
-
-            // // For chromosome mode flipped links are shown in red color and regular in blue
-            // if (configuration.isChromosomeModeON && d.alignment.type == 'flipped') {
-            //     fill = schemeCategory10[3];
-            // }
-
-            fill = '#808080';
 
             // Add style to elements
-            style = { fill }
+            style = { fill: d.color }
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"line-link-" + i}
                 className={'genome-link tree-link-polygon hover-link-polygon' + " link-source-" + d.alignment.source + " " + (d.alignment.hidden ? 'hidden-alignment-link' : '')}

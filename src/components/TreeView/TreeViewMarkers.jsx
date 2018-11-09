@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { schemeCategory10 } from 'd3';
 import MarkerText from '../GenomeView/MarkerText';
-import { refineAlignmentList } from '../../redux/actions/actions';
+import { refineAlignmentListTree } from '../../redux/actions/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -14,14 +14,31 @@ class Markers extends Component {
         this.generateMarkerElements = this.generateMarkerElements.bind(this);
     }
 
-    onMarkerClick(event) {
-        // const markerIndicator = event.target.className.baseVal.split(" ")[2],
-        //     { refineAlignmentList, configuration } = this.props,
-        //     markerId = markerIndicator.indexOf('source') > -1 ? 'source' : 'target';
 
-        // let { filterLevel = {} } = configuration;
-        // filterLevel[markerId] = markerIndicator.split("-")[2];
-        // refineAlignmentList(filterLevel, configuration.alignmentList);
+    onMarkerClick(event) {
+        this.clickedOnce = undefined;
+        const markerIndicator = event.target.className.baseVal.split(" ")[2],
+            { refineAlignmentListTree, configuration } = this.props,
+            markerIdList = markerIndicator.split("-");
+
+        let { filterLevel = {}, multiDualFilter = false } = configuration;
+
+        const prevMarkerIndex = Number(markerIdList[1]) - 1;
+
+        // if there is a list above and the multi dual filter is ON
+        if (prevMarkerIndex >= 0 && multiDualFilter) {
+            if (filterLevel[prevMarkerIndex]) {
+                filterLevel[prevMarkerIndex].target = markerIdList[2];
+            }
+            else {
+                filterLevel[prevMarkerIndex] = {
+                    target: markerIdList[2]
+                }
+            }
+        }
+
+        filterLevel[markerIdList[1]] = { source: markerIdList[2] }
+        refineAlignmentListTree(filterLevel, configuration.alignmentList);
     }
 
     generateMarkerElements(configuration, markerPositions) {
@@ -32,17 +49,10 @@ class Markers extends Component {
             // create marker lines
             let markerLines = markerList.map((d, i) => {
                 let stroke, style;
-                // Decide on stroke colour
-                if (markerListId == 'source') {
-                    let sourceIndex = configuration.markers.source.indexOf(d.key);
-                    stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
-                } else {
-                    stroke = (i % 2 == 0) ? '#3a3a3a' : 'grey';
-                }
                 // Add style to elements
                 style = {
                     'strokeWidth': '20px',
-                    stroke
+                    stroke: d.color
                 }
                 return <line key={markerListId + "-line-" + i}
                     className={'chromosomeMarkers marker-' + markerListId + " marker-" + markerListId + "-" + d.key}
@@ -91,7 +101,7 @@ class Markers extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { refineAlignmentList: bindActionCreators(refineAlignmentList, dispatch) };
+    return { refineAlignmentListTree: bindActionCreators(refineAlignmentListTree, dispatch) };
 }
 
 export default connect(null, mapDispatchToProps)(Markers);
