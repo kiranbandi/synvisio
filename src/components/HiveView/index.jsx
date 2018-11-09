@@ -166,7 +166,6 @@ class HiveView extends Component {
         return (
             <div className='hiveView-root text-xs-center'>
                 <HiveFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
-
                 {alignmentList.length > 0 &&
                     <svg className='hiveViewSVG' height={hiveView.height} width={hiveView.width}>
                         <g ref={node => this.innerG = node} transform={'translate(' + (hiveView.width / 2) + ',' + (hiveView.height / 2) + ')'} >
