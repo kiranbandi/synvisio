@@ -57,7 +57,7 @@ class Dashboard extends Component {
                             <div>
                                 <SnapshotPanel />
                                 <SnapshotCapture />
-                                <GeneSearch />
+                                {!multiLevel && <GeneSearch />}
                                 {multiLevel ?
                                     <div>
                                         {multiLevelType == 'hive' ?

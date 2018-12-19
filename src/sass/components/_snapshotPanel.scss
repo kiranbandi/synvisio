@@ -13,6 +13,17 @@
 }
 
 .snapshot-inner {
+    .clickable-search {
+        display: inline-block;
+        margin-right: 30px;
+        border: 2px solid white;
+        border-radius: 7px;
+        padding: 5px 10px;
+        cursor: pointer;
+        &:hover {
+            background: #32879e;
+        }
+    }
     margin: 0px 10px 10px 10px;
     background: #1a1c22;
     border-radius: 0px 0px 10px 10px;
@@ -20,17 +31,13 @@
     button {
         margin-left: 10px;
     }
-
     input {
         width: 150px;
         display: inline-block;
         vertical-align: middle;
     }
-
-    .snapshot-inner-result{
+    .snapshot-inner-result {
         font-size: 16px;
         margin: 10px;
     }
-
 }
-
