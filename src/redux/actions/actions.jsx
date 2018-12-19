@@ -159,10 +159,11 @@ export function refineAlignmentListTree(filterLevel, alignmentList) {
 }
 
 
-export function filterData(sourceMarkers = [], targetMarkers = []) {
+export function filterData(sourceMarkers = [], targetMarkers = [], selectedAlignment = {}) {
+
     const markers = { 'source': sourceMarkers, 'target': targetMarkers },
         alignmentList = window.synVisio.alignmentList,
-        updatedAlignmentList = processAlignment(markers, alignmentList);
+        updatedAlignmentList = processAlignment(markers, alignmentList, selectedAlignment);
 
     return dispatch => {
         let filterLevel = {}, isChromosomeModeON = false;
@@ -182,10 +183,10 @@ export function filterData(sourceMarkers = [], targetMarkers = []) {
 
 export function findGeneMatch(geneId) {
     let searchResult = [];
-    if(geneId.length == 0 ){
+    if (geneId.length == 0) {
         toastr["error"]("Please enter a gene ID", "ERROR");
     }
-    else if(!window.synVisio.genomeLibrary.get(geneId)){
+    else if (!window.synVisio.genomeLibrary.get(geneId)) {
         toastr["error"]("No gene found for ID - " + geneId, "ERROR");
     }
     else {
@@ -195,11 +196,11 @@ export function findGeneMatch(geneId) {
                     searchResult.push(alignment);
                 }
             })
-    
+
         })
     }
 
-    if(searchResult.length == 0){
+    if (searchResult.length == 0) {
         toastr["error"]("Gene - " + geneId + " doesnt have any alignments", "ERROR");
     }
 

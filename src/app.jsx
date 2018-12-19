@@ -16,6 +16,8 @@ import { Provider } from 'react-redux';
 // Refine the plots 
 // Add interactivity to the plots 
 
+
+
 //Root sass file for webpack to compile
 import './sass/main.scss';
 //Initial Default settings 

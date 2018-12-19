@@ -6,7 +6,7 @@ export default {
   oracle: {
     sourceID: 'bn',
     searchResult: [],
-    multiLevel: true,
+    multiLevel: false,
     multiLevelType: 'tree',
     plotType: 'dashboard',
     trackType: 'track-heatmap',

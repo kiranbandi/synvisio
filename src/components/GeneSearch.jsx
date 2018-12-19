@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { findGeneMatch } from '../redux/actions/actions';
+import { findGeneMatch, filterData } from '../redux/actions/actions';
 
 class GeneSearch extends Component {
 
     constructor(props) {
         super(props);
         this.searchForGene = this.searchForGene.bind(this);
+        this.onClick = this.onClick.bind(this);
     }
 
     searchForGene(event) {
@@ -15,11 +16,17 @@ class GeneSearch extends Component {
         this.props.findGeneMatch(geneId);
     }
 
+    onClick(event) {
+        const searchId = +event.currentTarget.id.split("search-result-")[1];
+        const searchResultData = this.props.searchResult[searchId];
+        this.props.filterData([searchResultData.source], [searchResultData.target], searchResultData);
+    }
+
     render() {
         const { searchResult = [] } = this.props;
 
         const searchResultContent = searchResult.map((val, index) => {
-            return <p key={'search-result-' + index}><b>Alignment Score : </b> {val.score} <b>Type: </b>{val.type} <b>Source: </b>{val.source} <b>Target: </b>{val.target}</p>
+            return <p className='clickable-search' onClick={this.onClick} id={'search-result-' + index} key={'search-result-' + index}><b>Alignment Score : </b> {val.score} <b>Type: </b>{val.type} <b>Source: </b>{val.source} <b>Target: </b>{val.target}</p>
         })
 
         return (
@@ -51,7 +58,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { findGeneMatch: bindActionCreators(findGeneMatch, dispatch) };
+    return {
+        findGeneMatch: bindActionCreators(findGeneMatch, dispatch),
+        filterData: bindActionCreators(filterData, dispatch)
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GeneSearch);
