@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
-import { Loader, HiveView, TreeView, SingleLevel, SnapshotPanel, SnapshotCapture, GeneSearch } from '../components';
+import { Loader, HiveView, TreeView, SingleLevel, DownloadSvg, SnapshotPanel, SnapshotCapture, GeneSearch } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureSourceID, setLoaderState, setGenomicData, setALignmentList } from '../redux/actions/actions';
@@ -57,6 +57,7 @@ class Dashboard extends Component {
                             <div>
                                 <SnapshotPanel />
                                 <SnapshotCapture />
+                                <DownloadSvg />
                                 {!multiLevel && <GeneSearch />}
                                 {multiLevel ?
                                     <div>
