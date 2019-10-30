@@ -54,7 +54,8 @@ function parseAlignmentDetails(alignmentDetails) {
         'source': alignmentDetailsList[6].split('&')[0].trim(),
         'target': alignmentDetailsList[6].split('&')[1].trim(),
         'sourceKey': Number(alignmentDetailsList[6].split('&')[0].trim().slice(2)),
-        'targetKey': Number(alignmentDetailsList[6].split('&')[1].trim().slice(2))
+        'targetKey': Number(alignmentDetailsList[6].split('&')[1].trim().slice(2)),
+        'alignmentID': Number(alignmentDetailsList[2].split(':')[0].trim())
     };
 }
 
