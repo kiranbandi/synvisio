@@ -52,7 +52,8 @@
             }
         }
         text.marker-x-lines-text {
-            transform: rotate(-90deg) translate(-10px);
+            // temporarily removing as it is causing unexpected behaviour in new chrome build
+            // transform: rotate(-90deg) translate(-10px);
             transform-box: fill-box;
         }
     }
