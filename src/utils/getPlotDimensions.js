@@ -27,6 +27,10 @@ export default (plotType = 'dashboard') => {
                 'width': 750,
                 'height': 500
             },
+            'cubeView': {
+                'height': 500,
+                'width': 500
+            },
             'panelView': {
                 'height': 350,
                 'width': 750
@@ -95,6 +99,10 @@ export default (plotType = 'dashboard') => {
             'treeView': {
                 'height': height,
                 'width': width
+            },
+            'cubeView': {
+                'height': width * 0.75,
+                'width': height * 0.90
             }
         }
     }

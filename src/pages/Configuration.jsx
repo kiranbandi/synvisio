@@ -5,7 +5,10 @@ import processFile from '../utils/processFile';
 import toastr from '../utils/toastr';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { configureSourceID, setGenomicData, setPlotProps, setLoaderState, setTrackType, setMultiLevelType } from '../redux/actions/actions';
+import {
+  configureSourceID, setGenomicData, setPlotProps,
+  setLoaderState, setTrackType, setMultiLevelType
+} from '../redux/actions/actions';
 
 class Configuration extends Component {
 
@@ -84,7 +87,9 @@ class Configuration extends Component {
 
   render() {
 
-    const { sourceID = '', multiLevel, multiLevelType = 'hive', plotType, trackType, loaderState = false } = this.props;
+    const { sourceID = '', multiLevel, multiLevelType = 'hive',
+      plotType, trackType, loaderState = false } = this.props;
+
     return (
       <div className="configuration-container">
         <div className="container">
@@ -136,6 +141,10 @@ class Configuration extends Component {
                   label={"Hive View"}
                   onChange={this.multiRadioChange}
                   checked={multiLevelType == 'hive'} />
+                <RadioButton value={'cube'} id={'cube'} className='conf-radio' name='multi-view-select'
+                  label={"3D Cube View"}
+                  onChange={this.multiRadioChange}
+                  checked={multiLevelType == 'cube'} />
               </div>
             }
 

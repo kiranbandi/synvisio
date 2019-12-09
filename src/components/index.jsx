@@ -15,6 +15,7 @@ export { default as SnapshotCapture } from './SnapshotCapture';
 export { default as FileUpload } from './FileUpload';
 export { default as HiveView } from './HiveView';
 export { default as TreeView } from './TreeView';
+export { default as CubeView } from './CubeView';
 export { default as SingleLevel } from './SingleLevel';
 export { default as GeneSearch } from './GeneSearch';
 export { default as DownloadSvg } from './DownloadSvg';

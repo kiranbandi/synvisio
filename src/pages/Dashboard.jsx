@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
-import { Loader, HiveView, TreeView, SingleLevel, DownloadSvg, SnapshotPanel, SnapshotCapture, GeneSearch } from '../components';
+import {
+    Loader, HiveView, TreeView,
+    SingleLevel, DownloadSvg, SnapshotPanel,
+    CubeView, SnapshotCapture, GeneSearch
+} from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { configureSourceID, setLoaderState, setGenomicData, setALignmentList } from '../redux/actions/actions';
@@ -63,7 +67,9 @@ class Dashboard extends Component {
                                     <div>
                                         {multiLevelType == 'hive' ?
                                             <HiveView configuration={configuration} /> :
-                                            <TreeView configuration={configuration} />}
+                                            multiLevelType == 'cube' ?
+                                                <CubeView configuration={configuration} /> :
+                                                <TreeView configuration={configuration} />}
                                     </div>
                                     : <SingleLevel
                                         plotType={plotType}
