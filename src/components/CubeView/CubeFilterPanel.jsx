@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sortAlphaNum from '../../utils/sortAlphaNum';
-import { hiveFilterData, setRootMarkers, setNormalizedState, setChromosomeLabelsState } from '../../redux/actions/actions';
+import { hiveFilterData, setRootMarkers } from '../../redux/actions/actions';
 import _ from 'lodash';
 
 class CubeFilterPanel extends Component {
@@ -77,7 +77,7 @@ class CubeFilterPanel extends Component {
         return (
             <form className="filter-panel-hive">
                 {markerFilterElements}
-                <button type="submit" className="btn btn-primary-outline" onClick={this.onSubmit}>
+                <button type="submit" className="btn btn-primary-outline m-l" onClick={this.onSubmit}>
                     GO <span className="icon icon-cw"></span>
                 </button>
             </form>

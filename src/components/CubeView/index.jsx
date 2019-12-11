@@ -4,6 +4,7 @@ import _ from 'lodash';
 import AxisLines from '../DotView/AxisLines';
 import AlignmentLines from '../DotView/AlignmentLines';
 import CubeFilterPanel from './CubeFilterPanel';
+import AxisLineLabel from '../DotView/AxisLineLabel';
 
 class DotView extends Component {
 
@@ -11,55 +12,56 @@ class DotView extends Component {
         super(props);
     }
 
-    initialisePostions(configuration, chromosomeCollection) {
+    initialisePostions(parameters, chromosomeCollection) {
 
-        let maxWidthAvailable = configuration.dotView.innerWidth;
+        var { sourceMarkers, targetMarkers, innerWidth, offset } = parameters;
 
-        let maximumWidthX = _.sumBy(configuration.markers.source, (key) => chromosomeCollection.get(key).width),
-            maximumWidthY = _.sumBy(configuration.markers.target, (key) => chromosomeCollection.get(key).width);
+        let maximumWidthX = _.sumBy(sourceMarkers, (key) => chromosomeCollection.get(key).width),
+            maximumWidthY = _.sumBy(targetMarkers, (key) => chromosomeCollection.get(key).width);
 
-        let scaleFactorX = maxWidthAvailable / maximumWidthX,
-            scaleFactorY = maxWidthAvailable / maximumWidthY;
+        let scaleFactorX = innerWidth / maximumWidthX,
+            scaleFactorY = innerWidth / maximumWidthY;
 
-        let posistions = {};
+
+        let positions = {};
         // more padding on the x axis since the labels are horizontal and need more space to the left of the graph
-        let sourceWidthUsedSoFar = configuration.dotView.offset;
-        posistions.source = _.map(configuration.markers.source, (source, index) => {
+        let sourceWidthUsedSoFar = offset;
+        positions.source = _.map(sourceMarkers, (source, index) => {
             let sourceBit = {
                 'data': chromosomeCollection.get(source),
                 'key': source,
                 'x1': sourceWidthUsedSoFar,
                 'x2': sourceWidthUsedSoFar + (scaleFactorX * (chromosomeCollection.get(source).width)),
-                'y1': configuration.dotView.offset,
-                'y2': configuration.dotView.innerWidth + configuration.dotView.offset
+                'y1': offset,
+                'y2': innerWidth + offset
             }
             sourceWidthUsedSoFar = sourceBit.x2;
             return sourceBit;
         });
 
-        let targetWidthUsedSoFar = configuration.dotView.offset;
-        posistions.target = _.map(configuration.markers.target, (target, index) => {
+        let targetWidthUsedSoFar = offset;
+        positions.target = _.map(targetMarkers, (target, index) => {
             let targetBit = {
                 'data': chromosomeCollection.get(target),
                 'key': target,
                 'y1': targetWidthUsedSoFar,
                 'y2': targetWidthUsedSoFar + (scaleFactorY * (chromosomeCollection.get(target).width)),
-                'x1': configuration.dotView.offset,
-                'x2': configuration.dotView.innerWidth + configuration.dotView.offset
+                'x1': offset,
+                'x2': innerWidth + offset
             }
             targetWidthUsedSoFar = targetBit.y2;
             return targetBit;
         });
 
-        return posistions;
+        return positions;
     }
 
-    initialiseLines(configuration, axisLinePositions, chromosomeCollection) {
+    initialiseLines(alignmentList, axisLinePositions, chromosomeCollection) {
 
         const { genomeLibrary } = window.synVisio, linkList = [];
 
-        _.map(configuration.alignmentList, (alignment) => {
-            if (!configuration.isChromosomeModeON || !alignment.hidden) {
+        _.map(alignmentList, (alignment) => {
+            if (!alignment.hidden) {
                 let firstLink = alignment.links[0],
                     lastLink = alignment.links[alignment.links.length - 1];
                 let sourceChromosome = chromosomeCollection.get(alignment.source),
@@ -102,12 +104,20 @@ class DotView extends Component {
             markers: Object.keys(configuration.markers).length < 3 ? { 0: [], 1: [], 2: [] } : configuration.markers
         }
 
-        let axisLinePositions, alignmentLinePositions;
+        let axisLinePositions = {}, alignmentLinePositions = {};
+
 
         if (alignmentList.length > 0) {
-            axisLinePositions = this.initialisePostions(configuration, genomeData.chromosomeMap);
-            alignmentLinePositions = this.initialiseLines(configuration, axisLinePositions, genomeData.chromosomeMap);
+
+            [[0, 1], [1, 2], [2, 0]].map((iterator, index) => {
+
+                axisLinePositions[iterator[0] + ',' + iterator[1]] = this.initialisePostions({ sourceMarkers: configuration.markers[iterator[0]], targetMarkers: configuration.markers[iterator[1]], innerWidth: configuration.dotView.innerWidth, offset: configuration.dotView.offset }, genomeData.chromosomeMap);
+                alignmentLinePositions[iterator[0] + ',' + iterator[1]] = this.initialiseLines(alignmentList[index].alignmentList, axisLinePositions[iterator[0] + ',' + iterator[1]], genomeData.chromosomeMap);
+
+            });
+
         }
+
 
         // reusing hiveview root wrapper name to reuse common filter panel styles
         return (
@@ -115,15 +125,106 @@ class DotView extends Component {
                 <CubeFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
                 {alignmentList.length > 0 &&
                     <div className={'dotViewWrapper only-dotview'}>
-                        <div className='dotViewRoot'>
+                        <div className='dotViewRoot threeDcube'>
                             <svg
                                 className={'dotViewSVG'}
-                                height={configuration.dotView.width}
-                                width={configuration.dotView.width}>
-                                <g>
-                                    <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
-                                    <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions} />
+                                height={2 * configuration.dotView.width}
+                                width={2 * configuration.dotView.width}>
+
+                                {/* XY Plot */}
+                                <g style={{ 'transformOrigin': 'center', 'transform': 'translate(48%, -33.5%) skewY(22deg)' }}>
+                                    <g style={{ 'transformOrigin': 'center', 'transform': 'rotateX(180deg)' }} >
+                                        <rect width={configuration.dotView.width / 1.328} height={configuration.dotView.width / 1.328} style={{ 'transform': 'translate(7%,7%)', 'fill': '#23262c' }} />
+                                        <AxisLines is3D={true} configuration={configuration} axisLinePositions={axisLinePositions['0,1']} />
+                                        <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions['0,1']} />
+                                    </g>
                                 </g>
+
+                                {/* YZ Plot */}
+                                <g style={{ 'transformOrigin': 'center', 'transform': 'translate(-41%, -33.5%) skewY(-22deg)' }}>
+                                    <g style={{ 'transformOrigin': 'center', 'transform': 'rotate(-90deg) rotateX(180deg)' }}>
+                                        <rect width={configuration.dotView.width / 1.328} height={configuration.dotView.width / 1.328} style={{ 'transform': 'translate(7%,7%)', 'fill': 'rgb(32, 35, 41)' }} />
+                                        <AxisLines is3D={true} configuration={configuration} axisLinePositions={axisLinePositions['1,2']} />
+                                        <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions['1,2']} />
+                                    </g>
+                                </g>
+
+
+                                {/* XZ Plot */}
+                                <g style={{ 'transformOrigin': 'center', 'transform': 'translate(3.5%, 29%)' }}>
+                                    <g style={{ 'transformOrigin': 'center', 'transform': 'scale(1.41, 0.57) rotate(135deg) rotateX(180deg)' }}>
+                                        <rect width={configuration.dotView.width / 1.328} height={configuration.dotView.width / 1.328} style={{ 'transform': 'translate(7%,7%)', 'fill': 'rgb(32, 35, 41)' }} />
+                                        <AxisLines is3D={true} configuration={configuration} axisLinePositions={axisLinePositions['2,0']} />
+                                        <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions['2,0']} />
+                                    </g>
+                                </g>
+
+                                {/* X axis Labels */}
+                                <g style={{ 'transform': 'translate(50%, -3%) rotate(22.5deg) scale(1.08, 1)' }}>
+                                    {_.map(axisLinePositions['0,1'].source.map((d, i) => {
+                                        return <AxisLineLabel className={'special-markers marker-x-lines-text dot-plot-markers marker-x-lines-text-' + d.key}
+                                            key={"vertical-line-text-outer-" + d.key}
+                                            innerKey={"vertical-line-text-" + d.key}
+                                            text={d.key}
+                                            type='x'
+                                            x={d.x1 + ((d.x2 - d.x1) / 2)}
+                                            y={d.y1 - 10}
+                                        />;
+                                    }))}
+                                </g>
+
+                                {/* Y axis Labels */}
+                                <g style={{ 'transform': 'translate(9%, 64%) rotate(-90deg) scale(1)' }}>
+                                    {_.map(axisLinePositions['1,2'].source.map((d, i) => {
+                                        return <AxisLineLabel className={'special-markers marker-x-lines-text dot-plot-markers marker-x-lines-text-' + d.key}
+                                            key={"vertical-line-text-outer-" + d.key}
+                                            innerKey={"vertical-line-text-" + d.key}
+                                            text={d.key}
+                                            type='x'
+                                            x={d.x1 + ((d.x2 - d.x1) / 2)}
+                                            y={d.y1 - 10}
+                                        />;
+                                    }))}
+                                </g>
+
+                                {/* Z axis Labels */}
+                                <g style={{ 'transform': 'translate(60%, 4.5%) rotate(157.5deg) scale(1.08)' }}>
+                                    {_.map(axisLinePositions['2,0'].source.map((d, i) => {
+                                        return <AxisLineLabel className={'special-markers marker-x-lines-text dot-plot-markers marker-x-lines-text-' + d.key}
+                                            key={"vertical-line-text-outer-" + d.key}
+                                            innerKey={"vertical-line-text-" + d.key}
+                                            text={d.key}
+                                            style={{ 'transform': 'rotate(270deg)', 'transformOrigin': 'center' }}
+                                            type='x'
+                                            x={d.x1 + ((d.x2 - d.x1) / 2)}
+                                            y={d.y1 - 10}
+                                        />;
+                                    }))}
+                                </g>
+
+                                <defs>
+                                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+                                        <path d="M0,0 L0,6 L9,3 z" fill="#f00" />
+                                    </marker>
+                                </defs>
+
+                                <g style={{ 'transform': 'translate(95%, 61%)' }}>
+                                    <g style={{ 'transform': 'rotate(-67.5deg)' }}>
+                                        <text style={{ 'transform': 'rotate(93deg) translate(0.5%, 1.5%)', 'transformOrigin': 'inherit' }} className='cube-label'>X axis</text>
+                                        <line className="y-axis dot-view-line" x1="0" y1="0" x2="0" y2="50" markerEnd="url(#arrow)"></line>
+                                    </g>
+                                    <g style={{ 'transform': 'rotate(-180deg)' }}>
+                                        <text style={{ 'transform': 'rotate(93deg) translate(0.75%, 1.5%)', 'transformOrigin': 'inherit' }} className='cube-label'>Y axis</text>
+                                        <line className="y-axis dot-view-line" x1="0" y1="0" x2="0" y2="50" markerEnd="url(#arrow)"></line>
+                                    </g>
+                                    <g style={{ 'transform': 'rotate(67.5deg)' }}>
+                                        <text style={{ 'transform': 'rotate(270deg) translate(-4%, -1%)', 'transformOrigin': 'inherit' }} className='cube-label'>Z axis</text>
+                                        <line className="y-axis dot-view-line" x1="0" y1="0" x2="0" y2="50" markerEnd="url(#arrow)"></line>
+                                    </g>
+                                </g>
+
+
+
                             </svg>
                         </div>
                     </div>}

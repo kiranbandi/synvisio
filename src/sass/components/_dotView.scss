@@ -6,11 +6,24 @@
     display: inline-block;
     vertical-align: top;
     position: relative;
+    .threeDcube {
+        .special-markers {
+            display: block !important;
+        }
+        .dot-plot-markers {
+            display: none;
+        }
+        .cube-label {
+            font-size: 14px;
+            font-weight: bold;
+            fill: white;
+        }
+    }
     .dotViewRoot {
         display: inline-block;
         vertical-align: top;
         position: relative;
-        .dot-view-line {
+        & .dot-view-line {
             stroke: #3a3a3a;
             stroke-width: 2px;
         }
