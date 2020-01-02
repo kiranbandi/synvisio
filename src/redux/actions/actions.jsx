@@ -159,11 +159,21 @@ export function refineAlignmentListTree(filterLevel, alignmentList) {
 }
 
 
-export function filterData(sourceMarkers = [], targetMarkers = [], selectedAlignment = {}) {
+export function filterData(sourceMarkers = [], targetMarkers = [], selectedAlignment = {}, hideUnalignedRegions = false) {
 
     const markers = { 'source': sourceMarkers, 'target': targetMarkers },
         alignmentList = window.synVisio.alignmentList,
         updatedAlignmentList = processAlignment(markers, alignmentList, selectedAlignment);
+
+    if (hideUnalignedRegions) {
+        // get the unique list of IDs of all chromosomes or scaffolds that have alignments mapped to them
+        let uniqueIDList = [];
+        updatedAlignmentList.map((d) => { uniqueIDList.push(d.source, d.target) });
+        uniqueIDList = _.uniq(uniqueIDList);
+
+        markers.source = _.filter(markers.source, (d) => uniqueIDList.indexOf(d) > -1);
+        markers.target = _.filter(markers.target, (d) => uniqueIDList.indexOf(d) > -1);
+    }
 
     return dispatch => {
         let filterLevel = {}, isChromosomeModeON = false;

@@ -7,8 +7,17 @@ import { filterData, toggleTracks } from '../redux/actions/actions';
 class FilterPanel extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            hideUnalignedRegions: false
+        }
         this.onSubmit = this.onSubmit.bind(this);
         this.onToggleTrack = this.onToggleTrack.bind(this);
+        this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
+    }
+
+    toggleCheckboxChange() {
+        const { hideUnalignedRegions } = this.state;
+        this.setState({ 'hideUnalignedRegions': !hideUnalignedRegions });
     }
 
     componentDidMount() {
@@ -46,9 +55,10 @@ class FilterPanel extends Component {
     onSubmit(e) {
         e.preventDefault();
         const sourceMarkers = $('.sourceChromosomeSelect').selectpicker('val'),
-            targetMarkers = $('.targetChromosomeSelect').selectpicker('val');
+            targetMarkers = $('.targetChromosomeSelect').selectpicker('val'),
+            { hideUnalignedRegions } = this.state;
         //  if markers lists are null set them to empty lists
-        this.props.filterData(!!sourceMarkers ? sourceMarkers : [], !!targetMarkers ? targetMarkers : []);
+        this.props.filterData(!!sourceMarkers ? sourceMarkers : [], !!targetMarkers ? targetMarkers : [], {}, hideUnalignedRegions);
     }
 
     onToggleTrack(e) {
@@ -59,6 +69,7 @@ class FilterPanel extends Component {
     render() {
 
         let { chromosomeMap = {} } = this.props,
+            { hideUnalignedRegions } = this.state,
             // sort chromosome map 
             // Zero is passed to the sorting function so that sorting happens based on the 0th value
             //  which is the actual chromosome identifier
@@ -84,8 +95,16 @@ class FilterPanel extends Component {
                         <select className="targetChromosomeSelect" multiple title="Select Chromosomes...">
                             {options}
                         </select>
-
                     </div>
+                    <div className="col-sm-12">
+                        <div className="checkbox custom-checkbox">
+                            <label>
+                                <input type="checkbox" id='hideUnalignedRegions' checked={hideUnalignedRegions} onChange={this.toggleCheckboxChange} />
+                                {"Hide Unaligned Chromosomes/Scaffolds"}
+                            </label>
+                        </div>
+                    </div>
+
                     <button type="submit" className="btn btn-primary-outline" onClick={this.onSubmit}>
                         GO <span className="icon icon-cw"></span>
                     </button>

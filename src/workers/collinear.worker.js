@@ -23,7 +23,10 @@ export function process(collinearityData) {
         })
         // push the last alignment still in the buffer
     alignmentList.push(alignmentBuffer);
-    return { "information": information, "alignmentList": alignmentList };
+    // get the unique list of IDs of all chromosomes or scaffolds that have alignments mapped to them
+    let uniqueIDList = [];
+    alignmentList.map((d) => { uniqueIDList.push(d.source, d.target) });
+    return { "information": information, "alignmentList": alignmentList, 'uniqueIDList': uniqueIDList.filter(onlyUnique) };
 };
 
 function parseInformation(informationLines) {
@@ -66,4 +69,8 @@ function parseLink(link) {
         'target': linkInfo[1],
         'e_value': linkInfo[2]
     };
+}
+
+function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
 }
