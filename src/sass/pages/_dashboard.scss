@@ -1,14 +1,17 @@
 .dashboard-root {
-    .hr-divider {
-        font-size: 17px;
-        margin: 20px auto;
-        .hr-divider-content {
-            font-weight: bold;
-            text-align: center;
-            margin: 30px auto;
+    .dashboard-container {
+        min-height: 1000px;
+        .hr-divider {
+            font-size: 17px;
+            margin: 20px auto;
+            .hr-divider-content {
+                font-weight: bold;
+                text-align: center;
+                margin: 30px auto;
+            }
         }
-    }
-    svg {
-        background-color: #252830;
+        svg {
+            background-color: #252830;
+        }
     }
 }
