@@ -78,7 +78,7 @@ export default (plotType = 'dashboard') => {
                 }
             },
             'dotView': {
-                'width': 523
+                'width': 0.60 * height
             },
             'panelView': {
                 'height': 0.60 * height,

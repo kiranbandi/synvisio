@@ -14,10 +14,30 @@ class Configuration extends Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      processScaffolds: false,
+      showAllScaffolds: false
+
+    };
     this.onUpload = this.onUpload.bind(this);
+    this.uploadRadioChange = this.uploadRadioChange.bind(this);
     this.radioChange = this.radioChange.bind(this);
     this.multiRadioChange = this.multiRadioChange.bind(this);
   }
+
+  uploadRadioChange(event) {
+    let value = event.target.value, { processScaffolds, showAllScaffolds } = this.state;
+    if (value.indexOf('scaffold') > -1) {
+      processScaffolds = value.indexOf('no') > -1;
+    }
+    else {
+      showAllScaffolds = value.indexOf('no') > -1;
+    }
+    this.setState({ processScaffolds, showAllScaffolds });
+  }
+
+
 
   radioChange(event) {
     const value = event.target.value;
@@ -31,7 +51,6 @@ class Configuration extends Component {
       this.props.actions.setPlotProps('type', value);
     }
   }
-
   multiRadioChange(event) {
     const value = event.target.value;
     this.props.actions.setMultiLevelType(value);
@@ -41,6 +60,7 @@ class Configuration extends Component {
 
     let datastore = {};
     const { actions, multiLevel } = this.props,
+      { processScaffolds, showAllScaffolds } = this.state,
       { configureSourceID, setGenomicData, setLoaderState } = actions;
 
     // Turn on loader to indicate file uploading and processing 
@@ -52,7 +72,7 @@ class Configuration extends Component {
     // load the coordinate file
     getFile('coordinate-file')
       // process the file in a seperate thread
-      .then((response) => { return processFile(response, 'gff') })
+      .then((response) => { return processFile(response, 'gff', { processScaffolds }) })
       // store the data and then load the collinear file
       .then((data) => {
         datastore = Object.assign(datastore, { ...data });
@@ -62,7 +82,19 @@ class Configuration extends Component {
       .then(((response) => { return processFile(response, 'collinear') }))
       // store the collinear data and load the track file if one is provided
       .then((data) => {
-        datastore = Object.assign({}, datastore, { ...data });
+
+        let { information, alignmentList, uniqueIDList } = data, { chromosomeMap } = datastore;
+
+        if (!showAllScaffolds) {
+          [...chromosomeMap].map((entry) => {
+            if (uniqueIDList.indexOf(entry[0]) == -1) {
+              chromosomeMap.delete(entry[0]);
+              console.log('deleted entry', entry[0]);
+            }
+          });
+        }
+
+        datastore = Object.assign({}, datastore, { information, alignmentList, chromosomeMap });
         return isTrackFileAvailable ? getFile('track-file') : Promise.resolve('false');
       })
       // process trackfile data is present
@@ -88,7 +120,8 @@ class Configuration extends Component {
   render() {
 
     const { sourceID = '', multiLevel, multiLevelType = 'hive',
-      plotType, trackType, loaderState = false } = this.props;
+      plotType, trackType, loaderState = false } = this.props,
+      { processScaffolds, showAllScaffolds } = this.state;
 
     return (
       <div className="configuration-container">
@@ -99,6 +132,32 @@ class Configuration extends Component {
             <FileUpload id='collinear-file' label='MCScanX Collinearity File' />
             <FileUpload id='coordinate-file' label='GFF File' />
             <FileUpload id='track-file' label='Track File (optional)' />
+            <div className="m-t-md">
+              <h4 className="sub-info">Would you like to ignore Scaffold regions ?</h4>
+              <RadioButton value={'scaffold-yes'} id={'scaffold-yes'} className='conf-radio' name='scaffold-select'
+                label={"Yes"}
+                onChange={this.uploadRadioChange}
+                checked={!processScaffolds} />
+              <RadioButton value={'scaffold-no'} id={'scaffold-no'} className='conf-radio' name='scaffold-select'
+                label={"No"}
+                onChange={this.uploadRadioChange}
+                checked={processScaffolds} />
+            </div>
+
+            <div className="">
+              <h4 className="sub-info">Would you like to ignore chromosomes and scaffolds without any alignments in them ? </h4>
+              <h4 className="sub-info">(This will reduce the number of options to filter through while picking the source and target chromosomes or scaffolds in the dashboard)</h4>
+
+              <RadioButton value={'showAllScaffold-yes'} id={'showAllScaffold-yes'} className='conf-radio' name='showAllScaffold-select'
+                label={"Yes"}
+                onChange={this.uploadRadioChange}
+                checked={!showAllScaffolds} />
+              <RadioButton value={'showAllScaffold-no'} id={'showAllScaffold-no'} className='conf-radio' name='showAllScaffold-select'
+                label={"No"}
+                onChange={this.uploadRadioChange}
+                checked={showAllScaffolds} />
+            </div>
+
             {loaderState && <h4 className='loading-text'>Loading data...</h4>}
             <button className="btn btn-primary-outline m-t" onClick={this.onUpload}> UPLOAD </button>
           </div>
