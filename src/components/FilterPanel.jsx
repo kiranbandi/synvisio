@@ -83,6 +83,16 @@ class FilterPanel extends Component {
         return (
             <div id='filter-panel-root' className='container-fluid'>
                 <form className="filter-panel-container">
+
+                    <div className="col-sm-12">
+                        <div className="checkbox custom-checkbox">
+                            <label>
+                                <input type="checkbox" id='hideUnalignedRegions' checked={hideUnalignedRegions} onChange={this.toggleCheckboxChange} />
+                                {"Hide Unaligned Chromosomes/Scaffolds"}
+                            </label>
+                        </div>
+                    </div>
+
                     <div className="col-sm-12">
                         <label htmlFor="sourceChromosomes">Source Chromosomes</label>
                         <select className="sourceChromosomeSelect" multiple title="Select Chromosomes...">
@@ -95,14 +105,6 @@ class FilterPanel extends Component {
                         <select className="targetChromosomeSelect" multiple title="Select Chromosomes...">
                             {options}
                         </select>
-                    </div>
-                    <div className="col-sm-12">
-                        <div className="checkbox custom-checkbox">
-                            <label>
-                                <input type="checkbox" id='hideUnalignedRegions' checked={hideUnalignedRegions} onChange={this.toggleCheckboxChange} />
-                                {"Hide Unaligned Chromosomes/Scaffolds"}
-                            </label>
-                        </div>
                     </div>
 
                     <button type="submit" className="btn btn-primary-outline" onClick={this.onSubmit}>
