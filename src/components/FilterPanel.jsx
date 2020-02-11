@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sortAlphaNum from '../utils/sortAlphaNum';
-import { filterData, toggleTracks } from '../redux/actions/actions';
+import { filterData, toggleTracks, setNormalizedState } from '../redux/actions/actions';
 
 class FilterPanel extends Component {
     constructor(props) {
@@ -15,9 +15,16 @@ class FilterPanel extends Component {
         this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
     }
 
-    toggleCheckboxChange() {
-        const { hideUnalignedRegions } = this.state;
-        this.setState({ 'hideUnalignedRegions': !hideUnalignedRegions });
+    toggleCheckboxChange(event) {
+        const { hideUnalignedRegions } = this.state, { isNormalized = false } = this.props;
+
+        if (event.target.id == 'markerNormalize') {
+            this.props.setNormalizedState(!isNormalized);
+        }
+        else {
+            this.setState({ 'hideUnalignedRegions': !hideUnalignedRegions });
+        }
+
     }
 
     componentDidMount() {
@@ -68,7 +75,7 @@ class FilterPanel extends Component {
 
     render() {
 
-        let { chromosomeMap = {} } = this.props,
+        let { chromosomeMap = {}, isNormalized = false } = this.props,
             { hideUnalignedRegions } = this.state,
             // sort chromosome map 
             // Zero is passed to the sorting function so that sorting happens based on the 0th value
@@ -89,6 +96,14 @@ class FilterPanel extends Component {
                             <label>
                                 <input type="checkbox" id='hideUnalignedRegions' checked={hideUnalignedRegions} onChange={this.toggleCheckboxChange} />
                                 {"Hide Unaligned Chromosomes/Scaffolds"}
+                            </label>
+                        </div>
+                    </div>
+                    <div className="col-sm-12">
+                        <div className="checkbox custom-checkbox">
+                            <label>
+                                <input type="checkbox" id='markerNormalize' checked={isNormalized} onChange={this.toggleCheckboxChange} />
+                                {"Normalize Chromosome Marker Lengths"}
                             </label>
                         </div>
                     </div>
@@ -124,7 +139,8 @@ class FilterPanel extends Component {
 function mapDispatchToProps(dispatch) {
     return {
         filterData: bindActionCreators(filterData, dispatch),
-        toggleTracks: bindActionCreators(toggleTracks, dispatch)
+        toggleTracks: bindActionCreators(toggleTracks, dispatch),
+        setNormalizedState: bindActionCreators(setNormalizedState, dispatch)
     };
 }
 
@@ -132,6 +148,7 @@ function mapStateToProps(state) {
     return {
         chromosomeMap: state.genome.chromosomeMap,
         markers: state.oracle.configuration.markers,
+        isNormalized: state.oracle.configuration.isNormalized,
         plotType: state.oracle.plotType
     };
 }

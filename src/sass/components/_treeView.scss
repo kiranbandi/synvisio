@@ -18,16 +18,14 @@
         .checkbox {
             display: inline-block;
             width: 150px;
-            margin-right: 15px;
+            margin-right: -5px;
             label {
                 font-weight: bold;
             }
         }
     }
-
     .treeViewSVG {
         margin: 10px auto;
-
         .markersText {
             fill: white;
             font-weight: bold;
@@ -40,7 +38,6 @@
         .chromosomeMarkers {
             stroke-linecap: round;
         }
-
         .tree-link-line {
             fill: none;
             stroke-opacity: 0.5;
@@ -50,5 +47,4 @@
             fill-opacity: 0.5;
         }
     }
-
 }

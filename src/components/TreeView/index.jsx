@@ -15,7 +15,7 @@ class TreeView extends Component {
 
     initialiseMarkerPositions() {
 
-        const { configuration, chromosomeMap } = this.props, { markers, treeView } = configuration;
+        const { configuration, chromosomeMap } = this.props, { markers, treeView, isNormalized = false } = configuration;
 
         const maxWidthAvailable = treeView.width;
 
@@ -27,7 +27,6 @@ class TreeView extends Component {
 
         // find the marker list that has the maximum width
         let maxGeneticWidthMarkerList = _.maxBy(widthCollection, (o) => o.width);
-
         //  we use 90% of the available width for the actual markers and the remaining 10% is used as padding between the markers 
         let scaleFactor = (maxWidthAvailable * 0.80) / maxGeneticWidthMarkerList.width;
 
@@ -36,6 +35,13 @@ class TreeView extends Component {
         let colorCount = 0;
 
         _.each(markers, (chromosomeList, markerId) => {
+
+            if (isNormalized) {
+                // find the marker list that has the maximum width
+                maxGeneticWidthMarkerList = _.find(widthCollection, (o) => o.markerId == markerId);
+                scaleFactor = (maxWidthAvailable * 0.80) / maxGeneticWidthMarkerList.width;
+            }
+
 
             // the remaining width is 20% for the maximum width marker list but will change for others
             let remainingWidth = (maxWidthAvailable - (_.find(widthCollection, (o) => o.markerId == markerId).width * scaleFactor)),
@@ -72,7 +78,7 @@ class TreeView extends Component {
             _.map(alignmentDetails.alignmentList, (alignment) => {
                 // only process alignments which are not hidden
                 if (!alignment.hidden) {
-                
+
                     const { genomeLibrary } = window.synVisio;
 
                     let firstLink = alignment.links[0],
