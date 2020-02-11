@@ -2,13 +2,14 @@
 var webpack = require("webpack");
 var path = require("path");
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: ['babel-polyfill', './src/app.jsx'],
     output: {
         path: path.resolve("build/assets/bundle"),
-        filename: "bundle.js",
-        publicPath: path.resolve("build/assets/bundle") + '/'
+        filename: "[name].bundle.[chunkhash].js",
+        chunkFilename: "[name].[chunkhash].js"
     },
     plugins: [new webpack.DefinePlugin({
             'process.env': {
@@ -17,6 +18,10 @@ module.exports = {
         }),
         new UglifyJSPlugin({
             sourceMap: false
+        }),
+        new HtmlWebpackPlugin({
+            filename: '../../index.html',
+            template: './src/assets/index.template.html'
         })
     ],
     module: {
