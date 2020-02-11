@@ -191,30 +191,39 @@ export function filterData(sourceMarkers = [], targetMarkers = [], selectedAlign
 }
 
 
-export function findGeneMatch(geneId) {
+export function findGeneMatch(geneId, cancelMatch = false) {
+
     let searchResult = [];
-    if (geneId.length == 0) {
-        toastr["error"]("Please enter a gene ID", "ERROR");
+
+    if (cancelMatch) {
+        return { type: types.SET_SEARCH_RESULT, searchResult };
     }
-    else if (!window.synVisio.genomeLibrary.get(geneId)) {
-        toastr["error"]("No gene found for ID - " + geneId, "ERROR");
-    }
+
     else {
-        _.map(window.synVisio.alignmentList, (alignment) => {
-            _.map(alignment.links, (o) => {
-                if (o.source == geneId || o.target == geneId) {
-                    searchResult.push(alignment);
-                }
+        if (geneId.length == 0) {
+            toastr["error"]("Please enter a gene ID", "ERROR");
+        }
+        else if (!window.synVisio.genomeLibrary.get(geneId)) {
+            toastr["error"]("No gene found for ID - " + geneId, "ERROR");
+        }
+        else {
+            _.map(window.synVisio.alignmentList, (alignment) => {
+                _.map(alignment.links, (o) => {
+                    if (o.source == geneId || o.target == geneId) {
+                        searchResult.push({ ...alignment, matchingLink: { ...o } });
+                    }
+                })
+
             })
+        }
 
-        })
+        if (searchResult.length == 0) {
+            toastr["error"]("Gene - " + geneId + " doesnt have any alignments", "ERROR");
+        }
+
+        return { type: types.SET_SEARCH_RESULT, searchResult };
     }
 
-    if (searchResult.length == 0) {
-        toastr["error"]("Gene - " + geneId + " doesnt have any alignments", "ERROR");
-    }
-
-    return { type: types.SET_SEARCH_RESULT, searchResult };
 }
 
 export function hiveFilterData(markers) {

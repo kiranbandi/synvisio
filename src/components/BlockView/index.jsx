@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { InlayIcon } from '../';
 import * as d3 from 'd3';
 
-export default class BlockView extends Component {
+class BlockView extends Component {
 
     constructor(props) {
         super(props);
@@ -183,7 +184,7 @@ export default class BlockView extends Component {
 
     render() {
 
-        const { configuration, plotType } = this.props;
+        const { configuration, plotType, searchResult } = this.props;
         let { blockView, filterLevel } = configuration;
         const { alignment } = filterLevel;
 
@@ -216,6 +217,10 @@ export default class BlockView extends Component {
 
         this.markerPositionStore = [];
 
+
+        // Is the selected block one that has the matching gene ID from the gene search panel
+        let markedAlignment = _.find(searchResult, (d) => d.alignmentID == alignment.alignmentID) || false;
+
         // Find the marker positions 
         _.map(alignment.links, (link, index) => {
             // the marker height is 10 px so we add and reduce that to the y postion for top and bottom
@@ -238,24 +243,33 @@ export default class BlockView extends Component {
 
             this.markerPositionStore[index] = markerPosition;
 
+            // if the link contains the gene that was searched for in the gene search panel
+            // then highlight it
+            let markLink = false;
+            if (markedAlignment &&
+                markedAlignment.matchingLink.source == link.source &&
+                markedAlignment.matchingLink.target == link.target) {
+                markLink = true;
+            }
+
             sourceMarkers.push(
                 <line
                     key={'source-marker-' + index}
                     id={'source-marker-' + index}
-                    className='blockview-makers source-marker'
+                    className={'blockview-makers source-marker ' + (markLink ? 'pale-marker' : '')}
                     x1={markerPosition.source.x1}
                     x2={markerPosition.source.x2}
                     y1={markerPosition.source.y}
-                    y2={markerPosition.source.y}>
+                    y2={markerPosition.source.y} >
                     <title>{link.source}</title>
-                </line>
+                </line >
             );
 
             targetMarkers.push(
                 <line
                     key={'target-marker-' + index}
                     id={'target-marker-' + index}
-                    className='blockview-makers target-marker'
+                    className={'blockview-makers target-marker ' + (markLink ? 'pale-marker' : '')}
                     x1={markerPosition.target.x1}
                     x2={markerPosition.target.x2}
                     y1={markerPosition.target.y}
@@ -266,7 +280,7 @@ export default class BlockView extends Component {
 
             polygonLinks.push(
                 <polygon
-                    className='blockview-polylink'
+                    className={'blockview-polylink ' + (markLink ? 'pale-link' : '')}
                     key={'polylink-' + index}
                     id={'polylink-' + index}
                     points={markerPosition.source.x1 + "," + (markerPosition.source.y + 10) + " " + markerPosition.source.x2 + "," + (markerPosition.source.y + 10) + " " + markerPosition.target.x2 + "," + (markerPosition.target.y - 10) + " " + markerPosition.target.x1 + "," + (markerPosition.target.y - 10)}>
@@ -321,3 +335,11 @@ export default class BlockView extends Component {
         );
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        searchResult: state.oracle.searchResult
+    };
+}
+
+export default connect(mapStateToProps)(BlockView);
