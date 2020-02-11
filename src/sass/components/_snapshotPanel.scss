@@ -13,6 +13,11 @@
 }
 
 .snapshot-inner {
+    .info-text-message {
+        display: block;
+        padding: 8px 0px;
+        background: #1a1c22;
+    }
     .clickable-search {
         display: inline-block;
         margin-right: 30px;

@@ -91,6 +91,14 @@ class Links extends Component {
                 'strokeWidth': d.width,
                 stroke
             }
+            // if the link is part of a search result paint it in white
+            if (d.taggedLink) {
+                style = {
+                    'stroke': 'white',
+                    'strokeWidth': '5',
+                    'strokeOpacity': 1
+                }
+            }
 
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"line-link-" + i}
@@ -125,6 +133,15 @@ class Links extends Component {
 
             // Add style to elements
             style = { fill }
+
+            // if the link is part of a search result paint it in white
+            if (d.taggedLink) {
+                style = {
+                    'fill': 'white',
+                    'fillOpacity': 1
+                }
+            }
+
             // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
             return <path key={"line-link-" + i}
                 className={'genome-link link-polygon hover-link-polygon' + ' alignmentID-' + d.alignment.alignmentID + " link-source-" + d.alignment.source + " " + (d.alignment.hidden ? 'hidden-alignment-link' : '')}

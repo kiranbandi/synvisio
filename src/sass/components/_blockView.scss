@@ -32,6 +32,9 @@
             &.target-marker {
                 stroke: grey;
             }
+            &.pale-marker {
+                stroke: white !important;
+            }
         }
         .blockview-polylink {
             opacity: 0.6;
@@ -39,6 +42,10 @@
             cursor: pointer;
             &:hover {
                 opacity: 0.9;
+            }
+            &.pale-link {
+                fill: white !important;
+                opacity: 1;
             }
         }
     }

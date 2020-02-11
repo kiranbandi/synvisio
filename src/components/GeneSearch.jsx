@@ -9,6 +9,14 @@ class GeneSearch extends Component {
         super(props);
         this.searchForGene = this.searchForGene.bind(this);
         this.onClick = this.onClick.bind(this);
+        this.cancelSearch = this.cancelSearch.bind(this);
+    }
+
+    cancelSearch(event) {
+        // using jquery for quick patch due to lack of time 
+        // will fix it later
+        $("#gene-input-search").val('');
+        this.props.findGeneMatch('cancel', true);
     }
 
     searchForGene(event) {
@@ -43,7 +51,14 @@ class GeneSearch extends Component {
                         SEARCH <span className="icon icon-magnifying-glass"></span>
                     </button>
 
+                    <button type="submit" className="btn btn-danger-outline" onClick={this.cancelSearch}>
+                        CLEAR
+                    </button>
+
                     <div className='snapshot-inner-result'>
+                        <span className="text-info info-text-message">
+                            Matching alignments are highlighted in <b>white</b> in the charts
+                    </span>
                         {searchResultContent}
                     </div>
                 </div>

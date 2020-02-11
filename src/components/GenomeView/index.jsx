@@ -99,7 +99,7 @@ class GenomeView extends Component {
         return markers;
     }
 
-    initialiseLinks(configuration, chromosomeMap, markerPositions) {
+    initialiseLinks(configuration, chromosomeMap, markerPositions, searchResult) {
 
         const linkList = [];
 
@@ -133,6 +133,7 @@ class GenomeView extends Component {
                     // pick the one with the smaller width and ensure the minimum is 2px
                     linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
 
+
                 // the marker height is 10 px so we add and reduce that to the y postion for top and bottom
                 linkList.push({
                     source: {
@@ -146,7 +147,8 @@ class GenomeView extends Component {
                         'x1': targetMarker.x + targetX + targetGeneWidth
                     },
                     alignment,
-                    width: linkWidth
+                    width: linkWidth,
+                    taggedLink: _.findIndex(searchResult, (d) => d.alignmentID == alignment.alignmentID) > -1
                 });
             }
         })
@@ -207,11 +209,11 @@ class GenomeView extends Component {
 
     render() {
 
-        const { configuration, genomeData, plotType, trackType } = this.props,
+        const { configuration, genomeData, plotType, trackType, searchResult } = this.props,
             { isChromosomeModeON = false, genomeView } = configuration,
             areTracksVisible = this.areTracksVisible(configuration, plotType),
             markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible),
-            linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions),
+            linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions, searchResult),
             trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType) : false,
             trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(markerPositions, trackType) : false;
 
@@ -240,7 +242,8 @@ class GenomeView extends Component {
 function mapStateToProps(state) {
     return {
         genomeData: state.genome,
-        trackType: state.oracle.trackType
+        trackType: state.oracle.trackType,
+        searchResult: state.oracle.searchResult
     };
 }
 
