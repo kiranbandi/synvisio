@@ -55,6 +55,8 @@ class GenomeView extends Component {
     initialiseMarkers(configuration, chromosomeCollection, areTracksVisible) {
 
         const maxWidthAvailable = configuration.genomeView.width;
+
+        const { isNormalized = false } = configuration;
         // To arrange the markers in a proper way we find the marker List that has the maximum genome width
         //  We need this to fit in the maximum available width so we use this and find the scale factor 
         // we then fit all the other markers using the same scale factors
@@ -76,6 +78,13 @@ class GenomeView extends Component {
         // no we initialise the markers and set the width directly on the markers lists directly 
         let markers = {};
         _.each(configuration.markers, (chromosomeList, markerId) => {
+
+            if (isNormalized) {
+                // find the marker list that has the maximum width
+                maxGeneticWidthMarkerList = _.find(widthCollection, (o) => o.markerId == markerId);
+                scaleFactor = (maxWidthAvailable * 0.80) / maxGeneticWidthMarkerList.width;
+            }
+
             // the remaining width is 20% for the maximum width marker list but will change for others
             let remainingWidth = (maxWidthAvailable - (_.find(widthCollection, (o) => o.markerId == markerId).width * scaleFactor)),
                 markerPadding = remainingWidth / (chromosomeList.length),

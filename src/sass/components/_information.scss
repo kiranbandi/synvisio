@@ -10,7 +10,6 @@
         font-weight: bold;
     }
     .filter-panel-container {
-        padding-top: 15px;
         label {
             padding: 0px 15px 15px 0px;
         }
@@ -22,7 +21,7 @@
         }
         .checkbox {
             display: inline-block;
-            margin-right: 15px;
+            margin: -5px;
             label {
                 font-weight: bold;
             }
