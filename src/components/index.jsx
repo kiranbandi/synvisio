@@ -19,3 +19,4 @@ export { default as CubeView } from './CubeView';
 export { default as SingleLevel } from './SingleLevel';
 export { default as GeneSearch } from './GeneSearch';
 export { default as DownloadSvg } from './DownloadSvg';
+export { default as AdvancedFilterPanel } from './AdvancedFilterPanel/index';

@@ -1,0 +1,63 @@
+.advanced-filter {
+    background: #1a1c22;
+    border-radius: 10px;
+    .advanced-filter-head {
+        padding: 5px;
+        cursor: pointer;
+        margin: 15px 0px 0px 0;
+        border-radius: 5px 5px 0px 0px;
+        &.bottom-line {
+            border-bottom: 2px solid #777373;
+        }
+        .icon {
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .icon-funnel {
+            margin-left: 10px;
+        }
+        .epa-label {
+            font-size: 16px;
+            display: inline-block;
+            font-family: sans-serif;
+            @media (max-width: 768px) {
+                font-size: 14px;
+                font-weight: bold;
+            }
+        }
+        .epa-label-status {
+            font-size: 15px;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 4px 15px;
+            background: #283a5d;
+            border-radius: 10px;
+            margin-left: 15px;
+            vertical-align: middle;
+            text-align: center;
+            color: white;
+            .icon {
+                margin-left: 5px;
+                font-size: 20px;
+            }
+            @media (max-width: 768px) {
+                display: block;
+                margin-left: 0px;
+                padding: 0px;
+                margin: 5px 20px;
+            }
+        }
+    }
+    .advanced-filter-content {
+        margin-top: 0px;
+        background: #252830;
+        overflow: hidden;
+        &.show-row {
+            height: auto;
+            overflow: visible;
+        }
+        &.hide-row {
+            height: 0px;
+        }
+    }
+}
