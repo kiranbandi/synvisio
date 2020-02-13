@@ -243,7 +243,8 @@ class GenomeView extends Component {
 
     render() {
 
-        const { configuration, genomeData, plotType, trackType, searchResult } = this.props,
+        const { configuration, genomeData, isDark,
+            plotType, trackType, searchResult } = this.props,
             { isChromosomeModeON = false, genomeView } = configuration,
             areTracksVisible = this.areTracksVisible(configuration, plotType),
             markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible),
@@ -260,7 +261,8 @@ class GenomeView extends Component {
                         x={genomeView.width - 50}
                         y={20}
                         onClick={this.resetZoom} />}
-                <svg className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')} ref={node => this.outerG = node} height={height} width={genomeView.width}>
+                <svg style={{ 'background': isDark ? '#252830' : 'white' }}
+                    className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')} ref={node => this.outerG = node} height={height} width={genomeView.width}>
                     <g ref={node => this.innerG = node} >
                         <Markers configuration={configuration} markerPositions={markerPositions} />
                         <Links configuration={configuration} linkPositions={linkPositions} />
@@ -277,7 +279,8 @@ function mapStateToProps(state) {
     return {
         genomeData: state.genome,
         trackType: state.oracle.trackType,
-        searchResult: state.oracle.searchResult
+        searchResult: state.oracle.searchResult,
+        isDark: state.oracle.isDark
     };
 }
 

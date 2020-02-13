@@ -37,6 +37,10 @@ export function setchromosomeMode(isChromosomeModeON) {
     return { type: types.SET_CHROMOSOME_MODE, isChromosomeModeON };
 }
 
+export function toggleTheme() {
+    return { type: types.TOGGLE_DARK_THEME };
+}
+
 export function setBlockMode(isBlockModeON) {
     return { type: types.SET_BLOCK_MODE, isBlockModeON };
 }

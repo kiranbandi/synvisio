@@ -6,6 +6,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
   switch (action.type) {
     case types.SET_LOADER_STATE:
       return Object.assign({}, state, { loaderState: action.loaderState })
+    case types.TOGGLE_DARK_THEME:
+      return Object.assign({}, state, { isDark: !state.isDark })
     case types.SET_SEARCH_RESULT:
       return Object.assign({}, state, { searchResult: action.searchResult })
     case types.SET_PLOT_LEVEL:
