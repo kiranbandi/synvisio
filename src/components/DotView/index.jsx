@@ -208,7 +208,7 @@ class DotView extends Component {
 
     render() {
 
-        let { configuration, genomeData, plotType, trackType } = this.props;
+        let { configuration, genomeData, isDark, plotType, trackType } = this.props;
         const side_margin = 57.5,
             { isChromosomeModeON = false } = configuration;
 
@@ -238,13 +238,14 @@ class DotView extends Component {
                             y={20}
                             onClick={this.resetZoom} />}
                     <svg
+                        style={{ 'background': isDark ? '#252830' : 'white', 'margin': '10px 10px 0px 10px' }}
                         className={'dotViewSVG ' + (isChromosomeModeON ? 'chrom-mode' : '')}
                         ref={node => this.outerG = node}
                         height={configuration.dotView.width}
                         width={configuration.dotView.width}>
 
                         <g ref={node => this.innerG = node}>
-                            <AxisLines configuration={configuration} axisLinePositions={axisLinePositions} />
+                            <AxisLines isDark={isDark} configuration={configuration} axisLinePositions={axisLinePositions} />
                             <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions} />
                             {areTracksVisible && <DotTracks trackPositions={trackPositions.source} trackType={trackType} />}
                             {areTracksVisible && <DotTracks trackPositions={trackPositions.target} trackType={trackType} rotate={true} />}
@@ -261,7 +262,8 @@ class DotView extends Component {
 function mapStateToProps(state) {
     return {
         genomeData: state.genome,
-        trackType: state.oracle.trackType
+        trackType: state.oracle.trackType,
+        isDark: state.oracle.isDark
     };
 }
 

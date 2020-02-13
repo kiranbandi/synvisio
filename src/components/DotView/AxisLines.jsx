@@ -21,7 +21,7 @@ class AxisLines extends Component {
     }
 
 
-    generateaxisLines(configuration, axisLinePositions, is3D) {
+    generateaxisLines(configuration, axisLinePositions, is3D = false, isDark = true) {
         // Lots of repetitions happening here but can be changed later 
 
         const { offset = 0, innerWidth = 0 } = configuration.dotView;
@@ -53,6 +53,7 @@ class AxisLines extends Component {
                 innerKey={"vertical-line-text-" + d.key}
                 text={d.key}
                 type='x'
+                style={{ 'fill': isDark ? 'white' : 'black' }}
                 x={d.x1 + ((d.x2 - d.x1) / 2)}
                 y={d.y1 - 10}
                 onMarkerClick={is3D ? null : this.onMarkerClick} />;
@@ -73,6 +74,7 @@ class AxisLines extends Component {
                 text={d.key}
                 type='y'
                 x={d.x1 - 25}
+                style={{ 'fill': isDark ? 'white' : 'black' }}
                 y={d.y1 + ((d.y2 - d.y1) / 2)}
                 onMarkerClick={is3D ? null : this.onMarkerClick} />;
         }));
@@ -83,8 +85,8 @@ class AxisLines extends Component {
 
     render() {
 
-        const { configuration, axisLinePositions, is3D = false } = this.props,
-            axisLineElements = this.generateaxisLines(configuration, axisLinePositions, is3D);
+        const { configuration, axisLinePositions, is3D = false, isDark } = this.props,
+            axisLineElements = this.generateaxisLines(configuration, axisLinePositions, is3D, isDark);
 
         return (
             <g className='axisLinesContainer'>

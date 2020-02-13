@@ -19,5 +19,11 @@
     .navbar-nav {
         margin: 0px;
         padding: 0px 2px;
+        &.pull-right {
+            margin: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
     }
 }
