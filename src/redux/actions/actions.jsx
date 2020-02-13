@@ -68,8 +68,19 @@ export function setGenomicData(data) {
     return { type: types.SET_GENOME_DATA, data: otherData };
 }
 
-export function setRootMarkers(markers) {
-    return { type: types.SET_ROOT_MARKERS, markers };
+export function setRootMarkers(markers, reversedMarkers = false) {
+
+    let customReversedMarkers = _.clone(reversedMarkers);
+
+    if (markers && !reversedMarkers) {
+        customReversedMarkers = {};
+        //create empty entry in reversed markers
+        for (let key in markers) {
+            customReversedMarkers[key] = [];
+        }
+    }
+
+    return { type: types.SET_ROOT_MARKERS, markers, 'reversedMarkers': customReversedMarkers };
 }
 
 export function setALignmentList(alignmentList) {

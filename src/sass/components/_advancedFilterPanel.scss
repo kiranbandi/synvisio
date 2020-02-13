@@ -1,6 +1,7 @@
 .advanced-filter {
     background: #1a1c22;
     border-radius: 10px;
+    margin: 10px;
     .advanced-filter-head {
         padding: 5px;
         cursor: pointer;
@@ -10,51 +11,57 @@
             border-bottom: 2px solid #777373;
         }
         .icon {
-            font-size: 18px;
+            font-size: 19px;
             vertical-align: middle;
         }
-        .icon-funnel {
+        .icon-copy {
             margin-left: 10px;
         }
         .epa-label {
             font-size: 16px;
             display: inline-block;
-            font-family: sans-serif;
-            @media (max-width: 768px) {
-                font-size: 14px;
-                font-weight: bold;
-            }
-        }
-        .epa-label-status {
-            font-size: 15px;
-            text-transform: uppercase;
             font-weight: bold;
-            padding: 4px 15px;
-            background: #283a5d;
-            border-radius: 10px;
-            margin-left: 15px;
-            vertical-align: middle;
-            text-align: center;
-            color: white;
-            .icon {
-                margin-left: 5px;
-                font-size: 20px;
-            }
-            @media (max-width: 768px) {
-                display: block;
-                margin-left: 0px;
-                padding: 0px;
-                margin: 5px 20px;
-            }
         }
     }
     .advanced-filter-content {
         margin-top: 0px;
         background: #252830;
         overflow: hidden;
+        .advanced-info-box {
+            p {
+                margin: 10px;
+                font-size: 15px;
+                font-weight: bolder;
+            }
+        }
         &.show-row {
             height: auto;
             overflow: visible;
+            background: #1a1c22;
+            border-radius: 0px 0px 10px 10px;
+            .text-info {
+                padding: 10px;
+            }
+            padding-bottom: 10px;
+            .marker-wrapper {
+                margin: 10px 10px;
+                padding: 5px 0px;
+                border: 2px solid #252830;
+                text-align: center;
+                .dragBox {
+                    cursor: move;
+                    display: inline-block;
+                    opacity: 1;
+                    border-radius: 15px;
+                    color: white;
+                    font-weight: bold;
+                    padding: 7px 15px;
+                    margin: 0px 5px;
+                }
+            }
+            .button-container {
+                padding-bottom: 10px;
+            }
         }
         &.hide-row {
             height: 0px;

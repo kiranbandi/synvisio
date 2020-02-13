@@ -26,6 +26,12 @@
     }
     .treeViewSVG {
         margin: 10px auto;
+        .reverse-arrow {
+            fill: #25282f;
+            stroke: #25282f;
+            stroke-width: 3px;
+            stroke-linecap: round;
+        }
         .markersText {
             fill: white;
             font-weight: bold;

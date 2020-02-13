@@ -16,7 +16,8 @@ class TreeView extends Component {
 
     initialiseMarkerPositions() {
 
-        const { configuration, chromosomeMap } = this.props, { markers, treeView, isNormalized = false } = configuration;
+        const { configuration, chromosomeMap } = this.props,
+            { markers, reversedMarkers, treeView, isNormalized = false } = configuration;
 
         const maxWidthAvailable = treeView.width;
 
@@ -35,6 +36,8 @@ class TreeView extends Component {
 
         let colorCount = 0;
 
+        let allMarkerIDs = Object.keys(markers);
+
 
         _.each(markers, (chromosomeList, markerId) => {
 
@@ -48,18 +51,23 @@ class TreeView extends Component {
             // the remaining width is 20% for the maximum width marker list but will change for others
             let remainingWidth = (maxWidthAvailable - (_.find(widthCollection, (o) => o.markerId == markerId).width * scaleFactor)),
                 markerPadding = remainingWidth / (chromosomeList.length),
-                widthUsedSoFar = 0;
+                widthUsedSoFar = 0,
+                reversedMarkerList = reversedMarkers[markerId],
+                isThisLastRow = _.findIndex(allMarkerIDs, (d) => d == markerId) == (allMarkerIDs.length - 1);
 
             let markerList = _.map(chromosomeList, (key) => {
                 let marker = {
                     'data': chromosomeMap.get(key),
                     'key': key,
+                    // if the chromosome key is in the reverse marker list set it here
+                    'reversed': (_.findIndex(reversedMarkerList, (d) => d == key) > -1),
                     // marker start point = used space + half marker padding 
                     'x': widthUsedSoFar + (markerPadding / 2),
                     // width of the marker
                     'dx': (scaleFactor * chromosomeMap.get(key).width),
                     'y': 150 + (markerId * 300),
-                    'color': schemeCategory10[colorCount]
+                    // for last row using alternating gray pattern if not use colors from d3
+                    'color': isThisLastRow ? ((colorCount % 2 == 0) ? '#3a3a3a' : 'grey') : schemeCategory10[colorCount]
                 }
                 // total width used = previous used space + width + half marker padding
                 widthUsedSoFar = marker.x + marker.dx + (markerPadding / 2);
@@ -109,22 +117,40 @@ class TreeView extends Component {
                             // pick the one with the smaller width and ensure the minimum is 2px
                             linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
 
-                        // code for flipping block
-                        // 'x': targetMarker.x + targetMarker.dx - targetX,
-                        //     'y': targetMarker.y - 10,
-                        //         'x1': targetMarker.x + targetMarker.dx - (targetX + targetGeneWidth)
-
-                        var linkConfig = {
-                            source: {
+                        let source, target;
+                        if (sourceMarker.reversed) {
+                            source = {
+                                'x': sourceMarker.x + sourceMarker.dx - sourceX,
+                                'y': sourceMarker.y + 10,
+                                'x1': sourceMarker.x + sourceMarker.dx - (sourceX + sourceGeneWidth)
+                            }
+                        }
+                        else {
+                            source = {
                                 'x': sourceMarker.x + sourceX,
                                 'y': sourceMarker.y + 10,
                                 'x1': sourceMarker.x + sourceX + sourceGeneWidth
-                            },
-                            target: {
+                            }
+                        }
+
+                        if (targetMarker.reversed) {
+                            target = {
+                                'x': targetMarker.x + targetMarker.dx - targetX,
+                                'y': targetMarker.y - 10,
+                                'x1': targetMarker.x + targetMarker.dx - (targetX + targetGeneWidth)
+                            }
+                        }
+                        else {
+                            target = {
                                 'x': targetMarker.x + targetX,
                                 'y': targetMarker.y - 10,
                                 'x1': targetMarker.x + targetX + targetGeneWidth
-                            },
+                            }
+                        }
+
+                        var linkConfig = {
+                            source,
+                            target,
                             alignment,
                             width: linkWidth,
                             color: sourceMarker.color
@@ -155,7 +181,7 @@ class TreeView extends Component {
         return (
             <div className='treeView-root text-xs-center'>
                 <TreeFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
-                <AdvancedFilterPanel />
+                <AdvancedFilterPanel width={treeView.width} />
                 {alignmentList.length > 0 &&
                     <svg className='treeViewSVG' height={treeViewHeight} width={treeView.width}>
                         <g ref={node => this.innerG = node} >

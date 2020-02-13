@@ -57,6 +57,19 @@ class Markers extends Component {
             });
             markerElements.push(markerLines);
 
+            // if there are any reversed markers
+            // add an arrow that is flipped onto the image to indicate it
+            let reversedArrows = markerList.map((d, i) => {
+                if (d.reversed) {
+                    return <path key={'arrow' + i} className='reverse-arrow'
+                        d={"M" + (d.x + d.dx) + ' ' + (d.y + 1) +
+                            " l-" + (d.dx - 2) + " 0 l15 5 l0 -10 l-15 5"} />
+                }
+                else return <path key={'arrow' + i} />;
+            });
+
+            markerElements.push(reversedArrows);
+
             // create marker text units
             let markerTextUnits = markerList.map((d, i) => {
 
