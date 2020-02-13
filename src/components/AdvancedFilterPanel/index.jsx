@@ -80,14 +80,14 @@ class AdvancedFilterPanel extends Component {
             <div className='advanced-filter'>
                 <div className={'text-xs-left advanced-filter-head' + (isOpen ? ' bottom-line ' : ' ')} onClick={this.onTabClick}>
                     {isOpen ? <span className="icon icon-chevron-down"></span> : <span className="icon icon-chevron-right"></span>}
-                    <span className='epa-label' >Advanced Chromosome Layout Editor</span>
-                    <span className={"icon icon-copy"}></span>
+                    <span className='epa-label' >Advanced Chromosome Layout Editor </span>
+                    <span className={"icon icon-copy"}></span> (Click to open)
                 </div>
                 <div className={'advanced-filter-content text-center ' + (isOpen ? 'show-row' : 'hide-row')}>
                     <div className='advanced-info-box'>
-                        <p>Click <b>GO</b> above before editing the layout here.</p>
+                        <p><b>Select</b> the required Chromosomes and Click <b>GO</b> above before editing the layout here.</p>
                         <p><b>Drag</b> the chromosomes around to rearrange their order. <b>Double click</b> on any chromosome if you want to reverse it.</p>
-                        <p>Regular chromosomes are <b className='text-primary'>BLUE</b> and reversed chromosomes are <b className='text-danger'>RED</b> </p>
+                        <p>Regular chromosomes are <b className='text-primary'>BLUE</b> and reversed chromosomes are <b className='text-danger'>RED.</b> </p>
                     </div>
                     {_.map(markers, (markerList, markerId) => {
                         return <div key={'markerID-' + markerId} className='marker-wrapper'>
