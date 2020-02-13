@@ -56,7 +56,7 @@ class GenomeView extends Component {
 
         const maxWidthAvailable = configuration.genomeView.width;
 
-        const { isNormalized = false } = configuration;
+        const { isNormalized = false, reversedMarkers } = configuration;
         // To arrange the markers in a proper way we find the marker List that has the maximum genome width
         //  We need this to fit in the maximum available width so we use this and find the scale factor 
         // we then fit all the other markers using the same scale factors
@@ -88,11 +88,14 @@ class GenomeView extends Component {
             // the remaining width is 20% for the maximum width marker list but will change for others
             let remainingWidth = (maxWidthAvailable - (_.find(widthCollection, (o) => o.markerId == markerId).width * scaleFactor)),
                 markerPadding = remainingWidth / (chromosomeList.length),
+                reversedMarkerList = reversedMarkers[markerId],
                 widthUsedSoFar = 0,
                 markerList = _.map(chromosomeList, (key) => {
                     let marker = {
                         'data': chromosomeCollection.get(key),
                         'key': key,
+                        // if the chromosome key is in the reverse marker list set it here
+                        'reversed': (_.findIndex(reversedMarkerList, (d) => d == key) > -1),
                         // marker start point = used space + half marker padding 
                         'x': widthUsedSoFar + (markerPadding / 2),
                         'y': configuration.genomeView.verticalPositions[markerId] + (areTracksVisible ? 45 : 0),
@@ -142,19 +145,41 @@ class GenomeView extends Component {
                     // pick the one with the smaller width and ensure the minimum is 2px
                     linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
 
-
-                // the marker height is 10 px so we add and reduce that to the y postion for top and bottom
-                linkList.push({
-                    source: {
+                let source, target;
+                if (sourceMarker.reversed) {
+                    source = {
+                        'x': sourceMarker.x + sourceMarker.dx - sourceX,
+                        'y': sourceMarker.y + 10,
+                        'x1': sourceMarker.x + sourceMarker.dx - (sourceX + sourceGeneWidth)
+                    }
+                }
+                else {
+                    source = {
                         'x': sourceMarker.x + sourceX,
                         'y': sourceMarker.y + 10,
                         'x1': sourceMarker.x + sourceX + sourceGeneWidth
-                    },
-                    target: {
+                    }
+                }
+
+                if (targetMarker.reversed) {
+                    target = {
+                        'x': targetMarker.x + targetMarker.dx - targetX,
+                        'y': targetMarker.y - 10,
+                        'x1': targetMarker.x + targetMarker.dx - (targetX + targetGeneWidth)
+                    }
+                }
+                else {
+                    target = {
                         'x': targetMarker.x + targetX,
                         'y': targetMarker.y - 10,
                         'x1': targetMarker.x + targetX + targetGeneWidth
-                    },
+                    }
+                }
+
+                // the marker height is 10 px so we add and reduce that to the y postion for top and bottom
+                linkList.push({
+                    source,
+                    target,
                     alignment,
                     width: linkWidth,
                     taggedLink: _.findIndex(searchResult, (d) => d.alignmentID == alignment.alignmentID) > -1

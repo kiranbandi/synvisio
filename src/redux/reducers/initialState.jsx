@@ -6,7 +6,7 @@ export default {
   oracle: {
     sourceID: 'bn',
     searchResult: [],
-    multiLevel: true,
+    multiLevel: false,
     multiLevelType: 'tree',
     plotType: 'dashboard',
     trackType: 'track-heatmap',
@@ -18,6 +18,7 @@ export default {
       showTracks: false,
       isBlockModeON: false,
       'markers': { 'source': [], 'target': [] }, // default preset markers are loaded from the sampleSourceMapper
+      'reversedMarkers': { 'source': [], 'target': [] },//same structure but array contains the marker that is reversed
       'alignmentList': [],
       'filterLevel': {}
     }

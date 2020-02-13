@@ -6,7 +6,7 @@ export default function oracleReducer(state = initialState.oracle, action) {
   switch (action.type) {
     case types.SET_LOADER_STATE:
       return Object.assign({}, state, { loaderState: action.loaderState })
-      case types.SET_SEARCH_RESULT:
+    case types.SET_SEARCH_RESULT:
       return Object.assign({}, state, { searchResult: action.searchResult })
     case types.SET_PLOT_LEVEL:
       return Object.assign({}, state, { multiLevel: action.value })
@@ -33,7 +33,7 @@ export default function oracleReducer(state = initialState.oracle, action) {
     case types.SET_CONFIGURATION:
       return Object.assign({}, state, { configuration: action.configuration })
     case types.SET_ROOT_MARKERS:
-      return Object.assign({}, state, { configuration: { ...state.configuration, markers: action.markers } })
+      return Object.assign({}, state, { configuration: { ...state.configuration, markers: action.markers, reversedMarkers: action.reversedMarkers } })
     case types.SET_SNAPSHOT_LIST:
       return Object.assign({}, state, { snapshotList: action.snapshotList })
     case types.SET_ALIGNMENT_LIST:
