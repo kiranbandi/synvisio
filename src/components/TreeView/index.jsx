@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import TreeViewMarkers from './TreeViewMarkers';
 import TreeViewLinks from './TreeViewLinks';
 import { schemeCategory10 } from 'd3';
+import { AdvancedFilterPanel } from '../';
 
 class TreeView extends Component {
 
@@ -33,6 +34,7 @@ class TreeView extends Component {
         let markerPositions = {};
 
         let colorCount = 0;
+
 
         _.each(markers, (chromosomeList, markerId) => {
 
@@ -107,6 +109,10 @@ class TreeView extends Component {
                             // pick the one with the smaller width and ensure the minimum is 2px
                             linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
 
+                        // code for flipping block
+                        // 'x': targetMarker.x + targetMarker.dx - targetX,
+                        //     'y': targetMarker.y - 10,
+                        //         'x1': targetMarker.x + targetMarker.dx - (targetX + targetGeneWidth)
 
                         var linkConfig = {
                             source: {
@@ -149,6 +155,7 @@ class TreeView extends Component {
         return (
             <div className='treeView-root text-xs-center'>
                 <TreeFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
+                <AdvancedFilterPanel />
                 {alignmentList.length > 0 &&
                     <svg className='treeViewSVG' height={treeViewHeight} width={treeView.width}>
                         <g ref={node => this.innerG = node} >

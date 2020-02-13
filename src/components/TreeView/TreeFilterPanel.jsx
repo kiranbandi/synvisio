@@ -138,6 +138,8 @@ class TreeFilterPanel extends Component {
                 <button type="submit" className="btn btn-primary-outline" onClick={this.onSubmit}>
                     GO <span className="icon icon-cw"></span>
                 </button>
+
+                <div className='advanced-features'></div>
             </form>
         );
 
