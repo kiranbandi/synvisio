@@ -27,10 +27,10 @@ export default class Container extends Component {
 
   render() {
 
-    const { markerList, width, reversedMarkerList = [] } = this.props;
+    const { markerList, reversedMarkerList = [] } = this.props;
 
     return (
-      <div style={{ 'width': width }}>
+      <div>
         {_.map(markerList, (marker, index) =>
           <Card
             key={marker}

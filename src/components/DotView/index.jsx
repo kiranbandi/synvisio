@@ -238,7 +238,10 @@ class DotView extends Component {
                             y={20}
                             onClick={this.resetZoom} />}
                     <svg
-                        style={{ 'background': isDark ? '#252830' : 'white', 'margin': '10px 10px 0px 10px' }}
+                        style={{
+                            'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white',
+                            'margin': '10px 10px 0px 10px'
+                        }}
                         className={'dotViewSVG ' + (isChromosomeModeON ? 'chrom-mode' : '')}
                         ref={node => this.outerG = node}
                         height={configuration.dotView.width}

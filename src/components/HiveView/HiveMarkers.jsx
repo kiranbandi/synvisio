@@ -11,7 +11,8 @@ export default class HiveMarkers extends Component {
     }
 
     generateMarkerElements() {
-        const { markerPositions } = this.props, angles = hiveAngles(Object.keys(markerPositions).length);
+        const { markerPositions } = this.props,
+            angles = hiveAngles(Object.keys(markerPositions).length);
 
         return _.map(markerPositions, (markerList, markerListId) => {
             // create marker lines

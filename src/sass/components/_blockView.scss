@@ -2,12 +2,11 @@
     position: relative;
     &.rounded-corner {
         border-radius: 10px;
-        background: #1a1c22;
         margin: 0px auto;
         display: block;
     }
     .blockViewSVG {
-        background-color: #1a1c22;
+        cursor: move;
         .axis--x text {
             fill: grey;
         }
@@ -34,6 +33,9 @@
             }
             &.pale-marker {
                 stroke: white !important;
+                &.inverted {
+                    stroke: #141313 !important
+                }
             }
         }
         .blockview-polylink {
@@ -46,6 +48,9 @@
             &.pale-link {
                 fill: white !important;
                 opacity: 1;
+                &.inverted {
+                    fill: #141313 !important
+                }
             }
         }
     }

@@ -184,7 +184,7 @@ class BlockView extends Component {
 
     render() {
 
-        const { configuration, plotType, searchResult } = this.props;
+        const { configuration, plotType, searchResult, isDark } = this.props;
         let { blockView, filterLevel } = configuration;
         const { alignment } = filterLevel;
 
@@ -256,7 +256,7 @@ class BlockView extends Component {
                 <line
                     key={'source-marker-' + index}
                     id={'source-marker-' + index}
-                    className={'blockview-makers source-marker ' + (markLink ? 'pale-marker' : '')}
+                    className={'blockview-makers source-marker ' + (isDark ? '' : ' inverted ') + (markLink ? 'pale-marker' : '')}
                     x1={markerPosition.source.x1}
                     x2={markerPosition.source.x2}
                     y1={markerPosition.source.y}
@@ -269,7 +269,7 @@ class BlockView extends Component {
                 <line
                     key={'target-marker-' + index}
                     id={'target-marker-' + index}
-                    className={'blockview-makers target-marker ' + (markLink ? 'pale-marker' : '')}
+                    className={'blockview-makers target-marker ' + (isDark ? '' : ' inverted ') + (markLink ? 'pale-marker' : '')}
                     x1={markerPosition.target.x1}
                     x2={markerPosition.target.x2}
                     y1={markerPosition.target.y}
@@ -280,7 +280,7 @@ class BlockView extends Component {
 
             polygonLinks.push(
                 <polygon
-                    className={'blockview-polylink ' + (markLink ? 'pale-link' : '')}
+                    className={'blockview-polylink ' + (isDark ? '' : ' inverted ') + (markLink ? 'pale-link' : '')}
                     key={'polylink-' + index}
                     id={'polylink-' + index}
                     points={markerPosition.source.x1 + "," + (markerPosition.source.y + 10) + " " + markerPosition.source.x2 + "," + (markerPosition.source.y + 10) + " " + markerPosition.target.x2 + "," + (markerPosition.target.y - 10) + " " + markerPosition.target.x1 + "," + (markerPosition.target.y - 10)}>
@@ -292,11 +292,13 @@ class BlockView extends Component {
 
         const containerStyle = {
             height: blockView.height,
-            width: blockView.width
+            width: blockView.width,
+            'backgroundColor': isDark ? '#1a1c22' : 'white'
         }
 
         return (
-            <div className={'blockViewRoot rounded-corner' + (plotType != 'dashboard' ? ' m-t' : '')} style={containerStyle} >
+
+            <div className={'blockViewRoot rounded-corner'} style={containerStyle} >
 
                 {/* Buttons for resetting zoom and inverting alignment */}
                 <InlayIcon onClick={this.resetZoom} right={30} />
@@ -311,7 +313,11 @@ class BlockView extends Component {
                 <InlayIcon onClick={this.shiftAlignment.bind(this, 'left', 'bottom')} icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.target - 15} type='info' />
 
 
-                <svg className='blockViewSVG' transform={'translate(' + this.leftOffset + ',0)'} ref={node => this.outerG = node} height={blockView.height} width={this.innerWidth}>
+                <svg className='blockViewSVG'
+                    style={{ 'background': isDark ? '#1a1c22' : 'white' }}
+                    transform={'translate(' + this.leftOffset + ',0)'}
+                    ref={node => this.outerG = node}
+                    height={blockView.height} width={this.innerWidth}>
                     <g className='axis axis--x' transform='translate(0,40)' ref={node => this.gxTop = node} > </g>
                     <g className='axis axis--x' transform={'translate(0,' + (blockView.height - 40) + ')'} ref={node => this.gxBottom = node} > </g>
 
@@ -338,7 +344,8 @@ class BlockView extends Component {
 
 function mapStateToProps(state) {
     return {
-        searchResult: state.oracle.searchResult
+        searchResult: state.oracle.searchResult,
+        isDark: state.oracle.isDark
     };
 }
 

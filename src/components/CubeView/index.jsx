@@ -89,7 +89,7 @@ class DotView extends Component {
 
     render() {
 
-        let { configuration, genomeData, chromosomeMap } = this.props,
+        let { configuration, genomeData, isDark, chromosomeMap } = this.props,
             { alignmentList } = configuration;
         const side_margin = 57.5;
 
@@ -127,6 +127,7 @@ class DotView extends Component {
                     <div className={'dotViewWrapper only-dotview'}>
                         <div className='dotViewRoot threeDcube'>
                             <svg
+                                style={{ 'background': isDark ? '#252830' : 'white' }}
                                 className={'dotViewSVG'}
                                 height={2 * configuration.dotView.width}
                                 width={2 * configuration.dotView.width}>
@@ -134,7 +135,7 @@ class DotView extends Component {
                                 {/* XY Plot */}
                                 <g style={{ 'transformOrigin': 'center', 'transform': 'translate(48%, -33.5%) skewY(22deg)' }}>
                                     <g style={{ 'transformOrigin': 'center', 'transform': 'rotateX(180deg)' }} >
-                                        <rect width={configuration.dotView.width / 1.328} height={configuration.dotView.width / 1.328} style={{ 'transform': 'translate(7%,7%)', 'fill': '#23262c' }} />
+                                        <rect width={configuration.dotView.width / 1.328} height={configuration.dotView.width / 1.328} style={{ 'transform': 'translate(7%,7%)', 'fill': isDark ? 'rgb(32, 35, 41)' : 'white' }} />
                                         <AxisLines is3D={true} configuration={configuration} axisLinePositions={axisLinePositions['0,1']} />
                                         <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions['0,1']} />
                                     </g>
@@ -143,7 +144,7 @@ class DotView extends Component {
                                 {/* YZ Plot */}
                                 <g style={{ 'transformOrigin': 'center', 'transform': 'translate(-41%, -33.5%) skewY(-22deg)' }}>
                                     <g style={{ 'transformOrigin': 'center', 'transform': 'rotate(-90deg) rotateX(180deg)' }}>
-                                        <rect width={configuration.dotView.width / 1.328} height={configuration.dotView.width / 1.328} style={{ 'transform': 'translate(7%,7%)', 'fill': 'rgb(32, 35, 41)' }} />
+                                        <rect width={configuration.dotView.width / 1.328} height={configuration.dotView.width / 1.328} style={{ 'transform': 'translate(7%,7%)', 'fill': isDark ? 'rgb(32, 35, 41)' : 'white' }} />
                                         <AxisLines is3D={true} configuration={configuration} axisLinePositions={axisLinePositions['1,2']} />
                                         <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions['1,2']} />
                                     </g>
@@ -153,7 +154,7 @@ class DotView extends Component {
                                 {/* XZ Plot */}
                                 <g style={{ 'transformOrigin': 'center', 'transform': 'translate(3.5%, 29%)' }}>
                                     <g style={{ 'transformOrigin': 'center', 'transform': 'scale(1.41, 0.57) rotate(135deg) rotateX(180deg)' }}>
-                                        <rect width={configuration.dotView.width / 1.328} height={configuration.dotView.width / 1.328} style={{ 'transform': 'translate(7%,7%)', 'fill': 'rgb(32, 35, 41)' }} />
+                                        <rect width={configuration.dotView.width / 1.328} height={configuration.dotView.width / 1.328} style={{ 'transform': 'translate(7%,7%)', 'fill': isDark ? 'rgb(32, 35, 41)' : 'white' }} />
                                         <AxisLines is3D={true} configuration={configuration} axisLinePositions={axisLinePositions['2,0']} />
                                         <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions['2,0']} />
                                     </g>
@@ -166,6 +167,7 @@ class DotView extends Component {
                                             key={"vertical-line-text-outer-" + d.key}
                                             innerKey={"vertical-line-text-" + d.key}
                                             text={d.key}
+                                            style={{ 'fill': isDark ? 'white' : 'black' }}
                                             type='x'
                                             x={d.x1 + ((d.x2 - d.x1) / 2)}
                                             y={d.y1 - 10}
@@ -180,6 +182,7 @@ class DotView extends Component {
                                             key={"vertical-line-text-outer-" + d.key}
                                             innerKey={"vertical-line-text-" + d.key}
                                             text={d.key}
+                                            style={{ 'fill': isDark ? 'white' : 'black' }}
                                             type='x'
                                             x={d.x1 + ((d.x2 - d.x1) / 2)}
                                             y={d.y1 - 10}
@@ -194,7 +197,10 @@ class DotView extends Component {
                                             key={"vertical-line-text-outer-" + d.key}
                                             innerKey={"vertical-line-text-" + d.key}
                                             text={d.key}
-                                            style={{ 'transform': 'rotate(270deg)', 'transformOrigin': 'center' }}
+                                            style={{
+                                                'transform': 'rotate(179deg)', 'transformOrigin': 'center',
+                                                'fill': isDark ? 'white' : 'black'
+                                            }}
                                             type='x'
                                             x={d.x1 + ((d.x2 - d.x1) / 2)}
                                             y={d.y1 - 10}
@@ -208,17 +214,17 @@ class DotView extends Component {
                                     </marker>
                                 </defs>
 
-                                <g style={{ 'transform': 'translate(95%, 61%)' }}>
+                                <g style={{ 'transform': 'translate(94%, 61%)' }}>
                                     <g style={{ 'transform': 'rotate(-67.5deg)' }}>
-                                        <text style={{ 'transform': 'rotate(93deg) translate(0.5%, 1.5%)', 'transformOrigin': 'inherit' }} className='cube-label'>X axis</text>
+                                        <text style={{ 'fill': isDark ? 'white' : 'rgb(32, 35, 41)', 'transform': 'rotate(93deg) translate(0.5%, 1.5%)', 'transformOrigin': 'inherit' }} className='cube-label'>X axis</text>
                                         <line className="y-axis dot-view-line" x1="0" y1="0" x2="0" y2="50" markerEnd="url(#arrow)"></line>
                                     </g>
                                     <g style={{ 'transform': 'rotate(-180deg)' }}>
-                                        <text style={{ 'transform': 'rotate(93deg) translate(0.75%, 1.5%)', 'transformOrigin': 'inherit' }} className='cube-label'>Y axis</text>
+                                        <text style={{ 'fill': isDark ? 'white' : 'rgb(32, 35, 41)', 'transform': 'rotate(93deg) translate(0.75%, 1.5%)', 'transformOrigin': 'inherit' }} className='cube-label'>Y axis</text>
                                         <line className="y-axis dot-view-line" x1="0" y1="0" x2="0" y2="50" markerEnd="url(#arrow)"></line>
                                     </g>
                                     <g style={{ 'transform': 'rotate(67.5deg)' }}>
-                                        <text style={{ 'transform': 'rotate(270deg) translate(-4%, -1%)', 'transformOrigin': 'inherit' }} className='cube-label'>Z axis</text>
+                                        <text style={{ 'fill': isDark ? 'white' : 'rgb(32, 35, 41)', 'transform': 'rotate(270deg) translate(-4%, -1%)', 'transformOrigin': 'inherit' }} className='cube-label'>Z axis</text>
                                         <line className="y-axis dot-view-line" x1="0" y1="0" x2="0" y2="50" markerEnd="url(#arrow)"></line>
                                     </g>
                                 </g>
@@ -239,7 +245,8 @@ function mapStateToProps(state) {
     return {
         genomeData: state.genome,
         trackType: state.oracle.trackType,
-        chromosomeMap: state.genome.chromosomeMap
+        chromosomeMap: state.genome.chromosomeMap,
+        isDark: state.oracle.isDark
     };
 }
 

@@ -16,7 +16,6 @@
         .cube-label {
             font-size: 14px;
             font-weight: bold;
-            fill: white;
         }
     }
     .dotViewRoot {
@@ -71,8 +70,8 @@
         }
     }
     .chrom-mode {
+        cursor: move;
         border-radius: 10px;
-        background: #1a1c22;
         margin: 10px 15px 0 15px;
         .alignment-link-lines {
             cursor: pointer;
