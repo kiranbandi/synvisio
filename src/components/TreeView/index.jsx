@@ -172,7 +172,7 @@ class TreeView extends Component {
 
 
     render() {
-        const { configuration, chromosomeMap } = this.props, { alignmentList, treeView, markers } = configuration;
+        const { configuration, chromosomeMap, isDark } = this.props, { alignmentList, treeView, markers } = configuration;
 
         const treeViewHeight = Object.keys(markers).length * 300;
         const markerPositions = (Object.keys(markers).length > 1) && this.initialiseMarkerPositions();
@@ -183,7 +183,9 @@ class TreeView extends Component {
                 <TreeFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
                 <AdvancedFilterPanel width={treeView.width} />
                 {alignmentList.length > 0 &&
-                    <svg className='treeViewSVG' height={treeViewHeight} width={treeView.width}>
+                    <svg className='treeViewSVG'
+                        style={{ 'background': isDark ? '#1a1c22' : 'white' }}
+                        height={treeViewHeight} width={treeView.width}>
                         <g ref={node => this.innerG = node} >
                             <TreeViewMarkers configuration={configuration} markerPositions={markerPositions} />
                             <TreeViewLinks configuration={configuration} linkStore={linkStore} />
@@ -197,7 +199,8 @@ class TreeView extends Component {
 function mapStateToProps(state) {
     return {
         genomeData: state.genome,
-        chromosomeMap: state.genome.chromosomeMap
+        chromosomeMap: state.genome.chromosomeMap,
+        isDark: state.oracle.isDark
     };
 }
 

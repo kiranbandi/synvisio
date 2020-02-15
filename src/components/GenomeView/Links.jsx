@@ -66,7 +66,7 @@ class Links extends Component {
 
     generateLinkElements() {
 
-        const { configuration, linkPositions } = this.props;
+        const { configuration, linkPositions, isDark } = this.props;
 
         let linkElements = [];
 
@@ -94,7 +94,7 @@ class Links extends Component {
             // if the link is part of a search result paint it in white
             if (d.taggedLink) {
                 style = {
-                    'stroke': 'white',
+                    'stroke': isDark ? 'white' : '#1a1c22',
                     'strokeWidth': '5',
                     'strokeOpacity': 1
                 }
@@ -137,7 +137,7 @@ class Links extends Component {
             // if the link is part of a search result paint it in white
             if (d.taggedLink) {
                 style = {
-                    'fill': 'white',
+                    'fill': isDark ? 'white' : '#1a1c22',
                     'fillOpacity': 1
                 }
             }

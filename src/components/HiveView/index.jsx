@@ -9,6 +9,7 @@ import hiveAngles from './hiveAngles';
 import { connect } from 'react-redux';
 import { setHiveViewSelectedMarker } from '../../redux/actions/actions';
 import { schemeCategory10 } from 'd3';
+import { AdvancedFilterPanel } from '../';
 
 class HiveView extends Component {
 
@@ -29,7 +30,8 @@ class HiveView extends Component {
     }
 
     initialiseMarkerPositions() {
-        const { configuration, chromosomeMap } = this.props, { markers, hiveView, isNormalized = false } = configuration,
+        const { configuration, chromosomeMap } = this.props,
+            { reversedMarkers, markers, hiveView, isNormalized = false } = configuration,
             angles = hiveAngles(Object.keys(markers).length);
 
         this.outerRadius = (hiveView.height / 2) - 50;
@@ -43,7 +45,6 @@ class HiveView extends Component {
         // find the marker list that has the maximum width
         let maxGeneticWidthMarkerList = _.maxBy(widthCollection, (o) => o.width);
         let scaleFactor = (this.outerRadius - this.innerRadius) / maxGeneticWidthMarkerList.width;
-
         let markerPositions = {};
         _.each(markers, (chromosomeList, markerId) => {
 
@@ -55,10 +56,13 @@ class HiveView extends Component {
 
 
             let widthUsedSoFar = this.innerRadius,
+                reversedMarkerList = reversedMarkers[markerId],
                 markerList = _.map(chromosomeList, (key, index) => {
                     let marker = {
                         'data': chromosomeMap.get(key),
                         'key': key,
+                        // if the chromosome key is in the reverse marker list set it here
+                        'reversed': (_.findIndex(reversedMarkerList, (d) => d == key) > -1),
                         // marker start point = used space so far
                         'x': widthUsedSoFar,
                         // width of the marker
@@ -126,11 +130,11 @@ class HiveView extends Component {
                     if (linkWidth == 2) {
                         linkStore.links.push({
                             source: {
-                                'radius': sourceMarker.x + sourceX,
+                                'radius': sourceMarker.reversed ? sourceMarker.x + sourceMarker.dx - sourceX : sourceMarker.x + sourceX,
                                 'angle': sourceMarker.angle
                             },
                             target: {
-                                'radius': targetMarker.x + targetX,
+                                'radius': targetMarker.reversed ? targetMarker.x + targetMarker.dx - targetX : targetMarker.x + targetX,
                                 'angle': targetMarker.angle
                             },
                             color
@@ -139,14 +143,14 @@ class HiveView extends Component {
                     else {
                         linkStore.polygons.push({
                             source: {
-                                'startRadius': sourceMarker.x + sourceX,
+                                'startRadius': sourceMarker.reversed ? sourceMarker.x + sourceMarker.dx - sourceX : sourceMarker.x + sourceX,
                                 'angle': sourceMarker.angle,
-                                'endRadius': sourceMarker.x + sourceX + sourceGeneWidth
+                                'endRadius': sourceMarker.reversed ? sourceMarker.x + sourceMarker.dx - (sourceX + sourceGeneWidth) : sourceMarker.x + sourceX + sourceGeneWidth
                             },
                             target: {
-                                'startRadius': targetMarker.x + targetX,
+                                'startRadius': targetMarker.reversed ? targetMarker.x + targetMarker.dx - targetX : targetMarker.x + targetX,
                                 'angle': targetMarker.angle,
-                                'endRadius': targetMarker.x + targetX + targetGeneWidth
+                                'endRadius': targetMarker.reversed ? targetMarker.x + targetMarker.dx - (targetX + targetGeneWidth) : targetMarker.x + targetX + targetGeneWidth
                             },
                             color
                         });
@@ -158,21 +162,33 @@ class HiveView extends Component {
     }
 
     render() {
-        const { configuration, chromosomeMap } = this.props, { alignmentList, hiveView, markers } = configuration,
-            { chromosomeLabelsON } = configuration,
+        const { configuration, chromosomeMap, isDark } = this.props,
+            { alignmentList, hiveView, markers, chromosomeLabelsON } = configuration,
+            { selectedMarker } = hiveView,
             markerPositions = (Object.keys(markers).length > 1) && this.initialiseMarkerPositions(),
             linkStore = markerPositions ? this.initialiseLinks(markerPositions) : { links: [], polygons: [] };
 
         return (
             <div className='hiveView-root text-xs-center'>
                 <HiveFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
+                <AdvancedFilterPanel width={hiveView.width} />
                 {alignmentList.length > 0 &&
-                    <svg className='hiveViewSVG' height={hiveView.height} width={hiveView.width}>
+                    <svg className='hiveViewSVG'
+                        style={{ 'background': isDark ? '#252830' : 'white' }}
+                        height={hiveView.height} width={hiveView.width}>
                         <g ref={node => this.innerG = node} transform={'translate(' + (hiveView.width / 2) + ',' + (hiveView.height / 2) + ')'} >
                             <HiveLinks hiveView={hiveView} linkStore={linkStore} />
                             <HiveMarkers markerPositions={markerPositions} />
-                            <HiveRadialLabels markerPositions={markerPositions} onMarkerSelect={this.onMarkerSelect} />
-                            {chromosomeLabelsON && <HiveMarkerLabels markerPositions={markerPositions} />}
+                            <HiveRadialLabels
+                                isDark={isDark}
+                                selectedMarker={selectedMarker}
+                                markerPositions={markerPositions}
+                                onMarkerSelect={this.onMarkerSelect} />
+                            {chromosomeLabelsON &&
+                                <HiveMarkerLabels
+                                    isDark={isDark}
+                                    selectedMarker={selectedMarker}
+                                    markerPositions={markerPositions} />}
                         </g>
                     </svg>}
             </div>
@@ -183,7 +199,8 @@ class HiveView extends Component {
 function mapStateToProps(state) {
     return {
         genomeData: state.genome,
-        chromosomeMap: state.genome.chromosomeMap
+        chromosomeMap: state.genome.chromosomeMap,
+        isDark: state.oracle.isDark
     };
 }
 

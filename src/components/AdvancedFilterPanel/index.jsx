@@ -92,7 +92,7 @@ class AdvancedFilterPanel extends Component {
                     {_.map(markers, (markerList, markerId) => {
                         return <div key={'markerID-' + markerId} className='marker-wrapper'>
                             <DndProvider backend={Backend}>
-                                <DragContainer markerId={markerId} width={width}
+                                <DragContainer markerId={markerId}
                                     reversedMarkerList={reversedMarkers[markerId]}
                                     markerList={markerList}
                                     updateMarkerList={this.updateMarkerList}

@@ -261,16 +261,16 @@ class GenomeView extends Component {
                         x={genomeView.width - 50}
                         y={20}
                         onClick={this.resetZoom} />}
-                <svg style={{ 'background': isDark ? '#252830' : 'white' }}
+                <svg style={{ 'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white' }}
                     className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')} ref={node => this.outerG = node} height={height} width={genomeView.width}>
                     <g ref={node => this.innerG = node} >
                         <Markers configuration={configuration} markerPositions={markerPositions} />
-                        <Links configuration={configuration} linkPositions={linkPositions} />
+                        <Links isDark={isDark} configuration={configuration} linkPositions={linkPositions} />
                         {areTracksVisible && <Tracks trackPositions={trackPositions} trackType={trackType} />}
                         {trackTrailPositions && <TrackTrails trackTrailPositions={trackTrailPositions} />}
                     </g>
                 </svg>
-            </div>
+            </div >
         );
     }
 }

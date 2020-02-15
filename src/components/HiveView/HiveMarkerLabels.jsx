@@ -9,7 +9,8 @@ export default class HiveMarkerLabels extends Component {
 
     render() {
 
-        const { markerPositions } = this.props, angles = hiveAngles(Object.keys(markerPositions).length);
+        const { markerPositions, isDark } = this.props,
+            angles = hiveAngles(Object.keys(markerPositions).length);
 
         let markerTextElements = [];
 
@@ -19,10 +20,13 @@ export default class HiveMarkerLabels extends Component {
             markerList.map((d, i) => {
                 markerTextElements.push(
                     <text key={"hive-marker-label-" + markerListId + "-" + i}
+                        style={{
+                            'fill': isDark ? 'white' : '#1a1c22'
+                        }}
                         className='hive-marker-label'
                         x={(d.x + (d.dx / 2)) * Math.cos(angle)}
                         y={(d.x + (d.dx / 2)) * Math.sin(angle)}>
-                        {d.key}
+                        {d.reversed ? ('(rev)' + d['key']) : d['key']}
                     </text>)
             });
 
