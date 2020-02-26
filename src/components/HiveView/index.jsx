@@ -141,7 +141,8 @@ class HiveView extends Component {
                         })
                     }
                     else {
-                        linkStore.polygons.push({
+
+                        var poyligonCoords = {
                             source: {
                                 'startRadius': sourceMarker.reversed ? sourceMarker.x + sourceMarker.dx - sourceX : sourceMarker.x + sourceX,
                                 'angle': sourceMarker.angle,
@@ -153,7 +154,23 @@ class HiveView extends Component {
                                 'endRadius': targetMarker.reversed ? targetMarker.x + targetMarker.dx - (targetX + targetGeneWidth) : targetMarker.x + targetX + targetGeneWidth
                             },
                             color
-                        });
+                        }
+
+                        // code block to straighten links out if they are reversed
+                        // when a marker is flipped the links are reversed too and this code block can
+                        // straighten them out
+                        if (sourceMarker.reversed && (poyligonCoords.source.startRadius > poyligonCoords.source.endRadius)) {
+                            let tempStore = poyligonCoords.source.startRadius;
+                            poyligonCoords.source.startRadius = poyligonCoords.source.endRadius;
+                            poyligonCoords.source.endRadius = tempStore;
+                        }
+                        if (targetMarker.reversed && (poyligonCoords.target.startRadius > poyligonCoords.target.endRadius)) {
+                            let tempStore = poyligonCoords.target.startRadius;
+                            poyligonCoords.target.startRadius = poyligonCoords.target.endRadius;
+                            poyligonCoords.target.endRadius = tempStore;
+                        }
+
+                        linkStore.polygons.push(poyligonCoords);
                     }
                 }
             });

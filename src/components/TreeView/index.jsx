@@ -148,6 +148,24 @@ class TreeView extends Component {
                             }
                         }
 
+
+
+                        // code block to straighten links out if they are reversed
+                        // when a marker is flipped the links are reversed too and this code block can
+                        // straighten them out
+                        if (targetMarker.reversed && (target.x > target.x1)) {
+                            let tempStore = target.x1;
+                            target.x1 = target.x;
+                            target.x = tempStore;
+                        }
+                        if (sourceMarker.reversed && (source.x > source.x1)) {
+                            let tempStore = source.x1;
+                            source.x1 = source.x;
+                            source.x = tempStore;
+                        }
+
+
+
                         var linkConfig = {
                             source,
                             target,
