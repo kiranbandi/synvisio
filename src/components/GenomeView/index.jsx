@@ -176,6 +176,21 @@ class GenomeView extends Component {
                     }
                 }
 
+                // code block to straighten links out if they are reversed
+                // when a marker is flipped the links are reversed too and this code block can
+                // straighten them out
+                if (targetMarker.reversed && (target.x > target.x1)) {
+                    let tempStore = target.x1;
+                    target.x1 = target.x;
+                    target.x = tempStore;
+                }
+                if (sourceMarker.reversed && (source.x > source.x1)) {
+                    let tempStore = source.x1;
+                    source.x1 = source.x;
+                    source.x = tempStore;
+                }
+
+
                 // the marker height is 10 px so we add and reduce that to the y postion for top and bottom
                 linkList.push({
                     source,
