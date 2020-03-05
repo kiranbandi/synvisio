@@ -50,8 +50,8 @@ export default (plotType = 'dashboard') => {
                 'height': 350,
                 'width': width,
                 'verticalPositions': {
-                    'source': 25,
-                    'target': 325
+                    'source': 45,
+                    'target': 305
                 }
             },
             'dotView': {
@@ -70,19 +70,19 @@ export default (plotType = 'dashboard') => {
 
         configuration = {
             'genomeView': {
-                'height': 0.40 * height,
+                'height': 0.45 * height,
                 'width': width,
                 'verticalPositions': {
-                    'source': 25,
-                    'target': (0.40 * height) - 25
+                    'source': 45,
+                    'target': (0.45 * height) - 45
                 }
             },
             'dotView': {
-                'width': 0.60 * height
+                'width': 0.55 * height
             },
             'panelView': {
-                'height': 0.60 * height,
-                'width': width - (0.60 * height)
+                'height': 0.55 * height,
+                'width': width - (0.55 * height)
             },
             'blockView': {
                 'verticalPositions': {

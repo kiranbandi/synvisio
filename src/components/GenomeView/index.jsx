@@ -190,7 +190,6 @@ class GenomeView extends Component {
                     source.x = tempStore;
                 }
 
-
                 // the marker height is 10 px so we add and reduce that to the y postion for top and bottom
                 linkList.push({
                     source,
@@ -279,7 +278,7 @@ class GenomeView extends Component {
                 <svg style={{ 'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white' }}
                     className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')} ref={node => this.outerG = node} height={height} width={genomeView.width}>
                     <g ref={node => this.innerG = node} >
-                        <Markers configuration={configuration} markerPositions={markerPositions} />
+                        <Markers areTracksVisible={areTracksVisible} isDark={isDark} configuration={configuration} markerPositions={markerPositions} />
                         <Links isDark={isDark} configuration={configuration} linkPositions={linkPositions} />
                         {areTracksVisible && <Tracks trackPositions={trackPositions} trackType={trackType} />}
                         {trackTrailPositions && <TrackTrails trackTrailPositions={trackTrailPositions} />}
