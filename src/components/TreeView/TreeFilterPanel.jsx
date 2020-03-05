@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sortAlphaNum from '../../utils/sortAlphaNum';
 import {
-    treeFilterData, setRootMarkers,
+    treeFilterData, setRootMarkers, setMarkerScale,
     setMultiDualFilter, setNormalizedState
 } from '../../redux/actions/actions';
 import _ from 'lodash';
@@ -48,10 +48,13 @@ class TreeFilterPanel extends Component {
     }
 
     toggleCheckboxChange(e) {
-        const { multiDualFilter = false, isNormalized } = this.props.configuration;
+        const { multiDualFilter = false, isNormalized, showScale } = this.props.configuration;
 
         if (e.target.id == 'isNormalized-tree') {
             this.props.actions.setNormalizedState(!isNormalized);
+        }
+        else if (e.target.id == 'markerScale') {
+            this.props.actions.setMarkerScale(!showScale);
         }
         else {
             this.props.actions.setMultiDualFilter(!multiDualFilter);
@@ -101,7 +104,7 @@ class TreeFilterPanel extends Component {
         const options = chromosomeMapList.map((value, index) => {
             return <option key={index} value={value[0]}>{value[0]}</option>;
         }),
-            { markers = {}, isNormalized = false, multiDualFilter = false } = configuration;
+            { markers = {}, isNormalized = false, multiDualFilter = false, showScale = true } = configuration;
 
         let markerFilterElements = _.map(markers, (value, keyIndex) => {
             return (
@@ -124,6 +127,13 @@ class TreeFilterPanel extends Component {
                 </div>
 
                 <div className="checkbox">
+                    <label>
+                        <input type="checkbox" id='markerScale' checked={showScale} onChange={this.toggleCheckboxChange} />
+                        {"Show Scale"}
+                    </label>
+                </div>
+
+                <div className="checkbox" style={{ 'marginLeft': -20 }}>
                     <label>
                         <input type="checkbox" id='multiDualFilter' checked={multiDualFilter} onChange={this.toggleCheckboxChange} />
                         {"Dual Filter"}
@@ -149,7 +159,7 @@ class TreeFilterPanel extends Component {
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({
-            treeFilterData, setRootMarkers,
+            treeFilterData, setRootMarkers, setMarkerScale,
             setNormalizedState, setMultiDualFilter
         }, dispatch)
     };

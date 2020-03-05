@@ -189,13 +189,91 @@ class TreeView extends Component {
     }
 
 
+    getMarkerTicks(configuration, markerPositions, isDark) {
+
+        let tickElements = [],
+            tickColor = isDark ? 'white' : 'darkslategrey',
+            lastMarkerListID = Object.keys(markerPositions).length - 1;
+
+        _.map(markerPositions, (markerList, markerListID) => {
+
+            let onesetofticks = _.map(markerList, (marker, markerID) => {
+                // the start end and width are all in base pair counts
+                let { start, end, width } = marker.data;
+                // we first normalise these numbers into million base pairs 
+                // or kilo base pairs based on the size
+                let normalizer = (width / 1000000) > 0 ? [1000000, 'Mb'] : [1000, 'Kb'],
+                    normalizedStart = Math.round(start / normalizer[0]),
+                    normalizedEnd = Math.round(end / normalizer[0]),
+                    normalizedWidth = Math.round(width / normalizer[0]);
+
+                // We find the number of step ticks we can fit into the marker,
+                // a tick element takes 20px so we need to divide the available marker width by that
+                let tickWidthInPixels = 30, tickCount = Math.round(marker.dx / tickWidthInPixels),
+                    // space between ticks 
+                    tickWidthinbp = normalizedWidth / (tickCount);
+
+                let verticalShifter = markerListID == '0' ? -15 : markerListID == lastMarkerListID ? 15 : 15;
+
+                // first we need a base line where the ticks can sit, this runs along
+                // the length of the marker
+                return <g className='marker-tick-container' key={'marker-tick-wrapper-' + markerID}>
+                    <line
+                        stroke={tickColor}
+                        x1={marker.x} y1={marker.y + verticalShifter}
+                        x2={marker.x + (tickCount * tickWidthInPixels)}
+                        y2={marker.y + verticalShifter}> </line>
+                    {_.times(tickCount + 1, (tickIndex) => {
+                        return <line
+                            stroke={tickColor}
+                            key={'custom-tick-' + tickIndex}
+                            x1={marker.x + (tickIndex * tickWidthInPixels)}
+                            x2={marker.x + (tickIndex * tickWidthInPixels)}
+                            y1={marker.y + verticalShifter}
+                            y2={marker.y + verticalShifter + verticalShifter / 4}>
+                        </line>;
+                    })}
+
+                    {_.times(tickCount + 1, (tickIndex) => {
+
+                        let tickText = String(Math.round(normalizedStart + (tickIndex * tickWidthinbp))),
+                            horizontalShifter = tickIndex == 0 ? 5 : tickIndex == tickCount ? -10 : 0;
+
+                        // when there is only one tick then tickwidthinbp necomes NaN
+                        // so simply show the width of the marker in bp
+                        if (isNaN(tickText)) {
+                            tickText = tickWidthinbp;
+                        }
+
+                        return <text
+                            fill={tickColor}
+                            key={'custom-ticktext-' + tickIndex}
+                            x={marker.x + (tickIndex * tickWidthInPixels - 5) + horizontalShifter}
+                            y={marker.y + (2 * verticalShifter) + (verticalShifter > 0 ? 0 : 10)}>
+                            {tickText + (tickIndex == tickCount ? ' ' + normalizer[1] : '')}
+                        </text>;
+                    })
+                    }
+                </g>
+            });
+
+            tickElements.push(onesetofticks);
+        });
+
+        return tickElements;
+    }
+
+
+
     render() {
-        const { configuration, chromosomeMap, isDark } = this.props, { alignmentList, treeView, markers } = configuration;
+        const { configuration, chromosomeMap, isDark } = this.props, { alignmentList, treeView, markers, showScale = true } = configuration;
 
         const treeViewHeight = Object.keys(markers).length * 300;
         const markerPositions = (Object.keys(markers).length > 1) && this.initialiseMarkerPositions();
         const linkStore = markerPositions ? this.initialiseLinks(configuration, chromosomeMap, markerPositions) : { links: [], polygons: [] };
 
+
+        const markerTicks = this.getMarkerTicks(configuration, markerPositions, isDark);
         return (
             <div className='treeView-root text-xs-center'>
                 <TreeFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
@@ -207,6 +285,7 @@ class TreeView extends Component {
                         <g ref={node => this.innerG = node} >
                             <TreeViewMarkers configuration={configuration} markerPositions={markerPositions} />
                             <TreeViewLinks configuration={configuration} linkStore={linkStore} />
+                            {showScale && markerTicks}
                         </g>
                     </svg>}
             </div>

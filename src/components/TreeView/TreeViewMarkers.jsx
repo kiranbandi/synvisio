@@ -98,7 +98,6 @@ class Markers extends Component {
         return markerElements;
     }
 
-
     render() {
 
         const { configuration, markerPositions } = this.props,
