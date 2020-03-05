@@ -347,6 +347,10 @@ export function setNormalizedState(isNormalized = false) {
     return { type: types.SET_NORMALIZED, isNormalized };
 }
 
+export function setMarkerScale(showScale = true) {
+    return { type: types.SET_MARKER_SCALE, showScale };
+}
+
 export function setChromosomeLabelsState(chromosomeLabelsON = false) {
     return { type: types.SET_CHROMOSOME_LABELS_STATE, chromosomeLabelsON };
 }

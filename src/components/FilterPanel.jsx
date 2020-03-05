@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sortAlphaNum from '../utils/sortAlphaNum';
-import { filterData, toggleTracks, setNormalizedState } from '../redux/actions/actions';
+import {
+    filterData, toggleTracks,
+    setNormalizedState, setMarkerScale
+} from '../redux/actions/actions';
 
 class FilterPanel extends Component {
     constructor(props) {
@@ -16,10 +19,13 @@ class FilterPanel extends Component {
     }
 
     toggleCheckboxChange(event) {
-        const { hideUnalignedRegions } = this.state, { isNormalized = false } = this.props;
+        const { hideUnalignedRegions } = this.state, { isNormalized = false, showScale } = this.props;
 
         if (event.target.id == 'markerNormalize') {
             this.props.setNormalizedState(!isNormalized);
+        }
+        else if (event.target.id == 'markerScale') {
+            this.props.setMarkerScale(!showScale);
         }
         else {
             this.setState({ 'hideUnalignedRegions': !hideUnalignedRegions });
@@ -75,7 +81,7 @@ class FilterPanel extends Component {
 
     render() {
 
-        let { chromosomeMap = {}, isNormalized = false } = this.props,
+        let { chromosomeMap = {}, isNormalized = false, showScale = true } = this.props,
             { hideUnalignedRegions } = this.state,
             // sort chromosome map 
             // Zero is passed to the sorting function so that sorting happens based on the 0th value
@@ -104,6 +110,15 @@ class FilterPanel extends Component {
                             <label>
                                 <input type="checkbox" id='markerNormalize' checked={isNormalized} onChange={this.toggleCheckboxChange} />
                                 {"Normalize Chromosome Marker Lengths"}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className="col-sm-12">
+                        <div className="checkbox custom-checkbox">
+                            <label>
+                                <input type="checkbox" id='markerScale' checked={showScale} onChange={this.toggleCheckboxChange} />
+                                {"Show Marker Scales"}
                             </label>
                         </div>
                     </div>
@@ -140,7 +155,8 @@ function mapDispatchToProps(dispatch) {
     return {
         filterData: bindActionCreators(filterData, dispatch),
         toggleTracks: bindActionCreators(toggleTracks, dispatch),
-        setNormalizedState: bindActionCreators(setNormalizedState, dispatch)
+        setNormalizedState: bindActionCreators(setNormalizedState, dispatch),
+        setMarkerScale:bindActionCreators(setMarkerScale, dispatch)
     };
 }
 
@@ -149,6 +165,7 @@ function mapStateToProps(state) {
         chromosomeMap: state.genome.chromosomeMap,
         markers: state.oracle.configuration.markers,
         isNormalized: state.oracle.configuration.isNormalized,
+        showScale: state.oracle.configuration.showScale,
         plotType: state.oracle.plotType
     };
 }

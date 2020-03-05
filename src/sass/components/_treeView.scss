@@ -32,6 +32,15 @@
             stroke-width: 3px;
             stroke-linecap: round;
         }
+        .marker-tick-container {
+            line {
+                stroke-width: 2px;
+            }
+            text {
+                font-weight: bolder;
+                font-size: 0.75em;
+            }
+        }
         .markersText {
             fill: white;
             font-weight: bold;

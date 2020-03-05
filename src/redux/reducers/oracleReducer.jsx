@@ -26,6 +26,8 @@ export default function oracleReducer(state = initialState.oracle, action) {
       return Object.assign({}, state, { configuration: { ...state.configuration, multiDualFilter: action.multiDualFilter } })
     case types.SET_NORMALIZED:
       return Object.assign({}, state, { configuration: { ...state.configuration, isNormalized: action.isNormalized } })
+    case types.SET_MARKER_SCALE:
+      return Object.assign({}, state, { configuration: { ...state.configuration, showScale: action.showScale } })
     case types.SET_BLOCK_MODE:
       return Object.assign({}, state, { configuration: { ...state.configuration, isBlockModeON: action.isBlockModeON } })
     case types.SET_CHROMOSOME_MODE:
