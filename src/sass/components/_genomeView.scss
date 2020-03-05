@@ -15,6 +15,15 @@
             font-weight: bold;
             font-size: 1.0em;
         }
+        .marker-tick-container {
+            line {
+                stroke-width: 2px;
+            }
+            text {
+                font-weight: bolder;
+                font-size: 0.75em;
+            }
+        }
         .chromosomeMarkers,
         .markersText {
             cursor: pointer;
