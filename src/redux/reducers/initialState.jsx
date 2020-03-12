@@ -5,7 +5,7 @@ const configuration = getPlotDimensions();
 export default {
   oracle: {
     isDark: true,
-
+    isSnapShotAvailable: false,
     sourceID: 'bn',
     searchResult: [],
     multiLevel: false,

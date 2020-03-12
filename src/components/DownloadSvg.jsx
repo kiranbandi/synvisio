@@ -34,7 +34,7 @@ export default class SnapshotCapture extends Component {
     render() {
         return (
             <div className='download-SVG' onClick={this.SVGExport}>
-                <span className="icon icon-download"></span>
+                <span className='icon-label'>Download</span> <span className="icon icon-download"></span>
             </div>
         );
     }

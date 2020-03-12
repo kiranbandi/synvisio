@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
 import {
-    Loader, HiveView, TreeView,
+    Loader, HiveView, TreeView, PlotCharacteristics,
     SingleLevel, DownloadSvg, SnapshotPanel,
     CubeView, SnapshotCapture, GeneSearch
 } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { configureSourceID, setLoaderState, setGenomicData, setALignmentList } from '../redux/actions/actions';
+import {
+    configureSourceID, setLoaderState,
+    setGenomicData, setALignmentList
+} from '../redux/actions/actions';
 
 
 class Dashboard extends Component {
@@ -51,17 +54,24 @@ class Dashboard extends Component {
     }
 
     render() {
-        let { loaderState, configuration, genome = {}, multiLevel, multiLevelType, plotType } = this.props;
+        let { loaderState, configuration, genome = {},
+            isSnapShotAvailable, multiLevel, multiLevelType, plotType } = this.props;
 
         return (
             <div className='dashboard-root m-t'>
+
                 {!loaderState ?
                     <div className='dashboard-container'>
                         {genome.chromosomeMap ?
                             <div>
-                                <SnapshotPanel />
-                                <SnapshotCapture />
+                                {isSnapShotAvailable && <SnapshotPanel />}
+                                {isSnapShotAvailable && <SnapshotCapture />}
                                 <DownloadSvg />
+                                <PlotCharacteristics
+                                    multiLevel={multiLevel}
+                                    multiLevelType={multiLevelType}
+                                    plotType={plotType}
+                                    configuration={configuration} />
                                 {!multiLevel && <GeneSearch />}
                                 {multiLevel ?
                                     <div>
@@ -85,7 +95,12 @@ class Dashboard extends Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators({ configureSourceID, setLoaderState, setGenomicData, setALignmentList }, dispatch)
+        actions: bindActionCreators({
+            configureSourceID,
+            setLoaderState,
+            setGenomicData,
+            setALignmentList
+        }, dispatch)
     };
 }
 
@@ -97,7 +112,8 @@ function mapStateToProps(state) {
         multiLevel: state.oracle.multiLevel,
         multiLevelType: state.oracle.multiLevelType,
         plotType: state.oracle.plotType,
-        genome: state.genome
+        genome: state.genome,
+        isSnapShotAvailable: state.oracle.isSnapShotAvailable
     };
 }
 
