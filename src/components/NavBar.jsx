@@ -44,19 +44,19 @@ class NavBar extends Component {
                         <ul className='nav navbar-nav'>
                             <li>
                                 <Link to={'/Dashboard/' + sourceID}>
-                                    <span className="icon icon-line-graph"></span> Dashboard
+                                    <span className="icon icon-line-graph"></span> SYNTENY Dashboard
                                 </Link>
                             </li>
                             <li>
-                                <Link to='/Configuration'>
-                                    <span className="icon icon-tools"></span> Configuration
+                                <Link to='/Upload'>
+                                    <span className="icon icon-publish"></span> Upload OWN Data to Dashboard
                                 </Link>
                             </li>
                         </ul>
 
                         <ul className='nav navbar-nav pull-right' onClick={this.props.toggleTheme}>
                             <li>
-                                <span className={"icon icon-light-" + (isDark ? "down" : "up")}></span> Switch to {isDark ? 'Light' : 'Dark'} Theme
+                                <span className={"icon icon-light-" + (isDark ? "down" : "up")}></span> Switch Chart Background to {isDark ? 'Light' : 'Dark'} Theme
                             </li>
                         </ul>
 

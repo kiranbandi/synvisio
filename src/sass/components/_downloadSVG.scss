@@ -1,4 +1,8 @@
 .download-SVG {
+    .icon-label {
+        font-size: 17px;
+        margin-right: 3px;
+    }
     position: fixed;
     bottom: 75px;
     right: 80px;
@@ -8,4 +12,5 @@
     cursor: pointer;
     font-size: 20px;
     z-index: 10;
+    border: 1px solid white;
 }
