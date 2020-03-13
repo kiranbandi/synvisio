@@ -11,7 +11,10 @@ export default {
     multiLevel: false,
     multiLevelType: 'tree',
     plotType: 'dashboard',
-    trackType: 'track-heatmap',
+    trackType: [{ 'type': 'track-heatmap', 'color': 'red' },
+    { 'type': 'track-heatmap', 'color': 'red' },
+    { 'type': 'track-heatmap', 'color': 'red' },
+    { 'type': 'track-heatmap', 'color': 'red' }],
     loaderState: false,
     snapshotList: [],
     configuration: {
