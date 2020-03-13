@@ -74,41 +74,40 @@ class Upload extends Component {
 
         datastore = Object.assign({}, datastore, { information, alignmentList, chromosomeMap });
 
-        return trackFiles[0] ? getFile('track-file-0') : Promise.resolve('false');
+        return trackFiles[0] ? getFile('track-file-0') : Promise.resolve(false);;
       })
       // process 1st trackfile data if present
       .then((data) => {
-        return trackFiles[0] ? processFile(data, 'track') : Promise.resolve('false');
+        return trackFiles[0] ? processFile(data, 'track') : Promise.resolve(false);;
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
-        return trackFiles[1] ? getFile('track-file-1') : Promise.resolve('false');
+        return trackFiles[1] ? getFile('track-file-1') : Promise.resolve(false);;
       })
       // process 2st trackfile data if present
       .then((data) => {
-        return trackFiles[1] ? processFile(data, 'track') : Promise.resolve('false');
+        return trackFiles[1] ? processFile(data, 'track') : Promise.resolve(false);;
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
-        return trackFiles[2] ? getFile('track-file-2') : Promise.resolve('false');
+        return trackFiles[2] ? getFile('track-file-2') : Promise.resolve(false);;
       })
       // process 3rd trackfile data if present
       .then((data) => {
-        return trackFiles[2] ? processFile(data, 'track') : Promise.resolve('false');
+        return trackFiles[2] ? processFile(data, 'track') : Promise.resolve(false);;
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
-        return trackFiles[3] ? getFile('track-file-3') : Promise.resolve('false');
+        return trackFiles[3] ? getFile('track-file-3') : Promise.resolve(false);;
       })
       // process 4th trackfile data if present
       .then((data) => {
-        return trackFiles[3] ? processFile(data, 'track') : Promise.resolve('false');
+        return trackFiles[3] ? processFile(data, 'track') : Promise.resolve(false);;
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
         // update the sourceID set in the state with the new sourceID
         configureSourceID('uploaded-source', multiLevel);
-        console.log(datastore);
         // set the genomic data
         setGenomicData(datastore);
       })

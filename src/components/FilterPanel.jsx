@@ -93,6 +93,9 @@ class FilterPanel extends Component {
             return <option key={index} value={value[0]}>{value[0]}</option>;
         });
 
+        // see if track data is available
+        const isTrackDataAvailable = _.reduce(window.synVisio.trackData, (acc, d) => (!!d || acc), false);
+
         return (
             <div id='filter-panel-root' className='container-fluid'>
                 <form className="filter-panel-container">
@@ -141,7 +144,7 @@ class FilterPanel extends Component {
                         GO <span className="icon icon-cw"></span>
                     </button>
 
-                    {window.synVisio.trackData && (this.props.plotType == 'linearplot' || this.props.plotType == 'dotplot') && <button type="submit" id='track-btn' className="btn btn-primary-outline" onClick={this.onToggleTrack}>
+                    {isTrackDataAvailable && <button type="submit" id='track-btn' className="btn btn-primary-outline" onClick={this.onToggleTrack}>
                         Toggle Tracks
                     </button>}
 
@@ -156,7 +159,7 @@ function mapDispatchToProps(dispatch) {
         filterData: bindActionCreators(filterData, dispatch),
         toggleTracks: bindActionCreators(toggleTracks, dispatch),
         setNormalizedState: bindActionCreators(setNormalizedState, dispatch),
-        setMarkerScale:bindActionCreators(setMarkerScale, dispatch)
+        setMarkerScale: bindActionCreators(setMarkerScale, dispatch)
     };
 }
 

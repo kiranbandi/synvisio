@@ -6,7 +6,7 @@ export default class NotFound extends Component {
 		return (
 			<div className='not-found container m-t'>
 				<div className="alert alert-danger text-center" role="alert">
-					<h3><strong>Oh snap ! Error 404 ! Page Not Found ! </strong></h3>
+					<h3><strong>Oh snap ! Page Not Found ! </strong></h3>
 				</div>
 				<div className="well well-lg align-center">
 					<strong>Seems like you took a wrong turn and landed here or maybe the page you

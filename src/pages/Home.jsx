@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import YouTube from 'react-youtube';
 
 //  Image url handling is convoluted in scss , much easier to set inline and get images from root
 let backgroundStyle = { background: 'url(assets/img/synvisio.jpg)' };
@@ -20,21 +19,23 @@ class Home extends Component {
 
         <div className="container home-body">
           <h1>How does it work ?</h1>
-          <p>SynVisio lets you explore the results of <a href='http://chibba.pgml.uga.edu/mcscan2/'>McScanX</a> a popular synteny and collinearity detection toolkit. </p>
+          <p>SynVisio lets you explore the results of <a href='http://chibba.pgml.uga.edu/mcscan2/'>McScanX</a> a popular synteny and collinearity detection toolkit and generate publication ready images.</p>
           <p>SynVisio requires two files to run:</p>
           <ul>
             <li>The <b>simplified gff file</b> that was used as an input for a McScanX query.</li>
             <li>The <b>collinearity file</b> generated as an output by McScanX for the same input query.</li>
+            <li>Optional <b>track file</b> in bedgraph format to annotate the generated charts.</li>
           </ul>
           <p>
-            SynVisio offers three basic types of visualizations a <b>Linear bar plot</b> a <b>Hive plot </b>and a <b>Dot plot</b>. General information regarding the parameters that were set for McScanX and the percetage share of collinear genes, are read from the collinearity
-            file and displayed along with the plots. Users can choose the source and the target chromosomes and the type of the plot using the options panel.</p>
-          
-          
-          <YouTube videoId="83ep_AuMWak" />
-          
-          <p>Use the following links for other videos and tutorials on using SynVisio.</p>
-          <p><a href='https://youtu.be/bLqeXwFDUbQ'> Multi-Analysis Hive plot</a></p>
+            SynVisio offers different types of visualizations such as <b>Linear Parallel plots</b>, <b>Hive plots</b>, <b>Stacked Parallel Plots </b> and <b>Dot plots</b>.
+            Users can configure the type of plots required and then choose the source and the target chromosomes that need to be mapped.
+            Users also have option to download the generated visualizations in publication ready SVG format. </p>
+
+          <p>Use the following links for tutorial videos on using SynVisio.
+          They might be outdated but will be updated shortly.
+            Meanwhile you can drop a mail to venkat.bandi@usask.ca for help with any particular features.</p>
+          <p><a href='https://youtu.be/83ep_AuMWak'> Basic Dashboard Demo</a></p>
+          <p><a href='https://youtu.be/bLqeXwFDUbQ'> Multi Analysis Hive plot</a></p>
           <p><a href='https://youtu.be/e6CNFLjGFmQ'> Visualizing additional tracks</a></p>
           <p><a href='https://youtu.be/dkInV2QHGVY'> Support for Revisitation using Snapshot Feature </a></p>
           <p><a href='https://youtu.be/C4fTi9bVHEY'> Detailed description of all features in SynVisio </a></p>
@@ -42,7 +43,7 @@ class Home extends Component {
           <p>SynVisio works best when opened in <b>Google chrome.</b></p>
 
           <h1>What Next ?</h1>
-          <p>We are working on adding several new features to this tool.The current development progress is documented <a href="https://trello.com/b/ag1Upk33/mcscanx-synteny-visualizer">here</a>.We have loaded up several sample files below that you can play around with :</p>
+          <p>We are working on adding several new features to this tool. We have loaded up some sample files below that you can play around with :</p>
           <ul>
             <li> <Link to={'/Dashboard/bn'}> Bn </Link> - Brassica napus , Canola </li>
             <li> <Link to={'/Dashboard/bnigra_bol_brapa_ortho'}> B.nigra vs B.oleracea vs B.rapa </Link> - 3 Way comparision between Brassica nigra , Brassica rapa and Brassica oleracea </li>
