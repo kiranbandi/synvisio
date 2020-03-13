@@ -52,7 +52,7 @@ class GenomeView extends Component {
         d3.select(this.innerG).attr('transform', 'translate(' + zoomTransform.x + "," + zoomTransform.y + ") scale(" + zoomTransform.k + ")")
     }
 
-    initialiseMarkers(configuration, chromosomeCollection, areTracksVisible) {
+    initialiseMarkers(configuration, chromosomeCollection, areTracksVisible, additionalTrackHeight) {
 
         const maxWidthAvailable = configuration.genomeView.width;
 
@@ -98,7 +98,7 @@ class GenomeView extends Component {
                         'reversed': (_.findIndex(reversedMarkerList, (d) => d == key) > -1),
                         // marker start point = used space + half marker padding 
                         'x': widthUsedSoFar + (markerPadding / 2),
-                        'y': configuration.genomeView.verticalPositions[markerId] + (areTracksVisible ? 45 : 0),
+                        'y': configuration.genomeView.verticalPositions[markerId] + (areTracksVisible ? additionalTrackHeight / 2 : 0),
                         // width of the marker
                         'dx': (scaleFactor * chromosomeCollection.get(key).width)
                     }
@@ -203,70 +203,88 @@ class GenomeView extends Component {
         return linkList;
     }
 
-    initialiseTracks(markerPositions, trackType) {
-        let trackPositions = {},
-            trackValue,
-            trackData = window.synVisio.trackData;
+    initialiseTracks(markerPositions, trackType, trackData, showScale) {
 
-        _.each(markerPositions, (markerList, markerListId) => {
-            let multiplier = markerListId == 'source' ? -66 : 16;
-            _.each(markerList, (marker) => {
-                let tracksPerMarker = _.map(trackData.chromosomeMap[marker.key], (trackDataFragment) => {
-                    trackValue = (trackDataFragment.value - trackData.min) / (trackData.max - trackData.min);
-                    return {
-                        x: ((trackDataFragment.start / marker.data.width) * marker.dx) + marker.x,
-                        dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * marker.dx,
-                        dy: (trackType == 'track-heatmap') ? 50 : (50 * trackValue),
-                        y: marker.y + (multiplier) + ((trackType == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
-                        value: trackValue,
-                        trackKey: marker.key
-                    }
-                });
-                trackPositions[marker.key] = tracksPerMarker;
-            });
-        });
-        return trackPositions;
+        return _.map(trackData, (singleTrackData, trackIndex) => {
 
-    }
+            let trackPositions = {}, trackValue;
 
-    initialiseTrackTrails(markerPositions, trackType) {
-        let trackTrailPostions = [];
-        // For heatmap style tracks we dont have y axis trails 
-        if (trackType == 'track-heatmap') { return false }
-        // The track height is hardcoded to 50px so the lines are at 10 ,20,30,40 and 50px respectively 
-        else {
             _.each(markerPositions, (markerList, markerListId) => {
-                let multiplier = markerListId == 'source' ? -66 : 16;
+
+                let yShifter = (50 * (trackIndex + 1)),
+                    interTrackGap = 12 * (trackIndex),
+                    interScaleShifter = showScale ? 50 + interTrackGap : 20 + interTrackGap,
+                    multiplier = markerListId == 'source' ? -1 * (yShifter + interScaleShifter) : (yShifter - 50 + interScaleShifter);
                 _.each(markerList, (marker) => {
-                    for (let looper = 0; looper <= 5; looper++) {
-                        trackTrailPostions.push({
-                            x: marker.x,
-                            dx: marker.dx,
-                            y: marker.y + multiplier + (looper * 10)
-                        });
-                    }
+                    let tracksPerMarker = _.map(singleTrackData.chromosomeMap[marker.key], (trackDataFragment) => {
+                        trackValue = (trackDataFragment.value - singleTrackData.min) / (singleTrackData.max - singleTrackData.min);
+                        return {
+                            x: ((trackDataFragment.start / marker.data.width) * marker.dx) + marker.x,
+                            dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * marker.dx,
+                            dy: (trackType[trackIndex].type == 'track-heatmap') ? 50 : 50 * trackValue,
+                            y: marker.y + (multiplier) + ((trackType[trackIndex].type == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
+                            value: trackValue,
+                            trackKey: marker.key
+                        }
+                    });
+                    trackPositions[marker.key + '-' + markerListId] = tracksPerMarker;
                 });
             });
-            return trackTrailPostions;
-        }
+            return trackPositions;
+        })
     }
 
-    areTracksVisible(configuration, plotType) {
-        return (window.synVisio.trackData && configuration.showTracks && plotType == 'linearplot');
+    initialiseTrackTrails(markerPositions, trackType, trackData, showScale) {
+
+        return _.map(trackData, (ignoreProp, trackIndex) => {
+
+            let trackTrailPostions = [];
+            // For heatmap style tracks we dont have y axis trails 
+            if (trackType[trackIndex].type == 'track-heatmap') { return false }
+            // The track height is hardcoded to 50px so the lines are at 10 ,20,30,40 and 50px respectively 
+            else {
+                _.each(markerPositions, (markerList, markerListId) => {
+
+                    let yShifter = (50 * (trackIndex + 1)),
+                        interTrackGap = 12 * (trackIndex),
+                        interScaleShifter = showScale ? 50 + interTrackGap : 20 + interTrackGap,
+                        multiplier = markerListId == 'source' ? -1 * (yShifter + interScaleShifter) : (yShifter - 50 + interScaleShifter);
+
+                    _.each(markerList, (marker) => {
+                        for (let looper = 0; looper <= 5; looper++) {
+                            trackTrailPostions.push({
+                                x: marker.x,
+                                dx: marker.dx,
+                                y: marker.y + multiplier + (looper * 10)
+                            });
+                        }
+                    });
+                });
+                return trackTrailPostions;
+            }
+        });
+    }
+
+    areTracksVisible(configuration, trackData) {
+        return (_.reduce(trackData, (acc, d) => (!!d || acc), false) && configuration.showTracks);
     }
 
     render() {
 
         const { configuration, genomeData, isDark,
-            plotType, trackType, searchResult } = this.props,
-            { isChromosomeModeON = false, genomeView } = configuration,
-            areTracksVisible = this.areTracksVisible(configuration, plotType),
-            markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible),
-            linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions, searchResult),
-            trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType) : false,
-            trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(markerPositions, trackType) : false;
+            trackType, searchResult } = this.props,
+            { isChromosomeModeON = false, genomeView, showScale } = configuration,
+            trackData = _.filter(window.synVisio.trackData, (d) => !!d),
+            areTracksVisible = this.areTracksVisible(configuration, trackData),
+            additionalTrackHeight = trackData.length * 120;
 
-        const height = genomeView.height + (areTracksVisible ? 90 : 0);
+        const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible, additionalTrackHeight),
+            linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions, searchResult),
+            trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType, trackData, showScale) : false,
+            trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(markerPositions, trackType, trackData, showScale) : false;
+
+        const trackHeightFix = areTracksVisible ? (trackData.length * 15) : 0;
+        const height = genomeView.height - trackHeightFix + (areTracksVisible ? (additionalTrackHeight + (showScale ? 50 : 20)) : 0);
 
         return (
             <div className='genomeViewRoot' >
@@ -276,12 +294,21 @@ class GenomeView extends Component {
                         y={20}
                         onClick={this.resetZoom} />}
                 <svg style={{ 'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white' }}
-                    className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')} ref={node => this.outerG = node} height={height} width={genomeView.width}>
+                    className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')}
+                    ref={node => this.outerG = node} height={height} width={genomeView.width}>
                     <g ref={node => this.innerG = node} >
                         <Markers areTracksVisible={areTracksVisible} isDark={isDark} configuration={configuration} markerPositions={markerPositions} />
                         <Links isDark={isDark} configuration={configuration} linkPositions={linkPositions} />
-                        {areTracksVisible && <Tracks trackPositions={trackPositions} trackType={trackType} />}
-                        {trackTrailPositions && <TrackTrails trackTrailPositions={trackTrailPositions} />}
+                        {areTracksVisible &&
+                            _.map(trackPositions, (trackPos, index) =>
+                                <Tracks key={'track-sub-' + index}
+                                    trackPositions={trackPos}
+                                    colorScale={trackType[index].color}
+                                    trackType={trackType[index].type} />)}
+                        {areTracksVisible &&
+                            _.map(trackTrailPositions, (trackTrailPos, index) =>
+                                <TrackTrails key={'track-trail-' + index}
+                                    trackTrailPositions={trackTrailPos} />)}
                     </g>
                 </svg>
             </div >

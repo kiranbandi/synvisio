@@ -173,7 +173,7 @@ class Markers extends Component {
         return (
             <g className='markerContainer'>
                 {markerElements}
-                {!areTracksVisible && configuration.showScale && markerTicks}
+                {configuration.showScale && markerTicks}
             </g>
         );
     }
