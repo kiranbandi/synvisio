@@ -14,12 +14,17 @@ export default class DotTrackTrails extends Component {
     }
 
     render() {
-        const { trackTrailPositions, rotate = false } = this.props;
+        const { trackTrailPositions, rotate = false, totalTrackCount = 1 } = this.props;
         return (
-            <g className={'tracksTrailsContainer' + (rotate ? ' rotate' : ' ')}>
+            <g className={'tracksTrailsContainer' + (rotate ? ' rotate' : '')}
+                style={{ 'transform': rotate ? 'translate(' + magicNumbers[totalTrackCount - 1] + '%,0%) rotate(90deg)' : 'none' }}>
                 {this.generateTrackTrails(trackTrailPositions)}
             </g>
         );
     }
 }
+
+// These are constant values that seem to work for 4 tracks depending on the size
+const magicNumbers = [12, 0, -10, -17];
+
 
