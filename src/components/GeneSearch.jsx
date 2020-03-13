@@ -56,7 +56,7 @@ class GeneSearch extends Component {
                     </button>
 
                     <div className='snapshot-inner-result'>
-                        <span className="text-info info-text-message">
+                        <span className="text-primary info-text-message">
                             Matching alignments are highlighted in <b>white</b> in the charts
                     </span>
                         {searchResultContent}

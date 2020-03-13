@@ -35,7 +35,7 @@ class Upload extends Component {
 
   onUpload() {
 
-    let datastore = {};
+    let datastore = { trackData: [] };
     const { actions, multiLevel } = this.props,
       { processScaffolds, showAllScaffolds } = this.state,
       { configureSourceID, setGenomicData, setLoaderState } = actions;
@@ -43,8 +43,9 @@ class Upload extends Component {
     // Turn on loader to indicate file uploading and processing 
     setLoaderState(true);
     configureSourceID('bn', multiLevel);
-    const isTrackFileAvailable = document.getElementById('track-file').files.length > 0;
 
+    // check the number of tracks files that are available to process
+    let trackFiles = _.map([0, 1, 2, 3], (d) => document.getElementById('track-file-' + d).files.length > 0)
 
     // load the coordinate file
     getFile('coordinate-file')
@@ -72,18 +73,42 @@ class Upload extends Component {
         }
 
         datastore = Object.assign({}, datastore, { information, alignmentList, chromosomeMap });
-        return isTrackFileAvailable ? getFile('track-file') : Promise.resolve('false');
+
+        return trackFiles[0] ? getFile('track-file-0') : Promise.resolve('false');
       })
-      // process trackfile data is present
+      // process 1st trackfile data if present
       .then((data) => {
-        return isTrackFileAvailable ? processFile(data, 'track') : Promise.resolve('false');
+        return trackFiles[0] ? processFile(data, 'track') : Promise.resolve('false');
       })
       .then((trackData) => {
-        if (isTrackFileAvailable) {
-          datastore.trackData = trackData;
-        }
+        datastore.trackData.push(trackData);
+        return trackFiles[1] ? getFile('track-file-1') : Promise.resolve('false');
+      })
+      // process 2st trackfile data if present
+      .then((data) => {
+        return trackFiles[1] ? processFile(data, 'track') : Promise.resolve('false');
+      })
+      .then((trackData) => {
+        datastore.trackData.push(trackData);
+        return trackFiles[2] ? getFile('track-file-2') : Promise.resolve('false');
+      })
+      // process 3rd trackfile data if present
+      .then((data) => {
+        return trackFiles[2] ? processFile(data, 'track') : Promise.resolve('false');
+      })
+      .then((trackData) => {
+        datastore.trackData.push(trackData);
+        return trackFiles[3] ? getFile('track-file-3') : Promise.resolve('false');
+      })
+      // process 4th trackfile data if present
+      .then((data) => {
+        return trackFiles[3] ? processFile(data, 'track') : Promise.resolve('false');
+      })
+      .then((trackData) => {
+        datastore.trackData.push(trackData);
         // update the sourceID set in the state with the new sourceID
         configureSourceID('uploaded-source', multiLevel);
+        console.log(datastore);
         // set the genomic data
         setGenomicData(datastore);
       })
@@ -102,12 +127,17 @@ class Upload extends Component {
     return (
       <div className="configuration-container">
         <div className="container">
-
           <div className='upload-panel'>
             <h2 className='text-primary m-t-lg configuration-sub-title'>Upload Collinearity Files</h2>
             <FileUpload id='collinear-file' label='MCScanX Collinearity File' />
             <FileUpload id='coordinate-file' label='GFF File' />
-            <h4 className='text-info m-t m-b'>You can upload upto 4 track files</h4>
+            <h4 className='text-primary m-t' style={{ 'lineHeight': '25px' }}>
+              You can upload upto 4 track files, these however are only visible in some charts
+              and not all.Tracks are also scaled automatically based on the minimum and maximum
+              values in the file, however if you want to set a custom scale such as (0,100) or (0,1),
+              please set the values in the first line of the track file being uploaded in the
+              format "<b>min=0,max=100</b>".
+            </h4>
             <FileUpload id='track-file-0' label='Track File 1 (optional)' />
             <FileUpload id='track-file-1' label='Track File 2 (optional)' />
             <FileUpload id='track-file-2' label='Track File 3 (optional)' />
@@ -167,8 +197,7 @@ function mapStateToProps(state) {
     multiLevel: state.oracle.multiLevel,
     multiLevelType: state.oracle.multiLevelType,
     plotType: state.oracle.plotType,
-    loaderState: state.oracle.loaderState,
-    trackType: state.oracle.trackType
+    loaderState: state.oracle.loaderState
   };
 }
 

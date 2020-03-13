@@ -19,4 +19,15 @@
         margin-right: 15px;
         margin-top: 10px;
     }
+    .track-select-box {
+        .select-wrapper {
+            display: inline-block;
+            margin: 10px 10px;
+        }
+        select {
+            width: 200px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+    }
 }

@@ -46,8 +46,8 @@ fetchData.getGenomicsData = function(sourceID) {
             })
             // if the data is not present resolve the promise without the track data
             .then((response) => { return processFile(response.data, 'track') })
-            .then((trackData) => { resolve({...datastore, trackData }); })
-            .catch(() => { resolve({...datastore, trackData: false }); })
+            .then((trackData) => { resolve({...datastore, trackData: [trackData] }); })
+            .catch(() => { resolve({...datastore, trackData: [false] }); })
     });
 }
 
