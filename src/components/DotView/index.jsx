@@ -127,89 +127,104 @@ class DotView extends Component {
         return linkList;
     }
 
-    areTracksVisible(configuration, plotType) {
-        return (window.synVisio.trackData && configuration.showTracks && plotType == 'dotplot');
+    areTracksVisible(configuration, trackData, plotType) {
+        return (_.reduce(trackData, (acc, d) => (!!d || acc), false) && configuration.showTracks && plotType == 'dotplot');
     }
 
-    initialiseTracks(axisLinePositions, trackType) {
+    initialiseTracks(axisLinePositions, trackType, trackData) {
 
-        let trackPositions = { source: {}, target: {} },
-            trackValue,
-            trackData = window.synVisio.trackData;
+        return _.map(trackData, (singleTrackData, trackIndex) => {
 
-        _.each(axisLinePositions, (axisList, markerListId) => {
+            let trackPositions = { source: {}, target: {} },
+                trackValue,
+                shifter = (55 * (trackIndex + 1));
 
-            _.each(axisList, (marker) => {
+            _.each(axisLinePositions, (axisList, markerListId) => {
 
-                let tracksPerMarker;
-                if (markerListId == 'target') {
-                    tracksPerMarker = _.map(trackData.chromosomeMap[marker.key], (trackDataFragment) => {
-                        trackValue = (trackDataFragment.value - trackData.min) / (trackData.max - trackData.min);
-                        return {
-                            x: ((trackDataFragment.start / marker.data.width) * (marker.y2 - marker.y1)) + marker.y1,
-                            dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * (marker.y2 - marker.y1),
-                            dy: (trackType == 'track-heatmap') ? 50 : (50 * trackValue),
-                            y: marker.x2 + (55) + ((trackType == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
-                            value: trackValue
-                        }
-                    });
-                    trackPositions.target[marker.key] = tracksPerMarker;
-                }
-                else {
-                    tracksPerMarker = _.map(trackData.chromosomeMap[marker.key], (trackDataFragment) => {
-                        trackValue = (trackDataFragment.value - trackData.min) / (trackData.max - trackData.min);
-                        return {
-                            x: ((trackDataFragment.start / marker.data.width) * (marker.x2 - marker.x1)) + marker.x1,
-                            dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * (marker.x2 - marker.x1),
-                            dy: (trackType == 'track-heatmap') ? 50 : (50 * trackValue),
-                            y: marker.y2 + (10) + ((trackType == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
-                            value: trackValue
-                        }
-                    });
-                    trackPositions.source[marker.key] = tracksPerMarker;
-                }
+                let multiplier = markerListId == 'target' ? (shifter + 70) : (shifter - 45);
 
-            });
-        });
-        return trackPositions;
-    }
-
-    initialiseTrackTrails(axisLinePositions, trackType) {
-        let trackTrailPostions = { source: [], target: [] };
-        // For heatmap style tracks we dont have y axis trails 
-        if (trackType == 'track-heatmap') { return false }
-        // The track height is hardcoded to 50px so the lines are at 10 ,20,30,40 and 50px respectively 
-        else {
-            _.each(axisLinePositions, (axisList, axisListId) => {
                 _.each(axisList, (marker) => {
-                    for (let looper = 0; looper <= 5; looper++) {
-                        if (axisListId == 'target') {
-                            trackTrailPostions[axisListId].push({
-                                x: marker.y1,
-                                dx: marker.y2 - marker.y1,
-                                y: marker.x2 + 55 + (looper * 10)
-                            });
-                        }
-                        else {
-                            trackTrailPostions[axisListId].push({
-                                x: marker.x1,
-                                dx: marker.x2 - marker.x1,
-                                y: marker.y2 + 10 + (looper * 10)
-                            });
-                        }
-
+                    let tracksPerMarker;
+                    if (markerListId == 'target') {
+                        tracksPerMarker = _.map(singleTrackData.chromosomeMap[marker.key], (trackDataFragment) => {
+                            trackValue = (trackDataFragment.value - singleTrackData.min) / (singleTrackData.max - singleTrackData.min);
+                            return {
+                                x: ((trackDataFragment.start / marker.data.width) * (marker.y2 - marker.y1)) + marker.y1,
+                                dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * (marker.y2 - marker.y1),
+                                dy: (trackType[trackIndex].type == 'track-heatmap') ? 50 : (50 * trackValue),
+                                y: marker.x2 + (multiplier) + ((trackType[trackIndex].type == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
+                                value: trackValue
+                            }
+                        });
+                        trackPositions.target[marker.key + '-' + markerListId] = tracksPerMarker;
+                    }
+                    else {
+                        tracksPerMarker = _.map(singleTrackData.chromosomeMap[marker.key], (trackDataFragment) => {
+                            trackValue = (trackDataFragment.value - singleTrackData.min) / (singleTrackData.max - singleTrackData.min);
+                            return {
+                                x: ((trackDataFragment.start / marker.data.width) * (marker.x2 - marker.x1)) + marker.x1,
+                                dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * (marker.x2 - marker.x1),
+                                dy: (trackType[trackIndex].type == 'track-heatmap') ? 50 : (50 * trackValue),
+                                y: marker.y2 + (multiplier) + ((trackType[trackIndex].type == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
+                                value: trackValue
+                            }
+                        });
+                        trackPositions.source[marker.key + '-' + markerListId] = tracksPerMarker;
                     }
                 });
             });
-            return trackTrailPostions;
-        }
+            return trackPositions;
+        });
+    }
+
+    initialiseTrackTrails(axisLinePositions, trackType, trackData) {
+
+        return _.map(trackData, (noUseProp, trackIndex) => {
+
+            let shifter = (55 * (trackIndex + 1));
+
+            let trackTrailPostions = { source: [], target: [] };
+            // For heatmap style tracks we dont have y axis trails 
+            if (trackType[trackIndex].type == 'track-heatmap') { return false }
+            // The track height is hardcoded to 50px so the lines are at 10 ,20,30,40 and 50px respectively 
+            else {
+                _.each(axisLinePositions, (axisList, axisListId) => {
+
+                    let multiplier = axisListId == 'target' ? (shifter + 70) : (shifter - 45);
+
+                    _.each(axisList, (marker) => {
+                        for (let looper = 0; looper <= 5; looper++) {
+                            if (axisListId == 'target') {
+                                trackTrailPostions[axisListId].push({
+                                    x: marker.y1,
+                                    dx: marker.y2 - marker.y1,
+                                    y: marker.x2 + multiplier + (looper * 10)
+                                });
+                            }
+                            else {
+                                trackTrailPostions[axisListId].push({
+                                    x: marker.x1,
+                                    dx: marker.x2 - marker.x1,
+                                    y: marker.y2 + multiplier + (looper * 10)
+                                });
+                            }
+
+                        }
+                    });
+                });
+                return trackTrailPostions;
+            }
+        });
     }
 
 
     render() {
 
         let { configuration, genomeData, isDark, plotType, trackType } = this.props;
-        const side_margin = 57.5,
+        const trackData = _.filter(window.synVisio.trackData, (d) => !!d),
+            areTracksVisible = this.areTracksVisible(configuration, trackData, plotType),
+            side_margin = 40,
+            additionalFix = areTracksVisible ? trackData.length * 60 : 10,
             { isChromosomeModeON = false } = configuration;
 
         configuration = {
@@ -217,7 +232,7 @@ class DotView extends Component {
             dotView: {
                 ...configuration.dotView,
                 width: isChromosomeModeON ? configuration.dotView.width - 30 : configuration.dotView.width,
-                innerWidth: configuration.dotView.width - (2 * side_margin),
+                innerWidth: configuration.dotView.width - side_margin,
                 offset: side_margin
             }
         }
@@ -225,9 +240,8 @@ class DotView extends Component {
         let axisLinePositions = this.initialisePostions(configuration, genomeData.chromosomeMap),
             alignmentLinePositions = this.initialiseLines(configuration, axisLinePositions, genomeData.chromosomeMap);
 
-        const areTracksVisible = this.areTracksVisible(configuration, plotType);
-        const trackPositions = areTracksVisible ? this.initialiseTracks(axisLinePositions, trackType) : false,
-            trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(axisLinePositions, trackType) : false;
+        const trackPositions = areTracksVisible ? this.initialiseTracks(axisLinePositions, trackType, trackData) : false,
+            trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(axisLinePositions, trackType, trackData) : false;
 
         return (
             <div className={(plotType != 'dashboard' ? 'dotViewWrapper only-dotview' : 'dotViewWrapper')}>
@@ -240,20 +254,46 @@ class DotView extends Component {
                     <svg
                         style={{
                             'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white',
-                            'margin': '10px 10px 0px 10px'
+                            'margin': '10px 0px 0px 10px'
                         }}
                         className={'dotViewSVG ' + (isChromosomeModeON ? 'chrom-mode' : '')}
                         ref={node => this.outerG = node}
-                        height={configuration.dotView.width}
-                        width={configuration.dotView.width}>
+                        height={configuration.dotView.width + additionalFix}
+                        width={configuration.dotView.width + additionalFix}>
 
                         <g ref={node => this.innerG = node}>
                             <AxisLines isDark={isDark} configuration={configuration} axisLinePositions={axisLinePositions} />
                             <AlignmentLines configuration={configuration} alignmentLinePositions={alignmentLinePositions} />
-                            {areTracksVisible && <DotTracks trackPositions={trackPositions.source} trackType={trackType} />}
-                            {areTracksVisible && <DotTracks trackPositions={trackPositions.target} trackType={trackType} rotate={true} />}
-                            {trackTrailPositions && <DotTrackTrails trackTrailPositions={trackTrailPositions.source} />}
-                            {trackTrailPositions && <DotTrackTrails trackTrailPositions={trackTrailPositions.target} rotate={true} />}
+
+                            {areTracksVisible &&
+                                _.map(trackPositions, (trackPos, index) =>
+                                    <DotTracks key={'track-sub-' + index}
+                                        trackPositions={trackPos.source}
+                                        totalTrackCount={trackPositions.length}
+                                        colorScale={trackType[index].color}
+                                        trackType={trackType[index].type} />)}
+
+                            {areTracksVisible &&
+                                _.map(trackPositions, (trackPos, index) =>
+                                    <DotTracks key={'track-sub-x-' + index}
+                                        trackPositions={trackPos.target}
+                                        rotate={true}
+                                        totalTrackCount={trackPositions.length}
+                                        colorScale={trackType[index].color}
+                                        trackType={trackType[index].type} />)}
+
+                            {areTracksVisible &&
+                                _.map(trackTrailPositions, (trackTrailPos, index) =>
+                                    <DotTrackTrails key={'track-trail-' + index}
+                                        trackTrailPositions={trackTrailPos.source}
+                                        totalTrackCount={trackTrailPositions.length} />)}
+
+                            {areTracksVisible &&
+                                _.map(trackTrailPositions, (trackTrailPos, index) =>
+                                    <DotTrackTrails key={'track-trail-x-' + index}
+                                        trackTrailPositions={trackTrailPos.target}
+                                        rotate={true}
+                                        totalTrackCount={trackTrailPositions.length} />)}
                         </g>
                     </svg>
                 </div>
