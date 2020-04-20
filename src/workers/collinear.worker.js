@@ -63,11 +63,11 @@ function parseAlignmentDetails(alignmentDetails) {
 }
 
 function parseLink(link) {
-    let linkInfo = link.split(":")[1].trim().split(/\s+/);
+    let linkInfo = link.split('\t');
     return {
-        'source': linkInfo[0],
-        'target': linkInfo[1],
-        'e_value': linkInfo[2]
+        'source': linkInfo[1],
+        'target': linkInfo[2],
+        'e_value': linkInfo[3]
     };
 }
 
