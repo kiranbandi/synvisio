@@ -122,7 +122,6 @@ class Modal extends Component {
     }
 }
 
-
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({ toggleModalVisbility }, dispatch)

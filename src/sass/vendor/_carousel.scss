@@ -1,0 +1,136 @@
+.carousel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden
+}
+
+.carousel .next,
+.carousel .prev {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 20px;
+    text-align: center;
+    position: absolute;
+    top: calc(50% - 50px - 25px);
+    z-index: 3;
+    color: #fff;
+    background-color: #000;
+    opacity: .7;
+    border-radius: 50%;
+    cursor: pointer
+}
+
+.carousel .next:hover,
+.carousel .prev:hover {
+    background-color: #fff;
+    color: #000
+}
+
+.carousel .prev {
+    left: -25px
+}
+
+.carousel .prev:before {
+    content: "<";
+    position: absolute;
+    right: 12px
+}
+
+.carousel .next {
+    right: -25px
+}
+
+.carousel .next:before {
+    content: ">";
+    position: absolute;
+    left: 12px
+}
+
+.carousel .carousel-main {
+    width: 100%;
+    height: calc(100% - 100px);
+    background-color: #000;
+    overflow: hidden
+}
+
+.carousel .carousel-main .carouselContent-enter {
+    opacity: .01
+}
+
+.carousel .carousel-main .carouselContent-enter.carouselContent-enter-active {
+    opacity: 1;
+    transition: opacity .5s ease-in
+}
+
+.carousel .carousel-main .carouselContent-leave {
+    opacity: 1
+}
+
+.carousel .carousel-main .carouselContent-leave.carouselContent-leave-active {
+    opacity: .01;
+    transition: opacity .5s ease-in
+}
+
+.carousel .carousel-main .carouselContent-appear {
+    opacity: .01
+}
+
+.carousel .carousel-main .carouselContent-appear.carouselContent-appear-active {
+    opacity: 1;
+    transition: opacity .5s ease-in
+}
+
+.carousel .carousel-main span {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: block;
+    position: relative;
+}
+
+.carousel .carousel-main img {
+    position: absolute;
+    top: -9999px;
+    right: -9999px;
+    bottom: -9999px;
+    left: -9999px;
+    margin: auto;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: 0
+}
+
+.carousel .carousel-footer {
+    height: 100px;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    overflow: auto;
+    margin: 0 auto
+}
+
+.carousel .carousel-footer .box {
+    margin: 0 auto;
+    display: flex
+}
+
+.carousel .carousel-footer .box .carousel-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    border-radius: 50%;
+    margin: 5px;
+    cursor: pointer
+}
+
+.carousel .carousel-footer .box .carousel-thumb {
+    width: 120px;
+    height: 80px;
+    background-size: contain;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    margin: 5px;
+    cursor: pointer
+}

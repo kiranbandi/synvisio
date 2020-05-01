@@ -1,6 +1,7 @@
 // import base - contains global styles, such as resets, typography, colors
 // import vendors 
 @import 'vendor/toastr';
+@import 'vendor/carousel';
 // import components- contains each self-contained component in its own .scss partial
 @import 'components/container';
 @import 'components/navbar';
