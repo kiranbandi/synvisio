@@ -190,7 +190,8 @@ class HiveView extends Component {
                 <HiveFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
                 <AdvancedFilterPanel width={hiveView.width} />
                 {alignmentList.length > 0 &&
-                    <svg className='hiveViewSVG'
+                    <svg className='hiveViewSVG exportable-svg'
+                        id={'hive-view-graphic'}
                         style={{ 'background': isDark ? '#252830' : 'white' }}
                         height={hiveView.height} width={hiveView.width}>
                         <g ref={node => this.innerG = node} transform={'translate(' + (hiveView.width / 2) + ',' + (hiveView.height / 2) + ')'} >

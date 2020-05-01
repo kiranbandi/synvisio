@@ -313,7 +313,8 @@ class BlockView extends Component {
                 <InlayIcon onClick={this.shiftAlignment.bind(this, 'left', 'bottom')} icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.target - 15} type='info' />
 
 
-                <svg className='blockViewSVG'
+                <svg className='blockViewSVG exportable-svg'
+                    id='geneblock-view-graphic'
                     style={{ 'background': isDark ? '#1a1c22' : 'white' }}
                     transform={'translate(' + this.leftOffset + ',0)'}
                     ref={node => this.outerG = node}

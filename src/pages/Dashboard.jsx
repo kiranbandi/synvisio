@@ -4,7 +4,7 @@ import { hashHistory } from 'react-router';
 import {
     Loader, HiveView, TreeView, PlotCharacteristics,
     SingleLevel, DownloadSvg, SnapshotPanel,
-    CubeView, SnapshotCapture, GeneSearch
+    CubeView, SnapshotCapture, GeneSearch, SaveModal
 } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -55,11 +55,11 @@ class Dashboard extends Component {
 
     render() {
         let { loaderState, configuration, genome = {},
-            isSnapShotAvailable, multiLevel, multiLevelType, plotType } = this.props;
+            isSnapShotAvailable, isModalVisible, multiLevel, multiLevelType, plotType } = this.props;
 
         return (
             <div className='dashboard-root m-t'>
-
+                {isModalVisible && <SaveModal />}
                 {!loaderState ?
                     <div className='dashboard-container'>
                         {genome.chromosomeMap ?
@@ -107,6 +107,7 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
     return {
         sourceID: state.oracle.sourceID,
+        isModalVisible: state.oracle.isModalVisible,
         loaderState: state.oracle.loaderState,
         configuration: state.oracle.configuration,
         multiLevel: state.oracle.multiLevel,
