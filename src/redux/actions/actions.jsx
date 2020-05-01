@@ -64,6 +64,11 @@ export function setFilterLevel(filterLevel) {
     return { type: types.SET_FILTER_LEVEL, filterLevel };
 };
 
+export function toggleModalVisbility() {
+    return { type: types.TOGGLE_MODAL };
+}
+
+
 export function setGenomicData(data) {
     const { genomeLibrary, alignmentList, snapshotStore = {}, trackData = false, ...otherData } = data;
     //  Treading Dangerous Territory here by polluting the global name space 

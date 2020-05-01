@@ -294,7 +294,8 @@ class GenomeView extends Component {
                         y={20}
                         onClick={this.resetZoom} />}
                 <svg style={{ 'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white' }}
-                    className={'genomeViewSVG ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')}
+                    id={'parallel-plot-graphic'}
+                    className={'genomeViewSVG exportable-svg ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')}
                     ref={node => this.outerG = node} height={height} width={genomeView.width}>
                     <g ref={node => this.innerG = node} >
                         <Markers areTracksVisible={areTracksVisible} isDark={isDark} configuration={configuration} markerPositions={markerPositions} />

@@ -279,7 +279,8 @@ class TreeView extends Component {
                 <TreeFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
                 <AdvancedFilterPanel width={treeView.width} />
                 {alignmentList.length > 0 &&
-                    <svg className='treeViewSVG'
+                    <svg className='treeViewSVG exportable-svg'
+                        id={'tree-view-graphic'}
                         style={{ 'background': isDark ? '#1a1c22' : 'white' }}
                         height={treeViewHeight} width={treeView.width}>
                         <g ref={node => this.innerG = node} >
