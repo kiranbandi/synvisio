@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setConfiguration } from '../redux/actions/actions';
+import { setConfiguration, setSnapshotList } from '../redux/actions/actions';
 
 class SnapshotPanel extends Component {
 
@@ -11,10 +11,21 @@ class SnapshotPanel extends Component {
     }
 
     snapshotRecallClick(event) {
-        const uniqueCode = event.target.id,
-            configuration = window.synVisio.snapshotStore[uniqueCode];
-        if (configuration) {
-            this.props.setConfiguration(_.cloneDeep(configuration));
+
+        const targetName = event.target.className,
+            uniqueCode = event.currentTarget.id,
+            { actions, snapshotList } = this.props,
+            { setConfiguration, setSnapshotList } = actions;
+
+        if (targetName.indexOf('snapshot-recall') > -1) {
+            const configuration = window.synVisio.snapshotStore[uniqueCode].configuration;
+            if (configuration) {
+                setConfiguration(_.cloneDeep(configuration));
+            }
+        }
+        else {
+            // If a snapshot is to be deleted remove it from the list 
+            setSnapshotList(_.filter(snapshotList, (d) => d != uniqueCode));
         }
     }
 
@@ -23,8 +34,14 @@ class SnapshotPanel extends Component {
         const { snapshotList } = this.props;
 
         let snapshotElementList = snapshotList.map((value, index) => {
-            return (<button id={value} key={'snapshot-' + index} className="btn btn-info-outline" onClick={this.snapshotRecallClick}>{index + 1}</button>);
+            return (<button id={value} key={'snapshot-' + index} className="snapshot-button snapshot-recall btn btn-primary-outline" onClick={this.snapshotRecallClick}>
+                <div className='close'>
+                    <span className='close-marker'>×</span>
+                </div>
+                <img className='snapshot-recall' height='100' width='250' src={window.synVisio.snapshotStore[value].imgURI} />
+            </button>);
         });
+
 
         return (
             <div>
@@ -48,7 +65,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { setConfiguration: bindActionCreators(setConfiguration, dispatch) };
+    return { actions: bindActionCreators({ setConfiguration, setSnapshotList }, dispatch) };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SnapshotPanel);
