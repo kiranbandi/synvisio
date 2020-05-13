@@ -84,11 +84,6 @@ class Home extends Component {
           <h1>Learn more</h1>
           <p> This tool was developed at the Human Computer Interaction Lab at the University of Saskatchewan, Canada to assist genome researchers at the Plant Phenotyping and Imaging Research Centre, Canada <a href="https://p2irc.usask.ca/index.php">(P2IRC)</a>.
           This tool is part of series of systems that are currently under development as part of the Theme 3 (Computational Informatics of Crop Phenotype Data) of the P2IRC project.</p>
-          <p>Contributions are made by:</p>
-          <p><b>Project Lead - </b> Carl Gutwin</p>
-          <p><b>System Architect - </b> Venkat Bandi</p>
-          <p><b>Research Collaborators - </b>Isobel Parkin, Andrew Sharpe, Kirstin Bett and Kevin Koh</p>
-
         </div>
       </div>
 
