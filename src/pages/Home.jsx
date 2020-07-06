@@ -88,7 +88,6 @@ class Home extends Component {
           <p><b>Project Lead - </b> Carl Gutwin</p>
           <p><b>System Architect - </b> Venkat Bandi</p>
           <p><b>Research Collaborators - </b>Isobel Parkin, Andrew Sharpe, Kirstin Bett and Kevin Koh</p>
-
         </div>
       </div>
 
