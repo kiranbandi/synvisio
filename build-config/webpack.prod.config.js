@@ -1,7 +1,7 @@
 'use strict';
 var webpack = require("webpack");
 var path = require("path");
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -16,8 +16,11 @@ module.exports = {
                 NODE_ENV: JSON.stringify('production')
             }
         }),
-        new UglifyJSPlugin({
-            sourceMap: false
+        new TerserPlugin({
+            parallel: true,
+            terserOptions: {
+                ecma: 6
+            }
         }),
         new HtmlWebpackPlugin({
             filename: '../../index.html',
