@@ -3,15 +3,16 @@ import { getGenomicsData } from '../utils/fetchData';
 import { hashHistory } from 'react-router';
 import {
     Loader, HiveView, TreeView, PlotCharacteristics,
-    SingleLevel, DownloadSvg, SnapshotPanel,
-    CubeView, SnapshotCapture, GeneSearch, SaveModal
+    SingleLevel, DownloadSvg, CubeView, GeneSearch, SaveModal
 } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
     configureSourceID, setLoaderState,
-    setGenomicData, setALignmentList
+    setGenomicData, setALignmentList, setConfiguration
 } from '../redux/actions/actions';
+
+import { initializeSnapshot, updateSnapshot } from '../utils/snapshot';
 
 
 class Dashboard extends Component {
@@ -23,8 +24,14 @@ class Dashboard extends Component {
     componentDidMount() {
         // get the source name based on window query params
         let { sourceID } = this.props.params;
-        const { multiLevel, actions } = this.props,
-            { configureSourceID, setLoaderState, setGenomicData } = actions;
+        const { multiLevel, actions, isSnapShotAvailable } = this.props,
+            { configureSourceID, setLoaderState,
+                setGenomicData, setConfiguration } = actions;
+
+        // attach snapshot to the dashboard
+        if (isSnapShotAvailable) {
+            initializeSnapshot(true, 1000, (data) => { setConfiguration(data) });
+        }
 
         if (sourceID != 'uploaded-source') {
             // Turn on loader
@@ -55,7 +62,9 @@ class Dashboard extends Component {
 
     render() {
         let { loaderState, configuration, genome = {},
-            isSnapShotAvailable, isModalVisible, multiLevel, multiLevelType, plotType } = this.props;
+            isModalVisible, multiLevel, multiLevelType, plotType } = this.props;
+
+        updateSnapshot(configuration);
 
         return (
             <div className='dashboard-root m-t'>
@@ -64,8 +73,6 @@ class Dashboard extends Component {
                     <div className='dashboard-container'>
                         {genome.chromosomeMap ?
                             <div>
-                                {isSnapShotAvailable && <SnapshotPanel />}
-                                {isSnapShotAvailable && <SnapshotCapture />}
                                 <DownloadSvg />
                                 <PlotCharacteristics
                                     multiLevel={multiLevel}
@@ -99,7 +106,8 @@ function mapDispatchToProps(dispatch) {
             configureSourceID,
             setLoaderState,
             setGenomicData,
-            setALignmentList
+            setALignmentList,
+            setConfiguration
         }, dispatch)
     };
 }

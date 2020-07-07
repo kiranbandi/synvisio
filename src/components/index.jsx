@@ -11,8 +11,6 @@ export { default as DotView } from './DotView';
 export { default as BlockView } from './BlockView';
 export { default as PanelView } from './PanelView';
 export { default as RadioButton } from './RadioButton';
-export { default as SnapshotPanel } from './SnapshotPanel';
-export { default as SnapshotCapture } from './SnapshotCapture';
 export { default as FileUpload } from './FileUpload';
 export { default as HiveView } from './HiveView';
 export { default as TreeView } from './TreeView';
