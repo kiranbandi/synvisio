@@ -1,7 +1,7 @@
 import uniqid from 'uniqid';
 import { isEqual } from 'lodash';
-import ParseSVG from '../ParseSVG';
-import svgSaver from '../saveSVGasPNG';
+import ParseSVG from './ParseSVG';
+import svgSaver from './saveSVGasPNG';
 
 var snapshot = {};
 var datastore = {};
@@ -11,13 +11,10 @@ var snapshotTimer = false;
 var isTimerON = false;
 var triggeredData = {};
 var isAutoModeON = false;
-
 var isIntialized = false;
-
 var stackedSnapshot = {};
 
 snapshot.initializeSnapshot = function(isAuto = false, timerDur = 5000, onRecallCallback = () => {}) {
-
 
     isAutoModeON = isAuto;
 
@@ -102,16 +99,11 @@ snapshot.initializeSnapshot = function(isAuto = false, timerDur = 5000, onRecall
                 'class': 'snapshot-trigger',
                 'html': isAuto ? 'start' : 'snapshot',
                 css: {
-                    'margin-bottom': ' 0',
-                    'font-weight': ' normal',
                     'text-align': ' center',
                     'vertical-align': ' middle',
-                    '-ms-touch-action': ' manipulation',
-                    'touch-action': ' manipulation',
                     'cursor': ' pointer',
                     'background-image': ' none',
                     'border': ' 1px solid transparent',
-                    'white-space': ' nowrap',
                     'padding': ' 6px 12px',
                     'font-size': ' 14px',
                     'line-height': ' 1.5',
@@ -129,7 +121,9 @@ snapshot.initializeSnapshot = function(isAuto = false, timerDur = 5000, onRecall
                 }
             })
             .appendTo('.snapshot-custom-wrapper')
-            .click(() => {
+            .click((event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 if (isAutoModeON) {
                     // timer is off at the moment so trigger it ON
                     if (!isTimerON) {
@@ -146,6 +140,46 @@ snapshot.initializeSnapshot = function(isAuto = false, timerDur = 5000, onRecall
                 snapshot.storeSnapshot();
             });
 
+
+        let clearSnapshotButton = $("<button>", {
+                'class': 'snapshot-clear',
+                'html': 'clear',
+                css: {
+                    'text-align': ' center',
+                    'vertical-align': ' middle',
+                    'cursor': ' pointer',
+                    'background-image': ' none',
+                    'border': ' 1px solid transparent',
+                    'padding': ' 6px 12px',
+                    'font-size': ' 14px',
+                    'line-height': ' 1.5',
+                    'border-radius': ' 4px',
+                    '-webkit-user-select': ' none',
+                    '-moz-user-select': ' none',
+                    '-ms-user-select': ' none',
+                    'user-select': ' none',
+                    'color': ' #1997c6',
+                    'background-color': ' transparent',
+                    'border-color': ' #1997c6',
+                    'margin': ' 10px auto',
+                    'display': 'inline-block',
+                    'text-transform': ' uppercase',
+                    'margin-left': '5px'
+                }
+            })
+            .appendTo('.snapshot-custom-wrapper')
+            .click(() => {
+                event.preventDefault();
+                event.stopPropagation();
+                Object.keys(datastore)
+                    .map(function(d) {
+                        delete datastore[d];
+                        $('#' + d).remove();
+                    });
+                currentData = {};
+                triggeredData = {};
+            });
+
         let snapshotImageWrapper = $("<div>", {
                 'class': 'snapshot-image-wrapper',
                 css: {
@@ -155,7 +189,7 @@ snapshot.initializeSnapshot = function(isAuto = false, timerDur = 5000, onRecall
                 }
             })
             .appendTo('.snapshot-custom-wrapper');
-        $('.snapshot-custom-wrapper').mousedown(handle_mousedown);
+        $('.snapshot-custom-wrapper').mousedown(make_draggable);
     }
 
     onRecall = onRecallCallback;
@@ -171,9 +205,7 @@ snapshot.updateSnapshot = function(data) {
 }
 
 snapshot.storeSnapshot = function() {
-
     let isNewSnapshotAvailable = !!currentData && !isEqual(stackedSnapshot, currentData) && !isEqual(triggeredData, currentData);
-
     // store current data in snapshot
     let snapshotData = currentData;
     // clear currentData
@@ -182,7 +214,7 @@ snapshot.storeSnapshot = function() {
     triggeredData = false;
 
     // Get the SVG element
-    let svgElements = $('.exportable-svg');
+    let svgElements = $('.snapshot-thumbnail');
     // check if there is a visual snapshot is available to be stored
     if (isNewSnapshotAvailable && svgElements.length > 0) {
 
@@ -208,6 +240,8 @@ snapshot.storeSnapshot = function() {
                         })
                         .appendTo('.snapshot-image-wrapper')
                         .click((event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
                             const targetName = event.target.className,
                                 uniqueCode = event.currentTarget.id;
                             if (targetName.indexOf('snapshot-recall') > -1) {
@@ -241,7 +275,6 @@ snapshot.storeSnapshot = function() {
                             }
                         })
                         .appendTo(imageButton);
-
                     imageButton.prepend('<img class="snapshot-recall" height="100" width="235" id=' + snapshotID + ' src=' + uri + ' />')
                 });
         });
@@ -250,7 +283,7 @@ snapshot.storeSnapshot = function() {
 
 // blurb to make element draggable
 // https://stackoverflow.com/questions/2424191
-function handle_mousedown(e) {
+function make_draggable(e) {
     window.my_dragging = {};
     my_dragging.pageX0 = e.pageX;
     my_dragging.pageY0 = e.pageY;

@@ -12,11 +12,10 @@ export function setLoaderState(loaderState) {
 export function configureSourceID(sourceID, multiLevel = false) {
     return dispatch => {
         dispatch(setSourceID(sourceID));
-        //reset configuration and snapshot store
+        //reset configuration
         dispatch(setFilterLevel({}));
         dispatch(setchromosomeMode(false));
         dispatch(setBlockMode(false));
-        dispatch(setSnapshotList([]));
         if (sampleSourceMapper[sourceID]) {
             const sampleDataMarkers = { ...sampleSourceMapper[sourceID] };
             if (multiLevel) {
@@ -53,13 +52,6 @@ export function setConfiguration(configuration) {
     return { type: types.SET_CONFIGURATION, configuration };
 }
 
-export function recreateSnapshot(configuration) {
-    return dispatch => {
-        dispatch(setConfiguration(configuration));
-        dispatch(refineAlignmentList(configuration.filterLevel, configuration.alignmentList));
-    };
-}
-
 export function setFilterLevel(filterLevel) {
     return { type: types.SET_FILTER_LEVEL, filterLevel };
 };
@@ -70,10 +62,10 @@ export function toggleModalVisbility() {
 
 
 export function setGenomicData(data) {
-    const { genomeLibrary, alignmentList, snapshotStore = {}, trackData = false, ...otherData } = data;
+    const { genomeLibrary, alignmentList, trackData = false, ...otherData } = data;
     //  Treading Dangerous Territory here by polluting the global name space 
     //  But this reduces the load placed on the redux and react global store
-    window.synVisio = { genomeLibrary, alignmentList, snapshotStore, trackData };
+    window.synVisio = { genomeLibrary, alignmentList, trackData };
     return { type: types.SET_GENOME_DATA, data: otherData };
 }
 
@@ -102,10 +94,6 @@ export function toggleTracks() {
 
 export function setMultiDualFilter(multiDualFilter) {
     return { type: types.SET_MULTI_DUAL_FILTER, multiDualFilter };
-}
-
-export function setSnapshotList(snapshotList) {
-    return { type: types.SET_SNAPSHOT_LIST, snapshotList };
 }
 
 export function refineAlignmentList(filterLevel, alignmentList) {
@@ -313,7 +301,6 @@ export function setPlotProps(levelOrType, value) {
             'alignmentList': [],
             'filterLevel': {}
         }
-        dispatch(setSnapshotList([]));
         dispatch(setConfiguration(configuration));
         if (isLevel) {
             dispatch({ type: types.SET_PLOT_LEVEL, value });
@@ -337,7 +324,6 @@ export function setMultiLevelType(value) {
             'alignmentList': [],
             'filterLevel': {}
         }
-        dispatch(setSnapshotList([]));
         dispatch(setConfiguration(configuration));
         dispatch({ type: types.SET_MULTI_TYPE, value });
     };

@@ -17,7 +17,6 @@ export default {
     { 'type': 'track-heatmap', 'color': 'red' },
     { 'type': 'track-heatmap', 'color': 'red' }],
     loaderState: false,
-    snapshotList: [],
     configuration: {
       ...configuration,
       showScale: true,
