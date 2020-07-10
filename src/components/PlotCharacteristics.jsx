@@ -55,13 +55,13 @@ class PlotCharacterisitics extends Component {
         return (
             <div className='plot-type-panel'>
 
-                <div className='snapshot-header'>
+                <div className='small-wrapper-header'>
                     <h4>Chart Configuration
                         <span className="icon icon-chevron-right"></span>
                     </h4>
                 </div>
 
-                <div className='snapshot-inner'>
+                <div className='small-wrapper-inner'>
                     <span className='text-primary info-text-message'> Select the type of analysis you want to do, single level analysis is for pairwise comparisions while multi level analysis is for comparing more than 2 entities at a time
                     through stacked parallel plots or hive plots.</span>
                     <RadioButton value={'level-single'} id={'level-single'} className='conf-radio' name='level-select'

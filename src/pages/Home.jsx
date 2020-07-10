@@ -62,7 +62,6 @@ class Home extends Component {
           <p><a href='https://youtu.be/83ep_AuMWak'> Basic Dashboard Demo</a></p>
           <p><a href='https://youtu.be/bLqeXwFDUbQ'> Multi Analysis Hive plot</a></p>
           <p><a href='https://youtu.be/e6CNFLjGFmQ'> Visualizing additional tracks</a></p>
-          <p><a href='https://youtu.be/dkInV2QHGVY'> Support for Revisitation using Snapshot Feature </a></p>
           <p><a href='https://youtu.be/C4fTi9bVHEY'> Detailed description of all features in SynVisio </a></p>
 
 

@@ -1,4 +1,4 @@
-.snapshot-header {
+.small-wrapper-header {
     margin: 20px 15px 0px 15px;
     h4 {
         font-weight: bold;
@@ -12,8 +12,8 @@
     }
 }
 
-.snapshot-inner {
-    .snapshot-button {
+.small-wrapper-inner {
+    .small-wrapper-button {
         margin-left: 10px;
         margin-bottom: 10px;
         padding: 2px 2px;
@@ -57,7 +57,7 @@
         display: inline-block;
         vertical-align: middle;
     }
-    .snapshot-inner-result {
+    .small-wrapper-inner-result {
         font-size: 16px;
         margin: 10px;
     }

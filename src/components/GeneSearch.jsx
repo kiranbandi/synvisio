@@ -39,13 +39,13 @@ class GeneSearch extends Component {
 
         return (
             <div>
-                <div className='snapshot-header'>
+                <div className='small-wrapper-header'>
                     <h4>
                         Gene Search Panel
                         <span className="icon icon-chevron-right"></span>
                     </h4>
                 </div>
-                <div className='snapshot-inner'>
+                <div className='small-wrapper-inner'>
                     <input id='gene-input-search' className="form-control" type="text" placeholder="Search..." />
                     <button type="submit" className="btn btn-primary-outline" onClick={this.searchForGene}>
                         SEARCH <span className="icon icon-magnifying-glass"></span>
@@ -55,7 +55,7 @@ class GeneSearch extends Component {
                         CLEAR
                     </button>
 
-                    <div className='snapshot-inner-result'>
+                    <div className='small-wrapper-inner-result'>
                         <span className="text-primary info-text-message">
                             Matching alignments are highlighted in <b>white</b> in the charts
                     </span>

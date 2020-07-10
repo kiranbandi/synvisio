@@ -257,7 +257,7 @@ class DotView extends Component {
                             'margin': '10px 0px 0px 10px'
                         }}
                         id='dot-plot-graphic'
-                        className={'dotViewSVG exportable-svg ' + (isChromosomeModeON ? 'chrom-mode' : '')}
+                        className={'dotViewSVG exportable-svg snapshot-thumbnail  ' + (isChromosomeModeON ? 'chrom-mode' : '')}
                         ref={node => this.outerG = node}
                         height={configuration.dotView.width + additionalFix}
                         width={configuration.dotView.width + additionalFix}>

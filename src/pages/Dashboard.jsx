@@ -62,9 +62,13 @@ class Dashboard extends Component {
 
     render() {
         let { loaderState, configuration, genome = {},
-            isModalVisible, multiLevel, multiLevelType, plotType } = this.props;
+            isModalVisible, multiLevel, isSnapShotAvailable,
+            multiLevelType, plotType } = this.props;
 
-        updateSnapshot(configuration);
+        // update snapshot
+        if (isSnapShotAvailable) {
+            updateSnapshot(configuration);
+        }
 
         return (
             <div className='dashboard-root m-t'>
@@ -121,8 +125,8 @@ function mapStateToProps(state) {
         multiLevel: state.oracle.multiLevel,
         multiLevelType: state.oracle.multiLevelType,
         plotType: state.oracle.plotType,
+        isSnapShotAvailable: state.oracle.isSnapShotAvailable,
         genome: state.genome,
-        isSnapShotAvailable: state.oracle.isSnapShotAvailable
     };
 }
 

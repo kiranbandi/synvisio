@@ -128,7 +128,7 @@ class DotView extends Component {
                         <div className='dotViewRoot threeDcube'>
                             <svg
                                 style={{ 'background': isDark ? '#252830' : 'white' }}
-                                className={'dotViewSVG exportable-svg'}
+                                className={'dotViewSVG exportable-svg snapshot-thumbnail '}
                                 id='3dcube-view-graphic'
                                 height={2 * configuration.dotView.width}
                                 width={2 * configuration.dotView.width}>
