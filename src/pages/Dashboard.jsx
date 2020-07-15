@@ -12,7 +12,7 @@ import {
     setGenomicData, setALignmentList, setConfiguration
 } from '../redux/actions/actions';
 
-import { initializeSnapshot, updateSnapshot } from '../utils/snapshot';
+import { initializeSnapshot, updateSnapshot } from '@kiranbandi/snapshot';
 
 class Dashboard extends Component {
 
