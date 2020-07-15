@@ -55,6 +55,8 @@
         "uniqid": "^5.0.3"
     },
     "devDependencies": {
+        "@rollup/plugin-commonjs": "^14.0.0",
+        "@rollup/plugin-node-resolve": "^8.4.0",
         "babel-core": "^6.26.3",
         "babel-loader": "^7.1.4",
         "babel-plugin-transform-decorators-legacy": "^1.3.5",
