@@ -14,7 +14,6 @@ import {
 
 import { initializeSnapshot, updateSnapshot } from '../utils/snapshot';
 
-
 class Dashboard extends Component {
 
     constructor(props) {
