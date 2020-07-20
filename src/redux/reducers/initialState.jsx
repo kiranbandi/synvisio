@@ -6,7 +6,7 @@ export default {
   oracle: {
     isDark: true,
     isModalVisible: false,
-    isSnapShotAvailable: true,
+    isSnapShotAvailable: false,
     sourceID: 'bn',
     searchResult: [],
     multiLevel: false,

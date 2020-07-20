@@ -21,7 +21,7 @@
     "license": "MIT",
     "homepage": "https://github.com/kiranbandi/mcscanx-synteny-visualizer#readme",
     "dependencies": {
-        "@kiranbandi/snapshot": "^1.0.0",
+        "@kiranbandi/snapshot": "^1.2.0",
         "axios": "^0.18.0",
         "canvg": "^3.0.6",
         "cash-dom": "^8.0.0",
