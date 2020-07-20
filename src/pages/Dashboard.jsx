@@ -29,7 +29,16 @@ class Dashboard extends Component {
 
         // attach snapshot to the dashboard
         if (isSnapShotAvailable) {
-            initializeSnapshot(true, 1000, (data) => { setConfiguration(data) });
+            // isAutomaticMode ON or OFF, automatic Timer Interval
+            initializeSnapshot(true, 1000,
+                // Thumbnail Options
+                {
+                    'class': '.snapshot-thumbnail',
+                    'type': 'svg',
+                    'size': { 'width': 235, 'height': 100 }
+                },
+                // Callback function called when a snapshot is recalled
+                (data) => { setConfiguration(data) });
         }
 
         if (sourceID != 'uploaded-source') {
