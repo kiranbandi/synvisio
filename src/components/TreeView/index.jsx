@@ -17,7 +17,8 @@ class TreeView extends Component {
     initialiseMarkerPositions() {
 
         const { configuration, chromosomeMap } = this.props,
-            { markers, reversedMarkers, treeView, isNormalized = false } = configuration;
+            { markers, reversedMarkers, treeView,
+                isNormalized = false, alignmentColor = 'tenColor' } = configuration;
 
         const maxWidthAvailable = treeView.width;
 
@@ -67,7 +68,7 @@ class TreeView extends Component {
                     'dx': (scaleFactor * chromosomeMap.get(key).width),
                     'y': 150 + (markerId * 300),
                     // for last row using alternating gray pattern if not use colors from d3
-                    'color': isThisLastRow ? ((colorCount % 2 == 0) ? '#3a3a3a' : 'grey') : schemeCategory10[colorCount]
+                    'color': isThisLastRow || alignmentColor == 'orientation' ? ((colorCount % 2 == 0) ? '#3a3a3a' : 'grey') : schemeCategory10[colorCount]
                 }
                 // total width used = previous used space + width + half marker padding
                 widthUsedSoFar = marker.x + marker.dx + (markerPadding / 2);
@@ -81,7 +82,8 @@ class TreeView extends Component {
 
     initialiseLinks(configuration, chromosomeMap, markerPositions) {
 
-        let linkStore = { links: [], polygons: [] };
+        let linkStore = { links: [], polygons: [] },
+            { alignmentColor = 'tenColor' } = configuration;
 
         _.map(configuration.alignmentList, (alignmentDetails) => {
 
@@ -148,8 +150,6 @@ class TreeView extends Component {
                             }
                         }
 
-
-
                         // code block to straighten links out if they are reversed
                         // when a marker is flipped the links are reversed too and this code block can
                         // straighten them out
@@ -164,14 +164,12 @@ class TreeView extends Component {
                             source.x = tempStore;
                         }
 
-
-
                         var linkConfig = {
                             source,
                             target,
                             alignment,
                             width: linkWidth,
-                            color: sourceMarker.color
+                            color: alignmentColor == 'tenColor' ? sourceMarker.color : (alignment.type == 'flipped' ? schemeCategory10[3] : schemeCategory10[0])
                         };
 
                         // the marker height is 10 px so we add and reduce that to the y postion for top and bottom
@@ -203,9 +201,9 @@ class TreeView extends Component {
                 // we first normalise these numbers into million base pairs 
                 // or kilo base pairs based on the size
                 let normalizer = (width / 1000000) > 0 ? [1000000, 'Mb'] : [1000, 'Kb'],
-                    normalizedStart = Math.round(start / normalizer[0]),
-                    normalizedEnd = Math.round(end / normalizer[0]),
-                    normalizedWidth = Math.round(width / normalizer[0]);
+                    normalizedStart = start / normalizer[0],
+                    normalizedEnd = end / normalizer[0],
+                    normalizedWidth = width / normalizer[0];
 
                 // We find the number of step ticks we can fit into the marker,
                 // a tick element takes 20px so we need to divide the available marker width by that
@@ -221,9 +219,9 @@ class TreeView extends Component {
                     <line
                         stroke={tickColor}
                         x1={marker.x} y1={marker.y + verticalShifter}
-                        x2={marker.x + (tickCount * tickWidthInPixels)}
+                        x2={marker.x + marker.dx}
                         y2={marker.y + verticalShifter}> </line>
-                    {_.times(tickCount + 1, (tickIndex) => {
+                    {_.times(tickCount, (tickIndex) => {
                         return <line
                             stroke={tickColor}
                             key={'custom-tick-' + tickIndex}
@@ -233,17 +231,19 @@ class TreeView extends Component {
                             y2={marker.y + verticalShifter + verticalShifter / 4}>
                         </line>;
                     })}
+                    <line
+                        stroke={tickColor}
+                        key={'custom-tick-' + (tickCount + 1)}
+                        x1={marker.x + marker.dx}
+                        x2={marker.x + marker.dx}
+                        y1={marker.y + verticalShifter}
+                        y2={marker.y + verticalShifter + verticalShifter / 4}>
+                    </line>
 
-                    {_.times(tickCount + 1, (tickIndex) => {
+                    {_.times(tickCount, (tickIndex) => {
 
                         let tickText = String(Math.round(normalizedStart + (tickIndex * tickWidthinbp))),
                             horizontalShifter = tickIndex == 0 ? 5 : tickIndex == tickCount ? -10 : 0;
-
-                        // when there is only one tick then tickwidthinbp necomes NaN
-                        // so simply show the width of the marker in bp
-                        if (isNaN(tickText)) {
-                            tickText = tickWidthinbp;
-                        }
 
                         return <text
                             fill={tickColor}
@@ -252,26 +252,30 @@ class TreeView extends Component {
                             y={marker.y + (2 * verticalShifter) + (verticalShifter > 0 ? 0 : 10)}>
                             {tickText + (tickIndex == tickCount ? ' ' + normalizer[1] : '')}
                         </text>;
-                    })
-                    }
+                    })}
+                    <text
+                        fill={tickColor}
+                        key={'custom-ticktext-' + (tickCount + 1)}
+                        x={marker.x + marker.dx - 10}
+                        y={marker.y + (2 * verticalShifter) + (verticalShifter > 0 ? 0 : 10)}>
+                        {Math.round((start + width) / normalizer[0]) + ' ' + normalizer[1]}
+                    </text>
                 </g>
             });
 
             tickElements.push(onesetofticks);
         });
-
         return tickElements;
     }
 
 
-
     render() {
-        const { configuration, chromosomeMap, isDark } = this.props, { alignmentList, treeView, markers, showScale = true } = configuration;
+        const { configuration, chromosomeMap, isDark } = this.props,
+            { alignmentList, treeView, markers, showScale = true, markerEdge = 'rounded' } = configuration;
 
         const treeViewHeight = Object.keys(markers).length * 300;
         const markerPositions = (Object.keys(markers).length > 1) && this.initialiseMarkerPositions();
         const linkStore = markerPositions ? this.initialiseLinks(configuration, chromosomeMap, markerPositions) : { links: [], polygons: [] };
-
 
         const markerTicks = this.getMarkerTicks(configuration, markerPositions, isDark);
         return (
@@ -279,7 +283,7 @@ class TreeView extends Component {
                 <TreeFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
                 <AdvancedFilterPanel width={treeView.width} />
                 {alignmentList.length > 0 &&
-                    <svg className='treeViewSVG exportable-svg snapshot-thumbnail '
+                    <svg className={'treeViewSVG exportable-svg snapshot-thumbnail ' + (markerEdge == 'square' ? 'remove-cap' : '')}
                         id={'tree-view-graphic'}
                         style={{ 'background': isDark ? '#1a1c22' : 'white' }}
                         height={treeViewHeight} width={treeView.width}>

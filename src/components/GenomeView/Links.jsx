@@ -66,7 +66,8 @@ class Links extends Component {
 
     generateLinkElements() {
 
-        const { configuration, linkPositions, isDark } = this.props;
+        const { configuration, linkPositions, isDark } = this.props,
+            { alignmentColor = 'tenColor', isChromosomeModeON = true } = configuration;
 
         let linkElements = [];
 
@@ -83,8 +84,12 @@ class Links extends Component {
             stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
 
             // For chromosome mode flipped links are shown in red color and regular in blue
-            if (configuration.isChromosomeModeON && d.alignment.type == 'flipped') {
+            if (isChromosomeModeON && d.alignment.type == 'flipped') {
                 stroke = schemeCategory10[3];
+            }
+            // If alignment color is overiden by property from chart configuration panel
+            if (alignmentColor == 'orientation') {
+                stroke = d.alignment.type == 'flipped' ? schemeCategory10[3] : schemeCategory10[0];
             }
             // Add style to elements
             style = {
@@ -106,8 +111,8 @@ class Links extends Component {
                 d={this.createLinkLinePath(d)}
                 style={style}
                 // Not so elegant but since the number of elements are few this is a workable solution
-                onDoubleClick={configuration.isChromosomeModeON ? this.onLinkClick.bind(this, d.alignment) : null}>
-                {configuration.isChromosomeModeON && <title>
+                onDoubleClick={isChromosomeModeON ? this.onLinkClick.bind(this, d.alignment) : null}>
+                {isChromosomeModeON && <title>
                     {d.alignment.source + " => " + d.alignment.target +
                         "\n type : " + d.alignment.type +
                         "\n E value : " + d.alignment.e_value +
@@ -127,8 +132,12 @@ class Links extends Component {
             fill = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
 
             // For chromosome mode flipped links are shown in red color and regular in blue
-            if (configuration.isChromosomeModeON && d.alignment.type == 'flipped') {
+            if (isChromosomeModeON && d.alignment.type == 'flipped') {
                 fill = schemeCategory10[3];
+            }
+            // If alignment color is overiden by property from chart configuration panel
+            if (alignmentColor == 'orientation') {
+                fill = d.alignment.type == 'flipped' ? schemeCategory10[3] : schemeCategory10[0];
             }
 
             // Add style to elements
@@ -147,8 +156,8 @@ class Links extends Component {
                 className={'genome-link link-polygon hover-link-polygon' + ' alignmentID-' + d.alignment.alignmentID + " link-source-" + d.alignment.source + " " + (d.alignment.hidden ? 'hidden-alignment-link' : '')}
                 d={this.createLinkPolygonPath(d)}
                 style={style}
-                onDoubleClick={configuration.isChromosomeModeON ? this.onLinkClick.bind(this, d.alignment) : null}>
-                {configuration.isChromosomeModeON && <title>
+                onDoubleClick={isChromosomeModeON ? this.onLinkClick.bind(this, d.alignment) : null}>
+                {isChromosomeModeON && <title>
                     {d.alignment.source + " => " + d.alignment.target +
                         "\n type : " + d.alignment.type +
                         "\n E value : " + d.alignment.e_value +

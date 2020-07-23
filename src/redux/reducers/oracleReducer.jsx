@@ -34,6 +34,10 @@ export default function oracleReducer(state = initialState.oracle, action) {
       return Object.assign({}, state, { configuration: { ...state.configuration, isBlockModeON: action.isBlockModeON } })
     case types.SET_CHROMOSOME_MODE:
       return Object.assign({}, state, { configuration: { ...state.configuration, isChromosomeModeON: action.isChromosomeModeON } })
+    case types.SET_MARKER_EDGE:
+      return Object.assign({}, state, { configuration: { ...state.configuration, markerEdge: action.value } })
+    case types.SET_ALIGNMENT_COLOR:
+      return Object.assign({}, state, { configuration: { ...state.configuration, alignmentColor: action.value } })
     case types.SET_SOURCEID:
       return Object.assign({}, state, { sourceID: action.sourceID })
     case types.SET_CONFIGURATION:
