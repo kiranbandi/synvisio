@@ -45,7 +45,7 @@ class Modal extends Component {
 
         let svgSelector = document.getElementsByClassName('exportable-svg')[selectedIndex];
 
-        toastr["info"]("Thanks for using SynVisio, Please wait for the download to begin...", "Export");
+        toastr["info"]("Thanks for using SynVisio, Please consider citing our work if you are using the images in a publication. The citation can be found on the home page. Please wait for the download to begin...", "Export");
 
         ParseSVG(svgSelector).then((svgEl) => {
             const fileName = "synvisio-export-" + selectedType + "-" + uniqid() + (selectedType == "SVG" ? '.svg' : '.png');
@@ -105,6 +105,8 @@ class Modal extends Component {
 
                                 <p className='text-warning text-left info-p'> If you prefer a white background for your exported images,</p>
                                 <p className='text-warning text-left info-p m-t-0'>switch it using the theme toggler present at the top of the page.</p>
+                                <p className='text-warning text-left info-p'>Please consider citing our work if you are using the images in a publication.</p>
+                                <p className='text-warning text-left info-p m-t-0'>The citation can be found on the home page.</p>
 
                                 <div>
                                     <button className="btn btn-primary-outline" onClick={this.downloadImage}>
