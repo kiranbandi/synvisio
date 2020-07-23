@@ -2,22 +2,20 @@ import React, { Component } from 'react';
 import { RadioButton } from './';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setPlotProps, setTrackType, setMultiLevelType } from '../redux/actions/actions';
+import {
+    setPlotProps, setTrackType, setMultiLevelType,
+    setMarkerEdge, setAlignmentColor
+} from '../redux/actions/actions';
 
 class PlotCharacterisitics extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            'currentTrack': 0
-        };
-        this.onTrackTypeChange = this.onTrackTypeChange.bind(this);
-        this.radioChange = this.radioChange.bind(this);
-        this.multiRadioChange = this.multiRadioChange.bind(this);
+        this.state = { 'currentTrack': 0 };
     }
 
 
-    onTrackTypeChange(event) {
+    onTrackTypeChange = (event) => {
         const trackId = event.target.id, { currentTrack } = this.state;
         let { trackType } = this.props;
 
@@ -31,7 +29,7 @@ class PlotCharacterisitics extends Component {
     }
 
 
-    radioChange(event) {
+    radioChange = (event) => {
         const value = event.target.value;
         if (value.indexOf('level') > -1) {
             this.props.actions.setPlotProps('level', value == 'level-multi');
@@ -41,16 +39,17 @@ class PlotCharacterisitics extends Component {
         }
     }
 
-    multiRadioChange(event) {
-        const value = event.target.value;
-        this.props.actions.setMultiLevelType(value);
-    }
+    markerEdgeRadio = (event) => { this.props.actions.setMarkerEdge(event.target.value) }
+    alignmentColorRadio = (event) => { this.props.actions.setAlignmentColor(event.target.value) }
+    multiRadioChange = (event) => { this.props.actions.setMultiLevelType(event.target.value) }
 
     render() {
 
         const { multiLevel, multiLevelType,
             trackType, configuration, plotType } = this.props,
             { currentTrack } = this.state;
+
+        const { markerEdge = 'rounded', alignmentColor = 'tenColor' } = configuration;
 
         return (
             <div className='plot-type-panel'>
@@ -140,6 +139,37 @@ class PlotCharacterisitics extends Component {
                             </select>
                         </span>
                     </div>
+
+                    {((!multiLevel && (plotType == 'dashboard' || plotType == 'linearplot')) || (multiLevel && (multiLevelType == 'tree'))) &&
+                        <div>
+                            <span className='text-primary info-text-message p-b-0'>Chromosome Marker Edge Style </span>
+                            <div>
+                                <RadioButton value={'rounded'} id={'rounded'} className='conf-radio' name='marker-edge-radio'
+                                    label={"Rounded Edges"}
+                                    onChange={this.markerEdgeRadio}
+                                    checked={markerEdge == 'rounded'} />
+                                <RadioButton value={'square'} id={'square'} className='conf-radio' name='marker-edge-radio'
+                                    label={"Square Edges"}
+                                    onChange={this.markerEdgeRadio}
+                                    checked={markerEdge == 'square'} />
+                            </div>
+                        </div>}
+
+                    {((!multiLevel && (plotType == 'dashboard' || plotType == 'linearplot')) || (multiLevel && (multiLevelType == 'tree'))) &&
+                        <div>
+                            <span className='text-primary info-text-message p-b-0'> Alignment Link Color Configuration </span>
+                            <div>
+                                <RadioButton value={'tenColor'} id={'tenColor'} className='conf-radio' name='alignment-color-select'
+                                    label={"Chromosome Source (repeating 10 color scale)"}
+                                    onChange={this.alignmentColorRadio}
+                                    checked={alignmentColor == 'tenColor'} />
+                                <RadioButton value={'orientation'} id={'orientation'} className='conf-radio' name='alignment-color-select'
+                                    label={"Alignment Orientation regular(blue) or reversed(red)"}
+                                    onChange={this.alignmentColorRadio}
+                                    checked={alignmentColor == 'orientation'} />
+                            </div>
+                        </div>}
+
                 </div>
             </div>
         );
@@ -152,7 +182,9 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators({
             setPlotProps,
             setTrackType,
-            setMultiLevelType
+            setMultiLevelType,
+            setMarkerEdge,
+            setAlignmentColor
         }, dispatch)
     };
 }

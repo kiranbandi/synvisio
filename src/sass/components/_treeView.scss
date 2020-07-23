@@ -53,6 +53,11 @@
         .chromosomeMarkers {
             stroke-linecap: round;
         }
+        &.remove-cap {
+            .chromosomeMarkers {
+                stroke-linecap: butt;
+            }
+        }
         .tree-link-line {
             fill: none;
             stroke-opacity: 0.5;

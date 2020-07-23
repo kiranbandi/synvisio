@@ -20,6 +20,8 @@ export default {
     configuration: {
       ...configuration,
       showScale: true,
+      markerEdge: 'rounded', // rounded or square
+      alignmentColor: 'tenColor', // tenColor or orientation
       isChromosomeModeON: false,
       showTracks: false,
       isBlockModeON: false,

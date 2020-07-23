@@ -4,6 +4,7 @@ import processAlignment from '../../utils/filterAlignment';
 import getPlotDimensions from '../../utils/getPlotDimensions';
 import _ from 'lodash';
 import toastr from '../../utils/toastr';
+import { dispatch } from 'd3';
 
 export function setLoaderState(loaderState) {
     return { type: types.SET_LOADER_STATE, loaderState };
@@ -310,6 +311,15 @@ export function setPlotProps(levelOrType, value) {
         }
     };
 }
+
+export function setMarkerEdge(value) {
+    return { type: types.SET_MARKER_EDGE, value }
+}
+
+export function setAlignmentColor(value) {
+    return { type: types.SET_ALIGNMENT_COLOR, value }
+}
+
 
 export function setMultiLevelType(value) {
 

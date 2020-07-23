@@ -26,14 +26,14 @@ class Markers extends Component {
 
     generateMarkerElements(configuration, markerPositions) {
 
-        let markerElements = [];
+        let markerElements = [], { alignmentColor = 'tenColor' } = configuration;
 
         _.map(markerPositions, (markerList, markerListId) => {
             // create marker lines
             let markerLines = markerList.map((d, i) => {
                 let stroke, style;
                 // Decide on stroke colour
-                if (markerListId == 'source') {
+                if (markerListId == 'source' && alignmentColor == 'tenColor') {
                     let sourceIndex = configuration.markers.source.indexOf(d.key);
                     stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
                 } else {
@@ -91,7 +91,6 @@ class Markers extends Component {
 
     getMarkerTicks(configuration, markerPositions, isDark) {
 
-
         let tickElements = [],
             tickColor = isDark ? 'white' : 'grey';
 
@@ -103,9 +102,9 @@ class Markers extends Component {
                 // we first normalise these numbers into million base pairs 
                 // or kilo base pairs based on the size
                 let normalizer = (width / 1000000) > 0 ? [1000000, 'Mb'] : [1000, 'Kb'],
-                    normalizedStart = Math.round(start / normalizer[0]),
-                    normalizedEnd = Math.round(end / normalizer[0]),
-                    normalizedWidth = Math.round(width / normalizer[0]);
+                    normalizedStart = start / normalizer[0],
+                    normalizedEnd = end / normalizer[0],
+                    normalizedWidth = width / normalizer[0];
 
                 // We find the number of step ticks we can fit into the marker,
                 // a tick element takes 20px so we need to divide the available marker width by that
@@ -121,9 +120,9 @@ class Markers extends Component {
                     <line
                         stroke={tickColor}
                         x1={marker.x} y1={marker.y + verticalShifter}
-                        x2={marker.x + (tickCount * tickWidthInPixels)}
+                        x2={marker.x + marker.dx}
                         y2={marker.y + verticalShifter}> </line>
-                    {_.times(tickCount + 1, (tickIndex) => {
+                    {_.times(tickCount, (tickIndex) => {
                         return <line
                             stroke={tickColor}
                             key={'custom-tick-' + tickIndex}
@@ -133,17 +132,19 @@ class Markers extends Component {
                             y2={marker.y + verticalShifter + verticalShifter / 4}>
                         </line>;
                     })}
+                    <line
+                        stroke={tickColor}
+                        key={'custom-tick-' + (tickCount + 1)}
+                        x1={marker.x + marker.dx}
+                        x2={marker.x + marker.dx}
+                        y1={marker.y + verticalShifter}
+                        y2={marker.y + verticalShifter + verticalShifter / 4}>
+                    </line>
 
-                    {_.times(tickCount + 1, (tickIndex) => {
+                    {_.times(tickCount, (tickIndex) => {
 
                         let tickText = String(Math.round(normalizedStart + (tickIndex * tickWidthinbp))),
                             horizontalShifter = tickIndex == 0 ? 5 : tickIndex == tickCount ? -10 : 0;
-
-                        // when there is only one tick then tickwidthinbp necomes NaN
-                        // so simply show the width of the marker in bp
-                        if (isNaN(tickText)) {
-                            tickText = tickWidthinbp;
-                        }
 
                         return <text
                             fill={tickColor}
@@ -152,8 +153,14 @@ class Markers extends Component {
                             y={marker.y + (2 * verticalShifter) + (verticalShifter > 0 ? 0 : 10)}>
                             {tickText + (tickIndex == tickCount ? ' ' + normalizer[1] : '')}
                         </text>;
-                    })
-                    }
+                    })}
+                    <text
+                        fill={tickColor}
+                        key={'custom-ticktext-' + (tickCount + 1)}
+                        x={marker.x + marker.dx - 10}
+                        y={marker.y + (2 * verticalShifter) + (verticalShifter > 0 ? 0 : 10)}>
+                        {Math.round((start + width) / normalizer[0]) + ' ' + normalizer[1]}
+                    </text>
                 </g>
             });
 

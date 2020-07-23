@@ -31,9 +31,9 @@
         .chromosomeMarkers {
             stroke-linecap: round;
         }
-        &.tracks-visible {
+        &.remove-cap {
             .chromosomeMarkers {
-                stroke-linecap: unset;
+                stroke-linecap: butt;
             }
         }
         .link {

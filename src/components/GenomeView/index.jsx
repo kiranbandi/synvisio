@@ -273,7 +273,8 @@ class GenomeView extends Component {
 
         const { configuration, genomeData, isDark,
             trackType, searchResult } = this.props,
-            { isChromosomeModeON = false, genomeView, showScale } = configuration,
+            { isChromosomeModeON = false, genomeView, showScale,
+                markerEdge = 'rounded' } = configuration,
             trackData = _.filter(window.synVisio.trackData, (d) => !!d),
             areTracksVisible = this.areTracksVisible(configuration, trackData),
             additionalTrackHeight = trackData.length * 120;
@@ -295,7 +296,7 @@ class GenomeView extends Component {
                         onClick={this.resetZoom} />}
                 <svg style={{ 'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white' }}
                     id={'parallel-plot-graphic'}
-                    className={'genomeViewSVG exportable-svg snapshot-thumbnail  ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (areTracksVisible ? 'tracks-visible' : '')}
+                    className={'genomeViewSVG exportable-svg snapshot-thumbnail  ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (markerEdge == 'square' ? 'remove-cap' : '')}
                     ref={node => this.outerG = node} height={height} width={genomeView.width}>
                     <g ref={node => this.innerG = node} >
                         <Markers areTracksVisible={areTracksVisible} isDark={isDark} configuration={configuration} markerPositions={markerPositions} />
