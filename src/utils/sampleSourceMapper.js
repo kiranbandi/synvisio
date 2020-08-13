@@ -43,5 +43,9 @@ export default {
     'cam': {
         'source': ['cs1', 'cs2', 'cs3', 'cs4', 'cs5'],
         'target': ['cs11', 'cs12', 'cs13', 'cs14', 'cs15']
-    }
+    },
+    'pt': {
+        'source': ['PT01', 'PT02', 'PT03', 'PT04', 'PT05', 'PT06', 'PT07', 'PT08', 'PT09', 'PT10'],
+        'target': ['PT11', 'PT12', 'PT13', 'PT14', 'PT15', 'PT16', 'PT17', 'PT18', 'PT19']
+    },
 }
