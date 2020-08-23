@@ -70,8 +70,7 @@ class Upload extends Component {
               console.log('deleted entry', entry[0]);
             }
           });
-        }
-
+        }        
         datastore = Object.assign({}, datastore, { information, alignmentList, chromosomeMap });
 
         return trackFiles[0] ? getFile('track-file-0') : Promise.resolve(false);;
