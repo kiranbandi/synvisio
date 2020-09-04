@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Card from './Card';
 import _ from 'lodash';
-import update from 'immutability-helper';
-
 
 export default class Container extends Component {
 
