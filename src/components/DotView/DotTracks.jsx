@@ -33,7 +33,7 @@ export default class DotTracks extends Component {
             // convert object to list 
             _.each(trackPositions, (value) => { trackPositionsList.push(...value) });
             return _.map(trackPositionsList, (track, index) => {
-                return <circle cx={track.x} cy={track.y} key={'track-' + index} r={2.5} style={{ 'fill': customColorScale(track.value) }}>
+                return <circle cx={track.x} cy={track.y} key={'track-' + index} r={2.5} style={{ 'fill': customColorScale(0.6) }}>
                 </circle>
             });
         }
@@ -42,7 +42,7 @@ export default class DotTracks extends Component {
             // get d3 line function that returns path
             let d3Line = line().x((d) => d.x).y((d) => d.y);
             return _.map(trackPositions, (value, key) => {
-                return <path key={'track-' + key} stroke={customColorScale(0.5)} className='track-line-path' d={d3Line(value)}></path>
+                return <path key={'track-' + key} stroke={customColorScale(0.6)} className='track-line-path' d={d3Line(value)}></path>
             });
         }
 
