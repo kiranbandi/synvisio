@@ -12,7 +12,7 @@
         "d3"
     ],
     "scripts": {
-        "start": "webpack-dev-server --config ./build-config/webpack.config.js --watch-poll",
+        "start": "webpack-dev-server --config ./build-config/webpack.config.js",
         "build": "webpack -p --config ./build-config/webpack.prod.config.js",
         "deploy": "npm run build && npm run deploy-gh",
         "deploy-gh": "gh-pages -d build"

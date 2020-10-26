@@ -212,7 +212,7 @@ class GenomeView extends Component {
             _.each(markerPositions, (markerList, markerListId) => {
 
                 let yShifter = (50 * (trackIndex + 1)),
-                    interTrackGap = 12 * (trackIndex),
+                    interTrackGap = 20 * (trackIndex),
                     interScaleShifter = showScale ? 50 + interTrackGap : 20 + interTrackGap,
                     multiplier = markerListId == 'source' ? -1 * (yShifter + interScaleShifter) : (yShifter - 50 + interScaleShifter);
                 _.each(markerList, (marker) => {
@@ -246,7 +246,7 @@ class GenomeView extends Component {
                 _.each(markerPositions, (markerList, markerListId) => {
 
                     let yShifter = (50 * (trackIndex + 1)),
-                        interTrackGap = 12 * (trackIndex),
+                        interTrackGap = 20 * (trackIndex),
                         interScaleShifter = showScale ? 50 + interTrackGap : 20 + interTrackGap,
                         multiplier = markerListId == 'source' ? -1 * (yShifter + interScaleShifter) : (yShifter - 50 + interScaleShifter);
 
@@ -277,15 +277,15 @@ class GenomeView extends Component {
                 markerEdge = 'rounded' } = configuration,
             trackData = _.filter(window.synVisio.trackData, (d) => !!d),
             areTracksVisible = this.areTracksVisible(configuration, trackData),
-            additionalTrackHeight = trackData.length * 120;
+            additionalTrackHeight = trackData.length * 140;
 
         const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible, additionalTrackHeight),
             linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions, searchResult),
             trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType, trackData, showScale) : false,
             trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(markerPositions, trackType, trackData, showScale) : false;
 
-        const trackHeightFix = areTracksVisible ? (trackData.length * 15) : 0;
-        const height = genomeView.height - trackHeightFix + (areTracksVisible ? (additionalTrackHeight + (showScale ? 50 : 20)) : 0);
+        const trackHeightFix = areTracksVisible ? (trackData.length * 12) : 0;
+        const height = genomeView.height - trackHeightFix + (areTracksVisible ? (additionalTrackHeight + (showScale ? 45 : 20)) : 0);
 
         return (
             <div className='genomeViewRoot' >
@@ -294,7 +294,8 @@ class GenomeView extends Component {
                         x={genomeView.width - 50}
                         y={20}
                         onClick={this.resetZoom} />}
-                <svg style={{ 'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white' }}
+                <svg 
+                style={{ 'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white' }}
                     id={'parallel-plot-graphic'}
                     className={'genomeViewSVG exportable-svg snapshot-thumbnail  ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (markerEdge == 'square' ? 'remove-cap' : '')}
                     ref={node => this.outerG = node} height={height} width={genomeView.width}>
