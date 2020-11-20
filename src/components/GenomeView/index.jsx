@@ -236,6 +236,7 @@ class GenomeView extends Component {
 
     initialiseTrackTrails(markerPositions, trackType, trackData, showScale) {
 
+
         return _.map(trackData, (ignoreProp, trackIndex) => {
 
             let trackTrailPostions = [];

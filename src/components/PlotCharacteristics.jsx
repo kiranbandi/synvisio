@@ -136,6 +136,10 @@ class PlotCharacterisitics extends Component {
                                 <option value='blue'>Blue</option>
                                 <option value='green'>Green</option>
                                 <option value='orange'>Orange</option>
+                                <option value='red and blue'>Red and Blue</option>
+                                <option value='purple and orange'>Purple and Orange</option>
+                                <option value='red,yellow and blue'>Red, Yellow and Blue</option>
+                                <option value='red, yellow and green'>Red, Yellow and Green</option>
                             </select>
                         </span>
                     </div>

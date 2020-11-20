@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import {
     interpolateOranges, interpolateReds,
-    interpolateGreens, interpolateBlues, line
+    interpolateGreens, interpolateBlues, line,
+    interpolateRdBu, interpolatePuOr,
+    interpolateRdYlBu, interpolateRdYlGn
 } from 'd3';
 
 // create custom color groups
 const colorGroup = {
     'red': interpolateReds, 'green': interpolateGreens,
-    'blue': interpolateBlues, 'orange': interpolateOranges
+    'blue': interpolateBlues, 'orange': interpolateOranges,
+    'red and blue': interpolateRdBu, 'purple and orange': interpolatePuOr,
+    'red,yellow and blue': interpolateRdYlBu, 'red, yellow and green': interpolateRdYlGn
 };
 
 export default class Tracks extends Component {
