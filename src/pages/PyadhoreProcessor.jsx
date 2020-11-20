@@ -82,8 +82,6 @@ export default class PyadhoreProcessor extends Component {
                 saveFile(header + alignmentText.join('\n'), 'example.collinearity');
             })
             .catch(() => {
-                debugger;
-
                 toastr["error"]("Failed to process the files , Please try again.", "ERROR");
             })
             .finally(() => { this.setState({ isProcessing: false }) });

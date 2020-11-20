@@ -70,14 +70,13 @@ class Upload extends Component {
               console.log('deleted entry', entry[0]);
             }
           });
-        }        
+        }
         datastore = Object.assign({}, datastore, { information, alignmentList, chromosomeMap });
-
-        return trackFiles[0] ? getFile('track-file-0') : Promise.resolve(false);;
+        return trackFiles[0] ? getFile('track-file-0') : Promise.resolve(false);
       })
       // process 1st trackfile data if present
       .then((data) => {
-        return trackFiles[0] ? processFile(data, 'track') : Promise.resolve(false);;
+        return trackFiles[0] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);;
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
@@ -85,7 +84,7 @@ class Upload extends Component {
       })
       // process 2st trackfile data if present
       .then((data) => {
-        return trackFiles[1] ? processFile(data, 'track') : Promise.resolve(false);;
+        return trackFiles[1] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);;
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
@@ -93,7 +92,7 @@ class Upload extends Component {
       })
       // process 3rd trackfile data if present
       .then((data) => {
-        return trackFiles[2] ? processFile(data, 'track') : Promise.resolve(false);;
+        return trackFiles[2] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);;
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
@@ -101,7 +100,7 @@ class Upload extends Component {
       })
       // process 4th trackfile data if present
       .then((data) => {
-        return trackFiles[3] ? processFile(data, 'track') : Promise.resolve(false);;
+        return trackFiles[3] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);;
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
