@@ -4,13 +4,17 @@ import {
     interpolateOranges, interpolateReds,
     interpolateGreens, interpolateBlues, line,
     interpolateRdBu, interpolatePuOr,
-    interpolateRdYlBu, interpolateRdYlGn
+    interpolateRdYlBu, interpolateRdYlGn,
+    interpolateViridis, interpolateInferno,
+    interpolatePlasma, interpolateMagma
 } from 'd3';
 
 // create custom color groups
 const colorGroup = {
     'red': interpolateReds, 'green': interpolateGreens,
     'blue': interpolateBlues, 'orange': interpolateOranges,
+    'viridis': interpolateViridis, 'inferno': interpolateInferno,
+    'plasma': interpolatePlasma, 'magma': interpolateMagma,
     'red and blue': interpolateRdBu, 'purple and orange': interpolatePuOr,
     'red,yellow and blue': interpolateRdYlBu, 'red, yellow and green': interpolateRdYlGn
 };
