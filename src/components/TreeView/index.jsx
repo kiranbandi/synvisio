@@ -80,7 +80,7 @@ class TreeView extends Component {
         return markerPositions;
     }
 
-    initialiseLinks(configuration, chromosomeMap, markerPositions) {
+    initialiseLinks(configuration, chromosomeMap, markerPositions, sourceID) {
 
         let linkStore = { links: [], polygons: [] },
             { alignmentColor = 'tenColor' } = configuration;
@@ -118,6 +118,15 @@ class TreeView extends Component {
                             targetX = ((targetGenes[0] - targetChromosome.start) / (targetChromosome.width)) * (targetMarker.dx),
                             // pick the one with the smaller width and ensure the minimum is 2px
                             linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
+
+                        if (sourceID == 'ancestor-source') {
+                            if (sourceGeneWidth == 0) {
+                                sourceGeneWidth = sourceMarker.dx;
+                            }
+                            if (targetGeneWidth == 0) {
+                                targetGeneWidth = targetMarker.dx;
+                            }
+                        }
 
                         let source, target;
                         if (sourceMarker.reversed) {
@@ -270,12 +279,12 @@ class TreeView extends Component {
 
 
     render() {
-        const { configuration, chromosomeMap, isDark } = this.props,
+        const { configuration, chromosomeMap, isDark, sourceID } = this.props,
             { alignmentList, treeView, markers, showScale = true, markerEdge = 'rounded' } = configuration;
 
         const treeViewHeight = Object.keys(markers).length * 300;
         const markerPositions = (Object.keys(markers).length > 1) && this.initialiseMarkerPositions();
-        const linkStore = markerPositions ? this.initialiseLinks(configuration, chromosomeMap, markerPositions) : { links: [], polygons: [] };
+        const linkStore = markerPositions ? this.initialiseLinks(configuration, chromosomeMap, markerPositions, sourceID) : { links: [], polygons: [] };
 
         const markerTicks = this.getMarkerTicks(configuration, markerPositions, isDark);
         return (
@@ -302,7 +311,8 @@ function mapStateToProps(state) {
     return {
         genomeData: state.genome,
         chromosomeMap: state.genome.chromosomeMap,
-        isDark: state.oracle.isDark
+        isDark: state.oracle.isDark,
+        sourceID: state.oracle.sourceID
     };
 }
 

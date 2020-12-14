@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
+import processAncestorData from '../utils/processAncestorData';
+import axios from 'axios';
 import { hashHistory } from 'react-router';
 import {
     Loader, HiveView, TreeView, PlotCharacteristics,
@@ -41,7 +43,22 @@ class Dashboard extends Component {
                 (data) => { setConfiguration(data) });
         }
 
-        if (sourceID != 'uploaded-source') {
+        if (sourceID == 'ancestor-source') {
+            // Turn on loader
+            setLoaderState(true);
+            axios.get('assets/files/ancestor.bed')
+                // process the ancestor bed file 
+                .then((response) => processAncestorData(response.data))
+                .then((data) => {
+                    configureSourceID(sourceID, true);
+                    setGenomicData(data);
+                }).finally(() => {
+                    // Turn off the loader
+                    setLoaderState(false);
+                });
+        }
+
+        else if (sourceID != 'uploaded-source') {
             // Turn on loader
             setLoaderState(true);
             if (!sourceID) {
@@ -61,6 +78,10 @@ class Dashboard extends Component {
                 setLoaderState(false);
             });
         }
+
+
+
+
     }
 
     componentWillUnmount() {
@@ -139,6 +160,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
-
 
 
