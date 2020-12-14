@@ -48,4 +48,9 @@ export default {
         'source': ['PT01', 'PT02', 'PT03', 'PT04', 'PT05', 'PT06', 'PT07', 'PT08', 'PT09', 'PT10'],
         'target': ['PT11', 'PT12', 'PT13', 'PT14', 'PT15', 'PT16', 'PT17', 'PT18', 'PT19']
     },
+
+    'ancestor-source': {
+        'target': ['BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6', 'BN7', 'BN8'],
+        'source': ['AN1', 'AN2', 'AN3', 'AN4', 'AN5', 'AN6', 'AN7', 'AN8', 'AN9']
+    }
 }

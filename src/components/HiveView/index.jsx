@@ -80,7 +80,7 @@ class HiveView extends Component {
 
     initialiseLinks(markerPositions) {
 
-        const { configuration, chromosomeMap } = this.props,
+        const { configuration, chromosomeMap, sourceID } = this.props,
             { selectedMarker = -1 } = configuration.hiveView,
             { genomeLibrary } = window.synVisio;
 
@@ -116,6 +116,15 @@ class HiveView extends Component {
                         targetX = ((targetGenes[0] - targetChromosome.start) / (targetChromosome.width)) * (targetMarker.dx),
                         // pick the one with the smaller width and ensure the minimum is 2px
                         linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
+
+                    if (sourceID == 'ancestor-source') {
+                        if (sourceGeneWidth == 0) {
+                            sourceGeneWidth = sourceMarker.dx;
+                        }
+                        if (targetGeneWidth == 0) {
+                            targetGeneWidth = targetMarker.dx;
+                        }
+                    }
 
                     if (Number(alignmentDetails.source) == Number(selectedMarker)) {
                         color = schemeCategory10[_.findIndex(markerPositions[alignmentDetails.source], (o) => o.key == alignment.source) % 10];
@@ -218,7 +227,8 @@ function mapStateToProps(state) {
     return {
         genomeData: state.genome,
         chromosomeMap: state.genome.chromosomeMap,
-        isDark: state.oracle.isDark
+        isDark: state.oracle.isDark,
+        sourceID: state.oracle.sourceID
     };
 }
 

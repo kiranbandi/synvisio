@@ -111,7 +111,7 @@ class GenomeView extends Component {
         return markers;
     }
 
-    initialiseLinks(configuration, chromosomeMap, markerPositions, searchResult) {
+    initialiseLinks(configuration, chromosomeMap, markerPositions, searchResult, sourceID = '') {
 
         const linkList = [];
 
@@ -144,6 +144,16 @@ class GenomeView extends Component {
                     targetX = ((targetGenes[0] - targetChromosome.start) / (targetChromosome.width)) * (targetMarker.dx),
                     // pick the one with the smaller width and ensure the minimum is 2px
                     linkWidth = Math.max(sourceGeneWidth, targetGeneWidth, 2);
+
+                if (sourceID == 'ancestor-source') {
+                    if (sourceGeneWidth == 0) {
+                        sourceGeneWidth = sourceMarker.dx;
+                    }
+                    if (targetGeneWidth == 0) {
+                        targetGeneWidth = targetMarker.dx;
+                    }
+                }
+
 
                 let source, target;
                 if (sourceMarker.reversed) {
@@ -273,7 +283,7 @@ class GenomeView extends Component {
     render() {
 
         const { configuration, genomeData, isDark,
-            trackType, searchResult } = this.props,
+            trackType, searchResult, sourceID } = this.props,
             { isChromosomeModeON = false, genomeView, showScale,
                 markerEdge = 'rounded' } = configuration,
             trackData = _.filter(window.synVisio.trackData, (d) => !!d),
@@ -281,7 +291,7 @@ class GenomeView extends Component {
             additionalTrackHeight = trackData.length * 140;
 
         const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible, additionalTrackHeight),
-            linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions, searchResult),
+            linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions, searchResult, sourceID),
             trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType, trackData, showScale) : false,
             trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(markerPositions, trackType, trackData, showScale) : false;
 
@@ -295,8 +305,8 @@ class GenomeView extends Component {
                         x={genomeView.width - 50}
                         y={20}
                         onClick={this.resetZoom} />}
-                <svg 
-                style={{ 'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white' }}
+                <svg
+                    style={{ 'background': isDark ? isChromosomeModeON ? '#1a1c22' : '#252830' : 'white' }}
                     id={'parallel-plot-graphic'}
                     className={'genomeViewSVG exportable-svg snapshot-thumbnail  ' + (isChromosomeModeON ? 'chrom-mode ' : '') + (markerEdge == 'square' ? 'remove-cap' : '')}
                     ref={node => this.outerG = node} height={height} width={genomeView.width}>
@@ -325,7 +335,8 @@ function mapStateToProps(state) {
         genomeData: state.genome,
         trackType: state.oracle.trackType,
         searchResult: state.oracle.searchResult,
-        isDark: state.oracle.isDark
+        isDark: state.oracle.isDark,
+        sourceID: state.oracle.sourceID
     };
 }
 

@@ -4,7 +4,6 @@ import processAlignment from '../../utils/filterAlignment';
 import getPlotDimensions from '../../utils/getPlotDimensions';
 import _ from 'lodash';
 import toastr from '../../utils/toastr';
-import { dispatch } from 'd3';
 
 export function setLoaderState(loaderState) {
     return { type: types.SET_LOADER_STATE, loaderState };
@@ -13,6 +12,7 @@ export function setLoaderState(loaderState) {
 export function configureSourceID(sourceID, multiLevel = false) {
     return dispatch => {
         dispatch(setSourceID(sourceID));
+        dispatch({ type: types.SET_PLOT_LEVEL, 'value': multiLevel })
         //reset configuration
         dispatch(setFilterLevel({}));
         dispatch(setchromosomeMode(false));
