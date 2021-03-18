@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Markers from './Markers';
 import Links from './Links';
 
-class GenomeView extends Component {
+class MultiGenomeView extends Component {
 
     initialiseMarkers(configuration, chromosomeCollection) {
 
@@ -159,33 +159,34 @@ class GenomeView extends Component {
 
     render() {
 
-        const { configuration, genomeData } = this.props,
+        const { configuration, genomeData, dataAvailable, sourceTitle } = this.props,
             { genomeView } = configuration;
 
         const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap),
             linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions);
 
-        const height = genomeView.height;
+        const { height, width } = genomeView;
+
 
         return (
-            <div className='genomeViewRoot' >
-                <svg
-                    style={{ 'background': '#252830' }}
-                    id='parallel-plot-graphic' className='genomeViewSVG'
-                    height={height} width={genomeView.width}>
-                    <Markers configuration={configuration} markerPositions={markerPositions} />
-                    <Links configuration={configuration} linkPositions={linkPositions} />
-                </svg>
-            </div >
+            <div className='genomeViewRoot multi-mode'>
+                {dataAvailable ?
+                    <svg className='genomeViewSVG' height={height} width={width}>
+                        <Markers configuration={configuration} markerPositions={markerPositions} />
+                        <Links configuration={configuration} linkPositions={linkPositions} />
+                    </svg> :
+                    <div className='empty-chart-banner' style={{ height, width }}>
+                        <h2>{sourceTitle}</h2>
+                    </div>}
+            </div>
         );
     }
 }
 
 function mapStateToProps(state) {
     return {
-        genomeData: state.genome,
-        trackType: state.oracle.trackType
+        genomeData: state.genome
     };
 }
 
-export default connect(mapStateToProps)(GenomeView);
+export default connect(mapStateToProps)(MultiGenomeView);

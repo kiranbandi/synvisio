@@ -168,6 +168,28 @@ export function refineAlignmentListTree(filterLevel, alignmentList) {
 }
 
 
+export function filterMultiGenomeData(markers) {
+
+    const markerGroupList = _.groupBy(markers, (d) => d.slice(0, 2));
+
+    const alignmentList = window.synVisio.alignmentList;
+    let alignmentMatrix = [], markerList = [];
+
+    _.map(markerGroupList, (source) => {
+        _.map(markerGroupList, (target) => {
+            const markers = { 'source': _.sortBy(source), 'target': _.sortBy(target) };
+            markerList.push(markers);
+            alignmentMatrix.push(processAlignment(markers, alignmentList));
+        });
+    });
+
+    return dispatch => {
+        dispatch(setRootMarkers(markerList));
+        dispatch(setALignmentList(alignmentMatrix));
+    };
+}
+
+
 export function filterData(sourceMarkers = [], targetMarkers = [], selectedAlignment = {}, hideUnalignedRegions = false) {
 
     const markers = { 'source': sourceMarkers, 'target': targetMarkers },
