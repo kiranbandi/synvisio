@@ -13,7 +13,7 @@
         .markersText {
             fill: white;
             font-weight: bold;
-            font-size: 1.0em;
+            font-size: 1em;
         }
         .marker-tick-container {
             line {
@@ -38,7 +38,7 @@
         }
         .link {
             fill: none;
-            stroke-opacity: .5;
+            stroke-opacity: 0.5;
             pointer-events: none;
             &.hidden-alignment-link {
                 stroke-opacity: 0;
@@ -46,7 +46,7 @@
         }
         .link-polygon {
             stroke: none;
-            fill-opacity: .6;
+            fill-opacity: 0.6;
             pointer-events: none;
             &.hidden-alignment-link {
                 fill-opacity: 0;
@@ -67,15 +67,39 @@
                 cursor: pointer;
                 pointer-events: all;
                 &:hover {
-                    stroke-opacity: .9;
+                    stroke-opacity: 0.9;
                 }
             }
             .link-polygon {
                 cursor: pointer;
                 pointer-events: all;
                 &:hover {
-                    fill-opacity: .9;
+                    fill-opacity: 0.9;
                 }
+            }
+        }
+    }
+
+    &.multi-mode {
+        display: inline-block;
+        margin-right: 20px;
+        vertical-align: top;
+        .genomeViewSVG {
+            display: inline-block;
+        }
+        .empty-chart-banner {
+            border-radius: 100px;
+            vertical-align: top;
+
+            h2 {
+                margin: 0px;
+                align-self: auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 90%;
+                text-transform: uppercase;
+                font-weight: bold;
             }
         }
     }
