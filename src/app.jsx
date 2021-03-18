@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
-import { NotFound, Home, Dashboard, Upload, PyadhoreProcessor } from './pages';
+import { NotFound, Home, Dashboard,
+   Upload, PyadhoreProcessor,MultiGenome } from './pages';
 import { Container } from './components';
 import configureStore from './redux/store/configureStore';
 import { Provider } from 'react-redux';
@@ -32,6 +33,7 @@ class App extends Component {
             <Route path='Dashboard(/:sourceID)' component={Dashboard} />
             <Route path='Upload' component={Upload} />
             <Route path='PyadhoreProcessor' component={PyadhoreProcessor} />
+            <Route path='MultiGenome' component={MultiGenome} />
             <Route path='*' component={NotFound} />
           </Route>
         </Router>
