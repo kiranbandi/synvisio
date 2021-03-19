@@ -30,10 +30,10 @@ class App extends Component {
         <Router history={hashHistory}>
           <Route path='/' component={Container}>
             <IndexRoute component={Home} />
-            <Route path='Dashboard(/:sourceID)' component={Dashboard} />
-            <Route path='Upload' component={Upload} />
-            <Route path='PyadhoreProcessor' component={PyadhoreProcessor} />
-            <Route path='MultiGenome' component={MultiGenome} />
+            <Route path='dashboard(/:sourceID)' component={Dashboard} />
+            <Route path='upload' component={Upload} />
+            <Route path='pyadhore-processor' component={PyadhoreProcessor} />
+            <Route path='multi-genome(/:sourceID)' component={MultiGenome} />
             <Route path='*' component={NotFound} />
           </Route>
         </Router>

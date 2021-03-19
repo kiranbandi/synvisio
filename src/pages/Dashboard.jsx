@@ -63,7 +63,7 @@ class Dashboard extends Component {
             setLoaderState(true);
             if (!sourceID) {
                 // If sourceID is not set then fetch default that is set in the initial state of the application
-                hashHistory.push('Dashboard/' + this.props.sourceID);
+                hashHistory.push('dashboard/' + this.props.sourceID);
                 sourceID = this.props.sourceID;
             }
             else {
