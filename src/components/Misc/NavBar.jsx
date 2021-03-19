@@ -43,12 +43,12 @@ class NavBar extends Component {
 
                         <ul className='nav navbar-nav'>
                             <li>
-                                <Link to={'/Dashboard/' + sourceID}>
+                                <Link to={'/dashboard/' + sourceID}>
                                     <span className="icon icon-line-graph"></span> SYNTENY Dashboard
                                 </Link>
                             </li>
                             <li>
-                                <Link to='/Upload'>
+                                <Link to='/upload'>
                                     <span className="icon icon-publish"></span> Upload OWN Data to Dashboard
                                 </Link>
                             </li>

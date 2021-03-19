@@ -5,20 +5,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
     setLoaderState, setGenomicData,
-    setALignmentList, filterMultiGenomeData
+    setALignmentList
 } from '../redux/actions/actions';
 
 class MultiGenome extends Component {
 
     componentDidMount() {
         const { actions } = this.props,
-            { setLoaderState, setGenomicData, filterMultiGenomeData } = actions;
+            { setLoaderState, setGenomicData } = actions;
         // turn loader on
         setLoaderState(true);
-        getGenomicsData('multi_genome')
+        getGenomicsData('multi_genome_wheat')
             .then((d) => {
                 setGenomicData(d);
-                filterMultiGenomeData(d.uniqueIDList);
             })
             .finally(() => { setLoaderState(false) });
 
@@ -54,7 +53,7 @@ function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({
             setLoaderState, setGenomicData,
-            setALignmentList, filterMultiGenomeData
+            setALignmentList
         }, dispatch)
     };
 }
