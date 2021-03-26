@@ -21,4 +21,7 @@ export { default as DownloadSvg } from './Misc/DownloadSvg';
 export { default as PlotCharacteristics } from './Misc/PlotCharacteristics';
 export { default as AdvancedFilterPanel } from './AdvancedFilterPanel';
 export { default as MultiGenomeView } from './MultiGenomeView';
+export { default as MultiGenomeFilter } from './MultiGenomeView/MultiGenomeFilter';
 export { default as MagnumView } from './Misc/MagnumView';
+export { default as MagnumHive } from './Misc/MagnumHive';
+export { default as MultiHiveView } from './MultiHiveView';

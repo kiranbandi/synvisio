@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { MultiGenomeView } from '../';
+import { MultiHiveView } from '../';
 import _ from 'lodash';
 
 export default class MagnumView extends Component {
@@ -10,29 +10,27 @@ export default class MagnumView extends Component {
 
         let { alignmentList, genomeView, markers } = configuration;
 
-        const matrixSize = Math.sqrt(markers.length);
+        const matrixSize = 4;
 
-        const horizontalOffset = 25, verticalOffset = 15,
+        const horizontalOffset = 1,
             gapWidth = (matrixSize - 1) * horizontalOffset,
-            width = (genomeView.width - gapWidth) / matrixSize,
-            height = (genomeView.height * 1.1 * 2) / matrixSize;
+            width = (genomeView.width - gapWidth) / 4,
+            height = 500;
 
         const clonedConfiguration = {
             'isBlockModeON': false,
             'isChromosomeModeON': false,
-            'genomeView': {
+            'isNormalized': true,
+            'hiveView': {
                 'height': height,
                 'width': width,
-                'verticalPositions': {
-                    'source': verticalOffset,
-                    'target': height - verticalOffset
-                }
+                'selectedMarker': 2
             },
             'reversedMarkers': { 'source': [], 'target': [] },
             'filterLevel': {}
         };
 
-        const syntenyMatrix = _.map(markers, (markerGroup, groupIndex) => {
+        const hiveMatrix = _.map(markers, (markerGroup, groupIndex) => {
 
             const graphConfiguration = {
                 ...clonedConfiguration,
@@ -40,10 +38,10 @@ export default class MagnumView extends Component {
                 'alignmentList': alignmentList[groupIndex]
             };
 
-            return <MultiGenomeView
-                sourceTitle={graphConfiguration.markers.source[0].slice(0, 2)}
+            return <MultiHiveView
+                sourceTitle={'test'}
                 dataAvailable={alignmentList[groupIndex].length > 0}
-                key={'multi-genome-' + groupIndex}
+                key={'multi-hive-' + groupIndex}
                 configuration={graphConfiguration} />;
 
         });
@@ -52,7 +50,7 @@ export default class MagnumView extends Component {
         return (
             <div>
                 <div className='anchor-root text-center'>
-                    {syntenyMatrix}
+                    {hiveMatrix}
                 </div>
             </div>
         );
