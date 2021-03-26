@@ -1,5 +1,22 @@
 .hiveView-root {
     margin: 10px;
+
+    &.multi-map {
+        display: inline-block;
+        margin: 0px;
+
+        .hiveViewSVG {
+            margin: 0px auto;
+           
+            text.hive-marker-label {
+                text-anchor: middle;
+                font-size: 12px;
+                fill: white;
+                font-weight: bold;
+            }
+        }
+    }
+    
     form.filter-panel-hive {
         text-align: center;
         .filter-row {

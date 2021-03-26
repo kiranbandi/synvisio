@@ -1,26 +1,38 @@
 // import base - contains global styles, such as resets, typography, colors
-// import vendors 
-@import 'vendor/toastr';
-@import 'vendor/carousel';
+// import vendors
+@import "vendor/toastr";
+@import "vendor/carousel";
 // import components- contains each self-contained component in its own .scss partial
-@import 'components/container';
-@import 'components/navbar';
-@import 'components/loader';
-@import 'components/information';
-@import 'components/genomeView';
-@import 'components/dotView';
-@import 'components/hiveView';
-@import 'components/treeView';
-@import 'components/blockView';
-@import 'components/panelView';
-@import 'components/radioButton';
-@import 'components/smallWrapper';
-@import 'components/downloadSVG';
-@import 'components/fileUpload';
-@import 'components/advancedFilterPanel';
-@import 'components/plotCharacteristics';
-@import 'components/saveModal';
+@import "components/container";
+@import "components/navbar";
+@import "components/loader";
+@import "components/information";
+@import "components/genomeView";
+@import "components/dotView";
+@import "components/hiveView";
+@import "components/treeView";
+@import "components/blockView";
+@import "components/panelView";
+@import "components/radioButton";
+@import "components/smallWrapper";
+@import "components/downloadSVG";
+@import "components/fileUpload";
+@import "components/advancedFilterPanel";
+@import "components/plotCharacteristics";
+@import "components/saveModal";
 // import pages contains page-specific styling
-@import 'pages/home';
-@import 'pages/dashboard';
-@import 'pages/configuration';
+@import "pages/home";
+@import "pages/dashboard";
+@import "pages/configuration";
+
+.filter-slider-multi {
+    width: 95%;
+    margin: 20px auto;
+    margin-top: -5px;
+}
+
+.multi-slider-label {
+    font-weight: bold;
+    margin-bottom: 0px;
+    font-size: 1.15em;
+}

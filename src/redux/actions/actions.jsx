@@ -9,7 +9,7 @@ export function setLoaderState(loaderState) {
     return { type: types.SET_LOADER_STATE, loaderState };
 }
 
-export function configureSourceID(sourceID, multiLevel = false) {
+export function configureSourceID(sourceID, multiLevel = false, multiGenome = false) {
     return dispatch => {
         dispatch(setSourceID(sourceID));
         dispatch({ type: types.SET_PLOT_LEVEL, 'value': multiLevel })
@@ -17,7 +17,12 @@ export function configureSourceID(sourceID, multiLevel = false) {
         dispatch(setFilterLevel({}));
         dispatch(setchromosomeMode(false));
         dispatch(setBlockMode(false));
-        if (sampleSourceMapper[sourceID]) {
+
+        // TODO For multi genome mode, we just use an empty root marker for now
+        if (multiGenome) {
+            dispatch(setRootMarkers([]));
+        }
+        else if (sampleSourceMapper[sourceID]) {
             const sampleDataMarkers = { ...sampleSourceMapper[sourceID] };
             if (multiLevel) {
                 sampleDataMarkers[0] = sampleDataMarkers.source;
@@ -32,6 +37,8 @@ export function configureSourceID(sourceID, multiLevel = false) {
         }
     }
 }
+
+
 
 export function setchromosomeMode(isChromosomeModeON) {
     return { type: types.SET_CHROMOSOME_MODE, isChromosomeModeON };
@@ -168,25 +175,68 @@ export function refineAlignmentListTree(filterLevel, alignmentList) {
 }
 
 
-export function filterMultiGenomeData(markers) {
+export function filterMultiGenomeData(markers, plotType = 'multi-genome') {
 
-    const markerGroupList = _.groupBy(markers, (d) => d.slice(0, 2));
+    const markerGroupList = _.groupBy(markers, (d) => d.slice(0, 2)),
+        alignmentList = window.synVisio.alignmentList;
 
-    const alignmentList = window.synVisio.alignmentList;
     let alignmentMatrix = [], markerList = [];
 
-    _.map(markerGroupList, (source) => {
-        _.map(markerGroupList, (target) => {
-            const markers = { 'source': _.sortBy(source), 'target': _.sortBy(target) };
-            markerList.push(markers);
-            alignmentMatrix.push(processAlignment(markers, alignmentList));
+    if (plotType == 'multi-hive') {
+
+        var metaMarkerList = [['as', 'cs', 'jl'], ['cs', 'jl', 'lm'], ['lm', 'as', 'cs'], ['lm', 'as', 'jl']];
+        var subGenomes = ['A', 'B', 'D'];
+
+        var markerStore = {};
+        // group wheat data by subgenome
+        _.map(markerGroupList, (e, index) => {
+            markerStore[index] = _.groupBy(e, (d) => d[3]);
         });
-    });
+
+
+        _.map(subGenomes, (subGenome) => {
+            _.map(metaMarkerList, (metaList) => {
+                    var markers = [markerStore[metaList[0]][subGenome], markerStore[metaList[1]][subGenome], markerStore[metaList[2]][subGenome]]
+                    markerList.push(markers);
+            });
+        });
+    
+
+
+
+        _.map(markerList, (markers) => {
+
+            let noOfMarkers = markers.length;
+
+            let updatedAlignmentList = [];
+            _.each(markers, (value, keyIndex) => {
+                const nextIndex = ((noOfMarkers - 1) == keyIndex) ? 0 : (Number(keyIndex) + 1),
+                    tempMarkers = { 'source': markers[keyIndex], 'target': markers[nextIndex] };
+                updatedAlignmentList.push({ source: keyIndex, target: nextIndex, 'alignmentList': processAlignment(tempMarkers, alignmentList) });
+            });
+            alignmentMatrix.push(updatedAlignmentList);
+        });
+
+    }
+    else {
+
+        _.map(markerGroupList, (source) => {
+            _.map(markerGroupList, (target) => {
+                const markers = { 'source': _.sortBy(source), 'target': _.sortBy(target) };
+                markerList.push(markers);
+                alignmentMatrix.push(processAlignment(markers, alignmentList));
+            });
+        });
+
+    }
 
     return dispatch => {
         dispatch(setRootMarkers(markerList));
         dispatch(setALignmentList(alignmentMatrix));
     };
+
+
+
 }
 
 

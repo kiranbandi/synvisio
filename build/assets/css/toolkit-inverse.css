@@ -608,6 +608,10 @@ ol ol {
   list-style: none;
   margin-left: -5px;
 }
+
+.d-inline{
+  display: inline-block !important;
+}
 .list-inline > li {
   display: inline-block;
   padding-left: 5px;

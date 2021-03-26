@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { getGenomicsData } from '../utils/fetchData';
-import { Loader, MagnumView, MultiGenomeFilter } from '../components';
+import { Loader, MagnumHive, MultiGenomeFilter } from '../components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -8,13 +8,13 @@ import {
     setALignmentList, configureSourceID
 } from '../redux/actions/actions';
 
-class MultiGenome extends Component {
+class MultiHive extends Component {
 
     componentDidMount() {
 
         const { actions, params } = this.props,
             // get the source name based on window query params
-            { sourceID = 'lentils' } = params,
+            { sourceID = 'wheat' } = params,
             { setLoaderState, setGenomicData, configureSourceID } = actions;
 
         // turn loader on
@@ -42,9 +42,9 @@ class MultiGenome extends Component {
                     <div className='dashboard-container'>
                         {genome.chromosomeMap ?
                             <div>
-                                <MultiGenomeFilter plotType={'multi-genome'}/>
-                                <MagnumView
-                                     plotType={'multi-genome'}
+                                <MultiGenomeFilter plotType={'multi-hive'} />
+                                <MagnumHive
+                                    plotType={'multi-hive'}
                                     configuration={configuration} />
                             </div>
                             : <h2 className='text-danger text-xs-center m-t-lg'>No data found</h2>}
@@ -73,6 +73,6 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MultiGenome);
+export default connect(mapStateToProps, mapDispatchToProps)(MultiHive);
 
 
