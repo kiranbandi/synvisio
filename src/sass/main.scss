@@ -36,3 +36,11 @@
     margin-bottom: 0px;
     font-size: 1.15em;
 }
+
+.experimental-banner {
+    padding: 5px 15px 15px 15px;
+    background: #363636;
+    .sub-info {
+        line-height: 1.5;
+    }
+}

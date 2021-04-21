@@ -5,6 +5,7 @@ import { refineAlignmentList } from '../../redux/actions/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+
 class Links extends Component {
 
     constructor(props) {
@@ -67,9 +68,11 @@ class Links extends Component {
     generateLinkElements() {
 
         const { configuration, linkPositions, isDark } = this.props,
-            { alignmentColor = 'tenColor', isChromosomeModeON = true } = configuration;
+            { alignmentColor = 'tenColor', colorMap = {}, isChromosomeModeON = true } = configuration;
 
         let linkElements = [];
+
+        const isColorMapAvailable = Object.keys(colorMap).length > 0;
 
         // split links into two parts , the links that have widths of less than 2px can be drawn as lines 
         // and the other are drawn as polygon links
@@ -81,7 +84,11 @@ class Links extends Component {
             let stroke, style;
             // Decide on stroke colour
             let sourceIndex = configuration.markers.source.indexOf(d.alignment.source);
-            stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
+
+            // If a color is present in the color map use it if not default to d3 color
+            let colorPaletteMap = isColorMapAvailable ? (colorMap[d.alignment.source] || '#1f77b4') : schemeCategory10[sourceIndex % 10];
+
+            stroke = (sourceIndex == -1) ? '#808080' : colorPaletteMap;
 
             // For chromosome mode flipped links are shown in red color and regular in blue
             if (isChromosomeModeON && d.alignment.type == 'flipped') {
@@ -129,7 +136,12 @@ class Links extends Component {
             let fill, style;
             // Decide on stroke colour
             let sourceIndex = configuration.markers.source.indexOf(d.alignment.source);
-            fill = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
+
+            // If a color is present in the color map use it if not default to d3 color
+            let colorPaletteMap = isColorMapAvailable ? (colorMap[d.alignment.source] || '#1f77b4') : schemeCategory10[sourceIndex % 10];
+
+
+            fill = (sourceIndex == -1) ? '#808080' : colorPaletteMap;
 
             // For chromosome mode flipped links are shown in red color and regular in blue
             if (isChromosomeModeON && d.alignment.type == 'flipped') {

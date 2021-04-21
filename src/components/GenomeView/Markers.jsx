@@ -26,8 +26,10 @@ class Markers extends Component {
 
     generateMarkerElements(configuration, markerPositions) {
 
-        let markerElements = [], { alignmentColor = 'tenColor' } = configuration;
+        let markerElements = [], { alignmentColor = 'tenColor', colorMap = {} } = configuration;
 
+        const isColorMapAvailable = Object.keys(colorMap).length > 0;
+        
         _.map(markerPositions, (markerList, markerListId) => {
             // create marker lines
             let markerLines = markerList.map((d, i) => {
@@ -35,7 +37,9 @@ class Markers extends Component {
                 // Decide on stroke colour
                 if (markerListId == 'source' && alignmentColor == 'tenColor') {
                     let sourceIndex = configuration.markers.source.indexOf(d.key);
-                    stroke = (sourceIndex == -1) ? '#808080' : schemeCategory10[sourceIndex % 10];
+                    // If a color is present in the color map use it if not default to d3 color
+                    let colorPaletteMap = isColorMapAvailable ? (colorMap[d.key] || '#1f77b4') : schemeCategory10[sourceIndex % 10];
+                    stroke = (sourceIndex == -1) ? '#808080' : colorPaletteMap;
                 } else {
                     stroke = (i % 2 == 0) ? '#3a3a3a' : 'grey';
                 }

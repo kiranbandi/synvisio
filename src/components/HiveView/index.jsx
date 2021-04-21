@@ -80,11 +80,15 @@ class HiveView extends Component {
 
     initialiseLinks(markerPositions) {
 
-        const { configuration, chromosomeMap, sourceID } = this.props,
+        const { configuration, chromosomeMap, sourceID, } = this.props,
+            { colorMap = {} } = configuration,
             { selectedMarker = -1 } = configuration.hiveView,
             { genomeLibrary } = window.synVisio;
 
+        // placeholder for color
         let color;
+
+        const isColorMapAvailable = Object.keys(colorMap).length > 0;
 
         let linkStore = { links: [], polygons: [] };
 
@@ -127,10 +131,15 @@ class HiveView extends Component {
                     }
 
                     if (Number(alignmentDetails.source) == Number(selectedMarker)) {
+
                         color = schemeCategory10[_.findIndex(markerPositions[alignmentDetails.source], (o) => o.key == alignment.source) % 10];
+                        // If a color is present in the color map use it if not default to d3 color
+                        color = isColorMapAvailable ? (colorMap[alignment.source] || '#1f77b4') : color;
                     }
                     else if (Number(alignmentDetails.target) == Number(selectedMarker)) {
                         color = schemeCategory10[_.findIndex(markerPositions[alignmentDetails.target], (o) => o.key == alignment.target) % 10];
+                        // If a color is present in the color map use it if not default to d3 color
+                        color = isColorMapAvailable ? (colorMap[alignment.target] || '#1f77b4') : color;
                     }
                     else {
                         color = 'grey';
@@ -205,7 +214,7 @@ class HiveView extends Component {
                         height={hiveView.height} width={hiveView.width}>
                         <g ref={node => this.innerG = node} transform={'translate(' + (hiveView.width / 2) + ',' + (hiveView.height / 2) + ')'} >
                             <HiveLinks hiveView={hiveView} linkStore={linkStore} />
-                            <HiveMarkers markerPositions={markerPositions} />
+                            <HiveMarkers configuration={configuration} markerPositions={markerPositions} />
                             <HiveRadialLabels
                                 isDark={isDark}
                                 selectedMarker={selectedMarker}

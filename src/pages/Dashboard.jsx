@@ -94,6 +94,9 @@ class Dashboard extends Component {
             isModalVisible, multiLevel, isSnapShotAvailable,
             multiLevelType, plotType } = this.props;
 
+        // transfer the colormap from genome to configuration
+        configuration['colorMap'] = genome.colorMap || {};
+
         // update snapshot
         if (isSnapShotAvailable) {
             updateSnapshot(configuration);
