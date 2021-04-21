@@ -196,11 +196,11 @@ export function filterMultiGenomeData(markers, plotType = 'multi-genome') {
 
         _.map(subGenomes, (subGenome) => {
             _.map(metaMarkerList, (metaList) => {
-                    var markers = [markerStore[metaList[0]][subGenome], markerStore[metaList[1]][subGenome], markerStore[metaList[2]][subGenome]]
-                    markerList.push(markers);
+                var markers = [markerStore[metaList[0]][subGenome], markerStore[metaList[1]][subGenome], markerStore[metaList[2]][subGenome]]
+                markerList.push(markers);
             });
         });
-    
+
 
 
 

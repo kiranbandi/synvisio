@@ -35,7 +35,7 @@ class Upload extends Component {
 
   onUpload() {
 
-    let datastore = { trackData: [] };
+    let datastore = { trackData: [], colorMap: {} };
     const { actions, multiLevel } = this.props,
       { processScaffolds, showAllScaffolds } = this.state,
       { configureSourceID, setGenomicData, setLoaderState } = actions;
@@ -45,7 +45,10 @@ class Upload extends Component {
     configureSourceID('bn', multiLevel);
 
     // check the number of tracks files that are available to process
-    let trackFiles = _.map([0, 1, 2, 3], (d) => document.getElementById('track-file-' + d).files.length > 0)
+    let trackFiles = _.map([0, 1, 2, 3], (d) => document.getElementById('track-file-' + d).files.length > 0);
+
+    // check if color palette is available 
+    let isColorMapAvailable = document.getElementById('color-map-file').files.length > 0;
 
     // load the coordinate file
     getFile('coordinate-file')
@@ -72,35 +75,41 @@ class Upload extends Component {
           });
         }
         datastore = Object.assign({}, datastore, { information, alignmentList, chromosomeMap });
+        return isColorMapAvailable ? getFile('color-map-file') : Promise.resolve(false);
+      })
+      .then((colorData) => {
+        let colorMap = {};
+        colorData.trim().split('\n').map((d) => d.split('\t')).map((e) => colorMap[e[0]] = e[1]);
+        datastore.colorMap = colorMap;
         return trackFiles[0] ? getFile('track-file-0') : Promise.resolve(false);
       })
       // process 1st trackfile data if present
       .then((data) => {
-        return trackFiles[0] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);;
+        return trackFiles[0] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
-        return trackFiles[1] ? getFile('track-file-1') : Promise.resolve(false);;
+        return trackFiles[1] ? getFile('track-file-1') : Promise.resolve(false);
       })
       // process 2st trackfile data if present
       .then((data) => {
-        return trackFiles[1] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);;
+        return trackFiles[1] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
-        return trackFiles[2] ? getFile('track-file-2') : Promise.resolve(false);;
+        return trackFiles[2] ? getFile('track-file-2') : Promise.resolve(false);
       })
       // process 3rd trackfile data if present
       .then((data) => {
-        return trackFiles[2] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);;
+        return trackFiles[2] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
-        return trackFiles[3] ? getFile('track-file-3') : Promise.resolve(false);;
+        return trackFiles[3] ? getFile('track-file-3') : Promise.resolve(false);
       })
       // process 4th trackfile data if present
       .then((data) => {
-        return trackFiles[3] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);;
+        return trackFiles[3] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
@@ -151,7 +160,7 @@ class Upload extends Component {
                 checked={processScaffolds} />
             </div>
 
-            <div className="">
+            <div>
               <h4 className="sub-info">Would you like to ignore chromosomes and scaffolds without any alignments in them ? </h4>
               <h4 className="sub-info">(This will reduce the number of options to filter through while picking the source and target chromosomes or scaffolds in the dashboard)</h4>
 
@@ -165,11 +174,14 @@ class Upload extends Component {
                 checked={showAllScaffolds} />
             </div>
 
+            <div className='m-t m-b experimental-banner'>
+              <h4 className="sub-info"> (New Experiment Feature) Upload a color template file to have your custom color scheme for the chromosomes instead of the default color palette provided by SynVisio. Refer to the <a target='_blank' href='./assets/files/sample_color_template.txt'>sample file</a> for the format (tab seperated with chromosome ids and color hex codes).</h4>
+              <FileUpload id='color-map-file' label='Color Template File' />
+            </div>
+
             {loaderState && <h4 className='loading-text'>Loading data...</h4>}
             <button className="btn btn-primary-outline m-t" onClick={this.onUpload}> UPLOAD </button>
           </div>
-
-
 
           {sourceID == 'uploaded-source' && <div className="alert alert-success m-t m-b">
             <strong>Upload Complete !</strong> Your files have been processed . Head over to the <strong>dashboard</strong> to view the results.

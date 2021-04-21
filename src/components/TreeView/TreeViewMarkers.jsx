@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { schemeCategory10 } from 'd3';
 import MarkerText from '../GenomeView/MarkerText';
 import { refineAlignmentListTree } from '../../redux/actions/actions';
 import { connect } from 'react-redux';

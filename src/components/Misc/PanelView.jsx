@@ -88,7 +88,9 @@ class PanelView extends Component {
             width = availableWidth - margin.left - margin.right,
             height = configuration.panelView.height - margin.top - margin.bottom;
 
-        let { alignmentList = [], filterLevel = {} } = configuration;
+        let { alignmentList = [], filterLevel = {}, colorMap = {} } = configuration;
+
+        const isColorMapAvailable = Object.keys(colorMap).length > 0;
 
         // we cannot hide all hidden alignments so we selectively 
         // remove only the ones not available for the present markers
@@ -122,10 +124,14 @@ class PanelView extends Component {
         let filterLevelValue = filterLevel[selectedRadio] || { 'sliderValue': 0, 'nominalValue': min, 'adjustToZero': (selectedRadio == 'e_value') };
 
         let dotList = alignmentList.map((alignment, index) => {
-            const sourceIndex = configuration.markers.source.indexOf(alignment.source),
-                style = {
-                    'fill': (sourceIndex == -1) ? '#2a859b' : schemeCategory10[sourceIndex % 10]
-                };
+            const sourceIndex = configuration.markers.source.indexOf(alignment.source);
+
+            // If a color is present in the color map use it if not default to d3 color
+            const colorPaletteMap = isColorMapAvailable ? (colorMap[alignment.source] || '#1f77b4') : schemeCategory10[sourceIndex % 10];
+
+            const style = {
+                'fill': (sourceIndex == -1) ? '#2a859b' : colorPaletteMap
+            };
             let cy;
 
             if ((selectedRadio == 'e_value' && alignment[selectedRadio] == 0) || (selectedRadio == 'e_value' && alignment[selectedRadio] < min)) {

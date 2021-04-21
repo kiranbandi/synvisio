@@ -11,15 +11,21 @@ export default class HiveMarkers extends Component {
     }
 
     generateMarkerElements() {
-        const { markerPositions } = this.props,
+        const { markerPositions, configuration } = this.props,
+            { colorMap = {} } = configuration,
             angles = hiveAngles(Object.keys(markerPositions).length);
+
+        const isColorMapAvailable = Object.keys(colorMap).length > 0;
 
         return _.map(markerPositions, (markerList, markerListId) => {
             // create marker lines
             let markerLines = markerList.map((d, i) => {
                 let style;
+
+                const colorPalette = isColorMapAvailable ? (colorMap[d.key] || '#1f77b4') : schemeCategory10[i % 10];
+
                 // Add style to elements
-                style = { 'strokeWidth': '7px', 'stroke': schemeCategory10[i % 10] };
+                style = { 'strokeWidth': '7px', 'stroke': colorPalette };
                 return (
                     <line key={markerListId + "-line-" + i}
                         className={'chromosomeMarkers marker-' + markerListId + " marker-" + markerListId + "-" + d.key}

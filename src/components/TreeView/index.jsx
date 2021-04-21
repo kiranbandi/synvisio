@@ -17,8 +17,10 @@ class TreeView extends Component {
     initialiseMarkerPositions() {
 
         const { configuration, chromosomeMap } = this.props,
-            { markers, reversedMarkers, treeView,
+            { markers, reversedMarkers, treeView, colorMap = {},
                 isNormalized = false, alignmentColor = 'tenColor' } = configuration;
+
+        const isColorMapAvailable = Object.keys(colorMap).length > 0;
 
         const maxWidthAvailable = treeView.width;
 
@@ -54,9 +56,12 @@ class TreeView extends Component {
                 markerPadding = remainingWidth / (chromosomeList.length),
                 widthUsedSoFar = 0,
                 reversedMarkerList = reversedMarkers[markerId],
-                isThisLastRow = _.findIndex(allMarkerIDs, (d) => d == markerId) == (allMarkerIDs.length - 1);
+                isThisLastRow = isColorMapAvailable ? false : _.findIndex(allMarkerIDs, (d) => d == markerId) == (allMarkerIDs.length - 1);
 
             let markerList = _.map(chromosomeList, (key) => {
+
+                const colorPalette = isColorMapAvailable ? (colorMap[key] || '#1f77b4') : schemeCategory10[colorCount];
+
                 let marker = {
                     'data': chromosomeMap.get(key),
                     'key': key,
@@ -68,7 +73,7 @@ class TreeView extends Component {
                     'dx': (scaleFactor * chromosomeMap.get(key).width),
                     'y': 150 + (markerId * 300),
                     // for last row using alternating gray pattern if not use colors from d3
-                    'color': isThisLastRow || alignmentColor == 'orientation' ? ((colorCount % 2 == 0) ? '#3a3a3a' : 'grey') : schemeCategory10[colorCount]
+                    'color': isThisLastRow || alignmentColor == 'orientation' ? ((colorCount % 2 == 0) ? '#3a3a3a' : 'grey') : colorPalette
                 }
                 // total width used = previous used space + width + half marker padding
                 widthUsedSoFar = marker.x + marker.dx + (markerPadding / 2);

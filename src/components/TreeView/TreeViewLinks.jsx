@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { schemeCategory10, interpolateNumber } from 'd3';
+import { interpolateNumber } from 'd3';
 
 export default class TreeViewLinks extends Component {
 
