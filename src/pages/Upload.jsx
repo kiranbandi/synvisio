@@ -78,9 +78,11 @@ class Upload extends Component {
         return isColorMapAvailable ? getFile('color-map-file') : Promise.resolve(false);
       })
       .then((colorData) => {
-        let colorMap = {};
-        colorData.trim().split('\n').map((d) => d.split('\t')).map((e) => colorMap[e[0]] = e[1]);
-        datastore.colorMap = colorMap;
+        if (colorData) {
+          let colorMap = {};
+          colorData.trim().split('\n').map((d) => d.split('\t')).map((e) => colorMap[e[0]] = e[1]);
+          datastore.colorMap = colorMap;
+        }
         return trackFiles[0] ? getFile('track-file-0') : Promise.resolve(false);
       })
       // process 1st trackfile data if present
