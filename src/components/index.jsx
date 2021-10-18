@@ -25,3 +25,5 @@ export { default as MultiGenomeFilter } from './MultiGenomeView/MultiGenomeFilte
 export { default as MagnumView } from './Misc/MagnumView';
 export { default as MagnumHive } from './Misc/MagnumHive';
 export { default as MultiHiveView } from './MultiHiveView';
+
+export { default as LinkageView } from './LinkageView';

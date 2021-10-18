@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import {
-  NotFound, Home, Dashboard,
+  NotFound, Home, Dashboard, LinkageMap,
   Upload, PyadhoreProcessor, MultiGenome, MultiHive
 } from './pages';
 import { Container } from './components';
@@ -27,6 +27,7 @@ const store = configureStore();
 class App extends Component {
 
   render() {
+
     return (
       <Provider store={store}>
         <Router history={hashHistory}>
@@ -37,6 +38,7 @@ class App extends Component {
             <Route path='pyadhore-processor' component={PyadhoreProcessor} />
             <Route path='multi-genome(/:sourceID)' component={MultiGenome} />
             <Route path='multi-hive(/:sourceID)' component={MultiHive} />
+            <Route path='linkage-map(/:sourceID)' component={LinkageMap} />
             <Route path='*' component={NotFound} />
           </Route>
         </Router>
