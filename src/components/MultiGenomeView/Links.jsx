@@ -99,7 +99,7 @@ class Links extends Component {
             // if the link is part of a search result paint it in white
             if (d.taggedLink) {
                 style = {
-                    'stroke': isDark ? 'white' : '#1a1c22',
+                    'stroke': isDark ? 'white' : '#434b63',
                     'strokeWidth': '5',
                     'strokeOpacity': 1
                 }
@@ -146,7 +146,7 @@ class Links extends Component {
             // if the link is part of a search result paint it in white
             if (d.taggedLink) {
                 style = {
-                    'fill': isDark ? 'white' : '#1a1c22',
+                    'fill': isDark ? 'white' : '#434b63',
                     'fillOpacity': 1
                 }
             }
