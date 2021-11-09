@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { InlayIcon } from '../';
 import * as d3 from 'd3';
+import _ from 'lodash';
 
 class BlockView extends Component {
 
@@ -218,8 +219,8 @@ class BlockView extends Component {
         this.markerPositionStore = [];
 
 
-        // Is the selected block one that has the matching gene ID from the gene search panel
-        let markedAlignment = _.find(searchResult, (d) => d.alignmentID == alignment.alignmentID) || false;
+        // Is the selected block one that has the matching gene IDs from the gene search panel
+        let markedAlignmentLinkIDs = _.filter(searchResult, (d) => d.alignmentID == alignment.alignmentID).map((d) => d.matchingLinkID);
 
         // Find the marker positions 
         _.map(alignment.links, (link, index) => {
@@ -246,10 +247,10 @@ class BlockView extends Component {
             // if the link contains the gene that was searched for in the gene search panel
             // then highlight it
             let markLink = false;
-            if (markedAlignment &&
-                markedAlignment.matchingLink.source == link.source &&
-                markedAlignment.matchingLink.target == link.target) {
-                markLink = true;
+            if (markedAlignmentLinkIDs.length > 0) {
+                if (markedAlignmentLinkIDs.indexOf(index) > -1) {
+                    markLink = true;
+                }
             }
 
             sourceMarkers.push(
