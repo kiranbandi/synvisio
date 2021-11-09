@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -33,7 +34,7 @@ class GeneSearch extends Component {
     render() {
         const { searchResult = [] } = this.props;
 
-        const searchResultContent = searchResult.map((val, index) => {
+        const searchResultContent = _.uniqBy(searchResult, (d) => d.alignmentID).map((val, index) => {
             return <p className='clickable-search' onClick={this.onClick} id={'search-result-' + index} key={'search-result-' + index}><b>Alignment Score : </b> {val.score} <b>Type: </b>{val.type} <b>Source: </b>{val.source} <b>Target: </b>{val.target}</p>
         })
 
@@ -58,7 +59,7 @@ class GeneSearch extends Component {
                     <div className='small-wrapper-inner-result'>
                         <span className="text-primary info-text-message">
                             Matching alignments are highlighted in <b>white</b> in the charts
-                    </span>
+                        </span>
                         {searchResultContent}
                     </div>
                 </div>
