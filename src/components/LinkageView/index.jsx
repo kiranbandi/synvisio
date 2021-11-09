@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Markers from './Markers';
 import Links from './Links';
+import Tracks from '../LinkageView/Tracks';
+import TrackTrails from './TrackTrails';
 import {
     scaleLinear, interpolateOranges, interpolateReds,
     interpolateGreens, interpolateBlues, line,
@@ -10,6 +12,9 @@ import {
     interpolateViridis, interpolateInferno,
     interpolatePlasma, interpolateMagma
 } from 'd3';
+
+
+const dynamicColorScale = interpolateMagma;
 
 class LinkageView extends Component {
 
@@ -85,11 +90,11 @@ class LinkageView extends Component {
 
         _.map(linkageData, (alignment) => {
 
-            const hetScores = linkageData.map((d) => d.het);
+            const hetScores = linkageData.map((d) => +d.het);
 
             let colorScale = scaleLinear()
                 .domain([_.min(hetScores), _.max(hetScores)])
-                .range([0, 1]);
+                .range([1, 0.3]);
 
 
             let sourceChromosome = chromosomeMap.get(alignment.locus),
@@ -125,7 +130,7 @@ class LinkageView extends Component {
                 source,
                 target,
                 alignment,
-                color: interpolateRdYlGn(colorScale(alignment.het)),
+                color: dynamicColorScale(colorScale(alignment.het)),
                 width: linkWidth
             });
 
@@ -134,21 +139,107 @@ class LinkageView extends Component {
         return linkList;
     }
 
+
+
+    initialiseTracks(markerPositions, trackType, trackData, showScale) {
+
+        return _.map(trackData, (singleTrackData, trackIndex) => {
+
+            let trackPositions = {}, trackValue;
+
+            _.each(markerPositions, (markerList, markerListId) => {
+
+                let yShifter = (50 * (trackIndex + 1)),
+                    interTrackGap = 20 * (trackIndex),
+                    interScaleShifter = showScale ? 50 + interTrackGap : 20 + interTrackGap,
+                    multiplier = markerListId == 'source' ? -1 * (yShifter + interScaleShifter) : (yShifter - 50 + interScaleShifter);
+                _.each(markerList, (marker) => {
+                    let tracksPerMarker = _.map(singleTrackData.chromosomeMap[marker.key], (trackDataFragment) => {
+                        trackValue = (trackDataFragment.value - singleTrackData.min) / (singleTrackData.max - singleTrackData.min);
+                        return {
+                            x: ((trackDataFragment.start / marker.data.width) * marker.dx) + marker.x,
+                            dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * marker.dx,
+                            dy: (trackType[trackIndex].type == 'track-heatmap') ? 50 : 50 * trackValue,
+                            y: marker.y + (multiplier) + ((trackType[trackIndex].type == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
+                            value: trackValue,
+                            trackKey: marker.key
+                        }
+                    });
+                    trackPositions[marker.key + '-' + markerListId] = tracksPerMarker;
+                });
+            });
+            return trackPositions;
+        })
+    }
+
+    initialiseTrackTrails(markerPositions, trackType, trackData, showScale) {
+
+
+        return _.map(trackData, (ignoreProp, trackIndex) => {
+
+            let trackTrailPostions = [];
+            // For heatmap style tracks we dont have y axis trails 
+            if (trackType[trackIndex].type == 'track-heatmap') { return false }
+            // The track height is hardcoded to 50px so the lines are at 10 ,20,30,40 and 50px respectively 
+            else {
+                _.each(markerPositions, (markerList, markerListId) => {
+
+                    let yShifter = (50 * (trackIndex + 1)),
+                        interTrackGap = 20 * (trackIndex),
+                        interScaleShifter = showScale ? 50 + interTrackGap : 20 + interTrackGap,
+                        multiplier = markerListId == 'source' ? -1 * (yShifter + interScaleShifter) : (yShifter - 50 + interScaleShifter);
+
+                    _.each(markerList, (marker) => {
+                        for (let looper = 0; looper <= 5; looper++) {
+                            trackTrailPostions.push({
+                                x: marker.x,
+                                dx: marker.dx,
+                                y: marker.y + multiplier + (looper * 10)
+                            });
+                        }
+                    });
+                });
+                return trackTrailPostions;
+            }
+        });
+    }
+
+    areTracksVisible(configuration, trackData) {
+        return (_.reduce(trackData, (acc, d) => (!!d || acc), false) && true);
+    }
+
+
     render() {
 
-        const { configuration, genomeData, isDark, searchResult, sourceID, linkageData } = this.props,
+        const { configuration, genomeData, isDark,
+            trackType, searchResult, linkageData, sourceID } = this.props,
             { isChromosomeModeON = false, genomeView, showScale,
                 markerEdge = 'rounded' } = configuration,
             trackData = _.filter(window.synVisio.trackData, (d) => !!d),
-            areTracksVisible = false,
+            areTracksVisible = this.areTracksVisible(configuration, trackData),
             additionalTrackHeight = trackData.length * 140;
 
-        configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
+
+
+        if (sourceID == 'lentils_lg') {
+            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
+        }
+
+        else {
+            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG0', 'LG14', 'LG6', 'LG11', 'LG15', 'LG3'] };
+        }
+
         configuration.isNormalized = true;
+
+
+
 
 
         const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible, additionalTrackHeight),
             linkPositions = this.initialiseLinks(genomeData.chromosomeMap, markerPositions, linkageData);
+
+        const trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType, trackData, showScale) : false,
+            trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(markerPositions, trackType, trackData, showScale) : false;
 
         const trackHeightFix = areTracksVisible ? (trackData.length * 12) : 0;
         const height = genomeView.height - trackHeightFix + (areTracksVisible ? (additionalTrackHeight + (showScale ? 45 : 20)) : 0);
@@ -163,6 +254,16 @@ class LinkageView extends Component {
                     <g ref={node => this.innerG = node} >
                         <Markers areTracksVisible={areTracksVisible} isDark={isDark} configuration={configuration} markerPositions={markerPositions} />
                         <Links isDark={isDark} configuration={configuration} linkPositions={linkPositions} />
+                        {areTracksVisible &&
+                            _.map(trackPositions, (trackPos, index) =>
+                                <Tracks key={'track-sub-' + index}
+                                    trackPositions={trackPos}
+                                    colorScale={trackType[index].color}
+                                    trackType={trackType[index].type} />)}
+                        {areTracksVisible &&
+                            _.map(trackTrailPositions, (trackTrailPos, index) =>
+                                <TrackTrails key={'track-trail-' + index}
+                                    trackTrailPositions={trackTrailPos} />)}
                     </g>
                 </svg>
             </div >
@@ -173,6 +274,7 @@ class LinkageView extends Component {
 function mapStateToProps(state) {
     return {
         genomeData: state.genome,
+        trackType: state.oracle.trackType,
         searchResult: state.oracle.searchResult,
         isDark: state.oracle.isDark,
         sourceID: state.oracle.sourceID

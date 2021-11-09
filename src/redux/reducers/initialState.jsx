@@ -22,6 +22,7 @@ export default {
       showScale: true,
       markerEdge: 'rounded', // rounded or square
       alignmentColor: 'tenColor', // tenColor or orientation
+      markerAlternateColor: true,
       isChromosomeModeON: false,
       showTracks: false,
       isBlockModeON: false,

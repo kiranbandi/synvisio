@@ -50,7 +50,13 @@ export default {
     },
     'lentils_lg': {
         'source': ['le1', 'le5', 'le2', 'le3', 'le4', 'le6', 'le7'],
-        'target': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7']
+        'target': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'],
+        'linkage':['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7']
+    },
+    'lentils_lg1': {
+        'source': ['le1', 'le5', 'le2', 'le3', 'le4', 'le6', 'le7'],
+        'target': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'],
+        'linkage':['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7']
     },
     'ancestor-source': {
         'target': ['BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6', 'BN7', 'BN8'],
