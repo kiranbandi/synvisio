@@ -26,10 +26,10 @@ class Markers extends Component {
 
     generateMarkerElements(configuration, markerPositions) {
 
-        let markerElements = [], { alignmentColor = 'tenColor', colorMap = {} } = configuration;
+        let markerElements = [], { alignmentColor = 'tenColor', colorMap = {}, markerAlternateColor = true } = configuration;
 
         const isColorMapAvailable = Object.keys(colorMap).length > 0;
-        
+
         _.map(markerPositions, (markerList, markerListId) => {
             // create marker lines
             let markerLines = markerList.map((d, i) => {
@@ -41,7 +41,14 @@ class Markers extends Component {
                     let colorPaletteMap = isColorMapAvailable ? (colorMap[d.key] || '#1f77b4') : schemeCategory10[sourceIndex % 10];
                     stroke = (sourceIndex == -1) ? '#808080' : colorPaletteMap;
                 } else {
-                    stroke = (i % 2 == 0) ? '#3a3a3a' : 'grey';
+
+                    if (markerAlternateColor) {
+                        stroke = (i % 2 == 0) ? '#3a3a3a' : 'grey';
+                    }
+                    else {
+                        stroke = '#3a3a3a';
+                    }
+
                 }
                 // Add style to elements
                 style = {

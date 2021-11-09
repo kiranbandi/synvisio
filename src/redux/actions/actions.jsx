@@ -272,7 +272,7 @@ export function filterData(sourceMarkers = [], targetMarkers = [], selectedAlign
 }
 
 
-export function findGeneMatch(geneId, cancelMatch = false) {
+export function findGeneMatch(geneIds, cancelMatch = false) {
 
     let searchResult = [];
 
@@ -281,25 +281,29 @@ export function findGeneMatch(geneId, cancelMatch = false) {
     }
 
     else {
-        if (geneId.length == 0) {
+
+        let geneIDsList = geneIds.split(',').map((d) => d.trim());
+
+        let matchingGeneList = geneIDsList.filter((d) => !!window.synVisio.genomeLibrary.get(d));
+
+        if (geneIDsList.length == 0) {
             toastr["error"]("Please enter a gene ID", "ERROR");
         }
-        else if (!window.synVisio.genomeLibrary.get(geneId)) {
-            toastr["error"]("No gene found for ID - " + geneId, "ERROR");
+        else if (matchingGeneList.length == 0) {
+            toastr["error"]("No genes found for given gene ID or IDs", "ERROR");
         }
         else {
             _.map(window.synVisio.alignmentList, (alignment) => {
                 _.map(alignment.links, (o) => {
-                    if (o.source == geneId || o.target == geneId) {
+                    if (geneIDsList.indexOf(o.source) > -1 || geneIDsList.indexOf(o.target) > -1) {
                         searchResult.push({ ...alignment, matchingLink: { ...o } });
                     }
                 })
 
             })
         }
-
         if (searchResult.length == 0) {
-            toastr["error"]("Gene - " + geneId + " doesnt have any alignments", "ERROR");
+            toastr["error"]("Supplied genes dont have any alignments", "ERROR");
         }
 
         return { type: types.SET_SEARCH_RESULT, searchResult };

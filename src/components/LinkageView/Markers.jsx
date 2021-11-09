@@ -35,9 +35,10 @@ class Markers extends Component {
             let markerLines = markerList.map((d, i) => {
                 let stroke, style;
 
-                stroke = (i % 2 == 0) ? '#3a3a3a' : 'grey';
+                stroke = '#3a3a3a';
 
                 if (markerListId == 'source') {
+                    //  hide source markers
                     stroke = 'rgb(0,0,0,0)';
                 }
 

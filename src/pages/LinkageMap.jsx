@@ -8,9 +8,12 @@ import {
     setGenomicData, setALignmentList, filterData, setConfiguration
 } from '../redux/actions/actions';
 import linkageMapData from '../utils/linkageMapData';
+import _ from 'lodash';
+
+import Legend from '../components/Misc/Legend';
 
 
-var linkageData = [];
+var linkageData = [], linkageMarkers = [];
 
 class LinkageMap extends Component {
 
@@ -28,22 +31,33 @@ class LinkageMap extends Component {
         // update the sourceID set in the state with the new sourceID
         configureSourceID(sourceID, multiLevel);
 
-
         getGenomicsData(sourceID).then((data) => {
 
+            let linkageRawData = sourceID == 'lentils_lg' ? linkageMapData.referenceMap : linkageMapData.newReferenceMap;
 
-            linkageData = linkageMapData.split('\n').filter((d) => d.length > 0).map((d) => d.trim().split(',')).map((e) => ({
+            linkageData = linkageRawData.split('\n').filter((d) => d.length > 0).map((d) => d.trim().split(',')).map((e) => ({
                 'locus': 'lc' + e[0].slice(12),
                 'position': e[1],
                 'linkageID': e[2],
                 'distance': +(e[3].trim()),
-                'het': +(e[4].trim())
+                'score': +(e[4] ? e[4].trim() : 0)
             }));
+
+
+            let hetScoreArray = linkageMapData.newHET
+                .split('\n').map((d) => d.trim()).filter((d) => d.length > 1).map((d) => d.split(','))
+                .map((d) => ({ 'chr': d[0], 'position': d[1], 'value': d[2] }))
+
+            let hetMap = _.groupBy(hetScoreArray, (e) => e['chr'].toLocaleLowerCase());
+
+            linkageData.map((e) => {
+                let matchingRecord = _.find(hetMap[e.locus], (d) => d.position == e.position) || { 'value': 0 };
+                e['het'] = matchingRecord.value;
+            });
 
             var { chromosomeMap, genomeLibrary } = data;
 
             linkageData.forEach(function (linkage) {
-
                 let chromosomeId = linkage.linkageID,
                     speciesIdentifier = 'lg',
                     geneStart = linkage.distance,
@@ -102,6 +116,10 @@ class LinkageMap extends Component {
         // transfer the colormap from genome to configuration
         configuration['colorMap'] = genome.colorMap || {};
         configuration.showScale = false;
+        configuration.alignmentColor = 'orientation';
+        configuration.markerAlternateColor = false;
+
+        let { sourceID = 'lentils_lg' } = this.props.params;
 
         return (
             <div className='dashboard-root m-t'>
@@ -110,7 +128,8 @@ class LinkageMap extends Component {
                         {genome.chromosomeMap ?
                             <div>
                                 <GenomeView plotType={'linearplot'} configuration={configuration} />
-                                <LinkageView plotType={'linearplot'} configuration={configuration} linkageData={linkageData} />
+                                <LinkageView sourceID={sourceID} plotType={'linearplot'} configuration={configuration} linkageData={linkageData} />
+                                <Legend />
                             </div>
                             : <h2 className='text-danger text-xs-center m-t-lg'>No data found</h2>}
                     </div>
