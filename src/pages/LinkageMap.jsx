@@ -40,7 +40,7 @@ class LinkageMap extends Component {
                 'position': e[1],
                 'linkageID': e[2],
                 'distance': +(e[3].trim()),
-                'score': +(e[4] ? e[4].trim() : 0)
+                'score': 2 + (+(e[4] ? e[4].trim() : 0))
             }));
 
 
@@ -94,8 +94,25 @@ class LinkageMap extends Component {
                 chromosome.width = chromosome.end - chromosome.start;
             });
 
+
+            // For track data 
+            // First group linkage data by linkage ID
+            const trackMin = _.minBy(linkageData, (d) => d.score),
+                trackMax = _.maxBy(linkageData, (d) => d.score),
+                groupedByLinkageID = _.groupBy(linkageData, (d) => d.linkageID);
+
+            _.map(groupedByLinkageID, (linkageGroupSet, groupKey) => {
+                groupedByLinkageID[groupKey] = _.map(linkageGroupSet, (e) => ({
+                    'value': e.score,
+                    'start': e.distance,
+                    'end': e.distance + 0.001,
+                }))
+            });
+
+            const trackStore = { 'chromosomeMap': groupedByLinkageID, 'min': trackMin.score, 'max': trackMax.score };
+
             // set the genomic data
-            setGenomicData({ ...data, chromosomeMap, genomeLibrary });
+            setGenomicData({ ...data, chromosomeMap, genomeLibrary, 'trackData': [trackStore] });
 
             filterData(['le1', 'le5', 'le2', 'le3', 'le4', 'le6', 'le7'], ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], {}, false);
 
@@ -129,7 +146,7 @@ class LinkageMap extends Component {
                             <div>
                                 <GenomeView plotType={'linearplot'} configuration={configuration} />
                                 <LinkageView sourceID={sourceID} plotType={'linearplot'} configuration={configuration} linkageData={linkageData} />
-                                <Legend />
+                                {/* <Legend /> */}
                             </div>
                             : <h2 className='text-danger text-xs-center m-t-lg'>No data found</h2>}
                     </div>

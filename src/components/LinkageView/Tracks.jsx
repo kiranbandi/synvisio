@@ -27,13 +27,13 @@ export default class Tracks extends Component {
 
     generateTracks(trackPositions, trackType, color = 'blue') {
 
-        let trackPositionsList = [], customColorScale = colorGroup[color];
+        let trackPositionsList = [], customColorScale = interpolateRdYlBu;
 
         if (trackType == 'track-histogram' || trackType == 'track-heatmap') {
             // convert object to list 
             _.each(trackPositions, (value) => { trackPositionsList.push(...value) });
             return _.map(trackPositionsList, (track, index) => {
-                return <rect x={track.x} y={track.y} key={'track-' + index} width={track.dx} height={track.dy} style={{ 'fill': customColorScale(track.value) }}>
+                return <rect x={track.x} y={track.y} key={'track-' + index} width={1} height={track.dy} style={{ 'fill': customColorScale(1 - track.value) }}>
                 </rect>
             });
         }
