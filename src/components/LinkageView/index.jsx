@@ -7,14 +7,15 @@ import TrackTrails from './TrackTrails';
 import {
     scaleLinear, interpolateOranges, interpolateReds,
     interpolateGreens, interpolateBlues, line,
-    interpolateRdBu, interpolatePuOr,
+    interpolateBuGn, interpolateYlOrRd, interpolateCool,
+    interpolateRdBu, interpolatePuOr, interpolateYlGnBu,
     interpolateRdYlBu, interpolateRdYlGn,
     interpolateViridis, interpolateInferno,
     interpolatePlasma, interpolateMagma
 } from 'd3';
 
 
-const dynamicColorScale = interpolateMagma;
+const dynamicColorScale = interpolateYlGnBu;
 
 class LinkageView extends Component {
 
@@ -94,7 +95,7 @@ class LinkageView extends Component {
 
             let colorScale = scaleLinear()
                 .domain([_.min(hetScores), _.max(hetScores)])
-                .range([1, 0.3]);
+                .range([0.3, 0.8]);
 
 
             let sourceChromosome = chromosomeMap.get(alignment.locus),
@@ -140,14 +141,15 @@ class LinkageView extends Component {
     }
 
 
-
     initialiseTracks(markerPositions, trackType, trackData, showScale) {
+
+        const moddedMarkerPositions = { 'target': markerPositions.target };
 
         return _.map(trackData, (singleTrackData, trackIndex) => {
 
             let trackPositions = {}, trackValue;
 
-            _.each(markerPositions, (markerList, markerListId) => {
+            _.each(moddedMarkerPositions, (markerList, markerListId) => {
 
                 let yShifter = (50 * (trackIndex + 1)),
                     interTrackGap = 20 * (trackIndex),
@@ -172,38 +174,6 @@ class LinkageView extends Component {
         })
     }
 
-    initialiseTrackTrails(markerPositions, trackType, trackData, showScale) {
-
-
-        return _.map(trackData, (ignoreProp, trackIndex) => {
-
-            let trackTrailPostions = [];
-            // For heatmap style tracks we dont have y axis trails 
-            if (trackType[trackIndex].type == 'track-heatmap') { return false }
-            // The track height is hardcoded to 50px so the lines are at 10 ,20,30,40 and 50px respectively 
-            else {
-                _.each(markerPositions, (markerList, markerListId) => {
-
-                    let yShifter = (50 * (trackIndex + 1)),
-                        interTrackGap = 20 * (trackIndex),
-                        interScaleShifter = showScale ? 50 + interTrackGap : 20 + interTrackGap,
-                        multiplier = markerListId == 'source' ? -1 * (yShifter + interScaleShifter) : (yShifter - 50 + interScaleShifter);
-
-                    _.each(markerList, (marker) => {
-                        for (let looper = 0; looper <= 5; looper++) {
-                            trackTrailPostions.push({
-                                x: marker.x,
-                                dx: marker.dx,
-                                y: marker.y + multiplier + (looper * 10)
-                            });
-                        }
-                    });
-                });
-                return trackTrailPostions;
-            }
-        });
-    }
-
     areTracksVisible(configuration, trackData) {
         return (_.reduce(trackData, (acc, d) => (!!d || acc), false) && true);
     }
@@ -216,7 +186,7 @@ class LinkageView extends Component {
             { isChromosomeModeON = false, genomeView, showScale,
                 markerEdge = 'rounded' } = configuration,
             trackData = _.filter(window.synVisio.trackData, (d) => !!d),
-            areTracksVisible = this.areTracksVisible(configuration, trackData),
+            areTracksVisible = true,
             additionalTrackHeight = trackData.length * 140;
 
 
@@ -235,14 +205,15 @@ class LinkageView extends Component {
 
 
 
-        const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible, additionalTrackHeight),
+        const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, false, additionalTrackHeight),
             linkPositions = this.initialiseLinks(genomeData.chromosomeMap, markerPositions, linkageData);
 
-        const trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType, trackData, showScale) : false,
-            trackTrailPositions = areTracksVisible ? this.initialiseTrackTrails(markerPositions, trackType, trackData, showScale) : false;
+        const trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType, trackData, showScale) : false;
 
         const trackHeightFix = areTracksVisible ? (trackData.length * 12) : 0;
         const height = genomeView.height - trackHeightFix + (areTracksVisible ? (additionalTrackHeight + (showScale ? 45 : 20)) : 0);
+
+
 
         return (
             <div className='genomeViewRoot' style={{ marginTop: '-35px' }}>
@@ -260,10 +231,6 @@ class LinkageView extends Component {
                                     trackPositions={trackPos}
                                     colorScale={trackType[index].color}
                                     trackType={trackType[index].type} />)}
-                        {areTracksVisible &&
-                            _.map(trackTrailPositions, (trackTrailPos, index) =>
-                                <TrackTrails key={'track-trail-' + index}
-                                    trackTrailPositions={trackTrailPos} />)}
                     </g>
                 </svg>
             </div >
