@@ -14,8 +14,10 @@ import {
     interpolatePlasma, interpolateMagma
 } from 'd3';
 
+import HetLegend from './HetLegend';
+import DistortionLegend from './DistortionLegend';
 
-const dynamicColorScale = interpolateYlGnBu;
+const dynamicColorScale = interpolatePuOr;
 
 class LinkageView extends Component {
 
@@ -185,25 +187,19 @@ class LinkageView extends Component {
             trackType, searchResult, linkageData, sourceID } = this.props,
             { isChromosomeModeON = false, genomeView, showScale,
                 markerEdge = 'rounded' } = configuration,
-            trackData = _.filter(window.synVisio.trackData, (d) => !!d),
             areTracksVisible = true,
+            trackData = _.filter(window.synVisio.trackData, (d) => !!d),
             additionalTrackHeight = trackData.length * 140;
 
-
-
         if (sourceID == 'lentils_lg') {
-            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
+            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
         }
 
         else {
-            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG0', 'LG14', 'LG6', 'LG11', 'LG15', 'LG3'] };
+            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
         }
 
         configuration.isNormalized = true;
-
-
-
-
 
         const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, false, additionalTrackHeight),
             linkPositions = this.initialiseLinks(genomeData.chromosomeMap, markerPositions, linkageData);
@@ -213,7 +209,10 @@ class LinkageView extends Component {
         const trackHeightFix = areTracksVisible ? (trackData.length * 12) : 0;
         const height = genomeView.height - trackHeightFix + (areTracksVisible ? (additionalTrackHeight + (showScale ? 45 : 20)) : 0);
 
-
+        const hetMax = _.maxBy(linkageData, (d) => +d.het).het,
+            hetMin = _.minBy(linkageData, (d) => +d.het).het,
+            distMax = trackData[0].max,
+            distMin = trackData[0].min;
 
         return (
             <div className='genomeViewRoot' style={{ marginTop: '-35px' }}>
@@ -232,6 +231,10 @@ class LinkageView extends Component {
                                     colorScale={trackType[index].color}
                                     trackType={trackType[index].type} />)}
                     </g>
+                    <HetLegend max={hetMax} min={hetMin}
+                        height={genomeView.height} width={configuration.genomeView.width} />
+                    <DistortionLegend max={distMax} min={distMin}
+                        height={genomeView.height} width={configuration.genomeView.width} />
                 </svg>
             </div >
         );
