@@ -10,10 +10,8 @@ import {
 import linkageMapData from '../utils/linkageMapData';
 import _ from 'lodash';
 
-import Legend from '../components/Misc/Legend';
 
-
-var linkageData = [], linkageMarkers = [];
+var linkageData = [];
 
 class LinkageMap extends Component {
 
@@ -31,9 +29,10 @@ class LinkageMap extends Component {
         // update the sourceID set in the state with the new sourceID
         configureSourceID(sourceID, multiLevel);
 
-        getGenomicsData(sourceID).then((data) => {
+        getGenomicsData('lentils_lg').then((data) => {
 
-            let linkageRawData = sourceID == 'lentils_lg' ? linkageMapData.referenceMap : linkageMapData.newReferenceMap;
+            let linkageRawData = sourceID == 'lentils_lg' ?
+                linkageMapData.newReferenceMap : linkageMapData.oldReferenceMap;
 
             linkageData = linkageRawData.split('\n').filter((d) => d.length > 0).map((d) => d.trim().split(',')).map((e) => ({
                 'locus': 'lc' + e[0].slice(12),
@@ -42,7 +41,6 @@ class LinkageMap extends Component {
                 'distance': +(e[3].trim()),
                 'score': 2 + (+(e[4] ? e[4].trim() : 0))
             }));
-
 
             let hetScoreArray = linkageMapData.newHET
                 .split('\n').map((d) => d.trim()).filter((d) => d.length > 1).map((d) => d.split(','))
@@ -146,7 +144,6 @@ class LinkageMap extends Component {
                             <div>
                                 <GenomeView plotType={'linearplot'} configuration={configuration} />
                                 <LinkageView sourceID={sourceID} plotType={'linearplot'} configuration={configuration} linkageData={linkageData} />
-                                {/* <Legend /> */}
                             </div>
                             : <h2 className='text-danger text-xs-center m-t-lg'>No data found</h2>}
                     </div>

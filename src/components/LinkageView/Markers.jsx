@@ -42,6 +42,10 @@ class Markers extends Component {
                     stroke = 'rgb(0,0,0,0)';
                 }
 
+                if(d.key.indexOf('LG')>-1){
+                    stroke = 'rgb(230 125 126)';
+                }
+
                 // Add style to elements
                 style = {
                     'strokeWidth': '20px',
