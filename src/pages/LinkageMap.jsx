@@ -18,7 +18,7 @@ class LinkageMap extends Component {
     componentDidMount() {
 
         // get the source name based on window query params
-        let { sourceID = 'lentils_lg' } = this.props.params;
+        let { sourceID = 'new' } = this.props.params;
 
         const { multiLevel, actions } = this.props,
             { configureSourceID, setLoaderState, setGenomicData, filterData } = actions;
@@ -31,10 +31,17 @@ class LinkageMap extends Component {
 
         getGenomicsData('lentils_lg').then((data) => {
 
-            let linkageRawData = sourceID == 'lentils_lg' ?
-                linkageMapData.newReferenceMap : linkageMapData.oldReferenceMap;
+            let dataKey = 'newReferenceMap';
 
-            linkageData = linkageRawData.split('\n').filter((d) => d.length > 0).map((d) => d.trim().split(',')).map((e) => ({
+            if (sourceID == 'old') {
+                dataKey = 'oldReferenceMap';
+            }
+            else if (sourceID == 'lr29') {
+                dataKey = 'twentynineReferenceMap'
+            }
+            let linkageRawData = linkageMapData[dataKey];
+
+             linkageData = linkageRawData.split('\n').filter((d) => d.length > 0).map((d) => d.trim().split(',')).map((e) => ({
                 'locus': 'lc' + e[0].slice(12),
                 'position': e[1],
                 'linkageID': e[2],
@@ -134,7 +141,7 @@ class LinkageMap extends Component {
         configuration.alignmentColor = 'orientation';
         configuration.markerAlternateColor = false;
 
-        let { sourceID = 'lentils_lg' } = this.props.params;
+        let { sourceID = 'new' } = this.props.params;
 
         return (
             <div className='dashboard-root m-t'>

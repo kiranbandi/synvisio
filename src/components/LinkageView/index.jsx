@@ -183,7 +183,7 @@ class LinkageView extends Component {
 
     render() {
 
-        const { configuration, genomeData, isDark,
+        let { configuration, genomeData, isDark,
             trackType, searchResult, linkageData, sourceID } = this.props,
             { isChromosomeModeON = false, genomeView, showScale,
                 markerEdge = 'rounded' } = configuration,
@@ -191,13 +191,18 @@ class LinkageView extends Component {
             trackData = _.filter(window.synVisio.trackData, (d) => !!d),
             additionalTrackHeight = trackData.length * 140;
 
-        if (sourceID == 'lentils_lg') {
+
+        if (sourceID == 'new') {
             configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
         }
-
-        else {
+        else if (sourceID == 'old') {
             configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
         }
+        else if (sourceID == 'lr29') {
+            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG0', 'LG14', 'LG6', 'LG11','LG15','LG3'] };
+            areTracksVisible = false;
+        }
+
 
         configuration.isNormalized = true;
 
