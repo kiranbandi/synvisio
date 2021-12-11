@@ -17,6 +17,25 @@
             font-size: 14px;
             font-weight: bold;
         }
+
+        &.light {
+            .alignment-link-lines {
+                stroke: blue !important;
+                &.flipped {
+                    stroke: red !important;
+                }
+            }
+            .dot-view-line {
+                stroke: #8f8f8f;
+                stroke-width: 1px;
+            }
+        }
+
+        .dot-plot-markers {
+            font-weight: normal !important;
+            font-size: 0.65em !important;
+        }
+
     }
     .dotViewRoot {
         display: inline-block;
@@ -40,6 +59,10 @@
             pointer-events: none;
             &.hidden-alignment-link {
                 opacity: 0;
+            }
+
+            &.flipped {
+                stroke: #dd5656;
             }
         }
         .tracksContainer {

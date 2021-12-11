@@ -62,7 +62,7 @@ class PlotCharacterisitics extends Component {
 
                 <div className='small-wrapper-inner'>
                     <span className='text-primary info-text-message'> Select the type of analysis you want to do, single level analysis is for pairwise comparisions while multi level analysis is for comparing more than 2 entities at a time
-                    through stacked parallel plots or hive plots.</span>
+                        through stacked parallel plots or hive plots.</span>
                     <RadioButton value={'level-single'} id={'level-single'} className='conf-radio' name='level-select'
                         label={"Single Level Analysis"}
                         onChange={this.radioChange}
@@ -117,7 +117,7 @@ class PlotCharacterisitics extends Component {
                             </select>
                         </span>
                         <span className='select-wrapper'>Track Type
-                        <select className='form-control'
+                            <select className='form-control'
                                 id='track-select-type'
                                 onChange={this.onTrackTypeChange}
                                 value={trackType[currentTrack].type}>
@@ -128,7 +128,7 @@ class PlotCharacterisitics extends Component {
                             </select>
                         </span>
                         <span className='select-wrapper'>Track Color Palette
-                        <select className='form-control'
+                            <select className='form-control'
                                 id='track-select-color'
                                 onChange={this.onTrackTypeChange}
                                 value={trackType[currentTrack].color}>
@@ -163,7 +163,7 @@ class PlotCharacterisitics extends Component {
                             </div>
                         </div>}
 
-                    {((!multiLevel && (plotType == 'dashboard' || plotType == 'linearplot')) || (multiLevel && (multiLevelType == 'tree'))) &&
+                    {((!multiLevel && (plotType == 'dashboard' || plotType == 'linearplot')) || (multiLevel && (multiLevelType == 'tree' || multiLevelType == 'cube'))) &&
                         <div>
                             <span className='text-primary info-text-message p-b-0'> Alignment Link Color Configuration </span>
                             <div>

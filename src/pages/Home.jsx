@@ -59,7 +59,7 @@ class Home extends Component {
 
           <h1>System Demonstration</h1>
           <p> Use the following links for tutorial videos on using SynVisio.
-          They might be outdated but will be updated shortly.
+            They might be outdated but will be updated shortly.
             Meanwhile you can drop a mail to venkat.bandi@usask.ca for help with any particular features.</p>
           <p><a href='https://youtu.be/83ep_AuMWak'> Basic Dashboard Demo</a></p>
           <p><a href='https://youtu.be/bLqeXwFDUbQ'> Multi Analysis Hive plot</a></p>
@@ -69,27 +69,34 @@ class Home extends Component {
 
           <h1>Sample Playground</h1>
           <p>We are working on adding several new features to this tool. We have loaded up some sample files below that you can play around with :</p>
-          <ul>
-            <li> <Link to={'/dashboard/bn'}> Bn </Link> - Brassica napus , Canola </li>
+          {/*shallow page reload to fix any cache errors*/}
+          <ul onClick={(e) => { location.reload(); }}>
+            <li> <Link to={'/dashboard/bn'}> B.napus </Link> - Brassica napus , Canola </li>
             <li> <Link to={'/dashboard/bnigra_bol_brapa_ortho'}> B.nigra vs B.oleracea vs B.rapa </Link> - 3 Way comparision between Brassica nigra , Brassica rapa and Brassica oleracea </li>
-            <li> <Link to={'/dashboard/ca_lc_mt'}> Ca vs Lc vs Mt </Link> - 3 Way comparision between Chickpea , Lentils and Barrel Meddick </li>
+            <li> <Link to={'/dashboard/ancestor-source'}> B.napus Ancestor </Link> - Mapping of Brassica napus against Ancestral reconstruction </li>
             <li> <Link to={'/dashboard/ta_cs'}> Wheat IWGSC </Link> - Wheat , Chinese Spring (With SNP tracks) </li>
             <li> <Link to={'/dashboard/ta_hb'}> Wheat  Hybrid </Link> - Wheat Hybrid , Artificial Ancestral Hexaplod </li>
             <li> <Link to={'/dashboard/cs_hb'}> Wheat cross way analysis </Link> - Wheat Chinese Spring vs Artificial Ancestral Hexaplod</li>
+            <li> <Link to={'/multi-hive'}> Wheat Multi Hive </Link> Multi genome comparision of wheat cultivars through Hive plot matrix </li>
             <li> <Link to={'/dashboard/hs_pt'}> Hs vs Pt </Link> - Hs(Homo sapiens Hg38, Human) vs Pt(Pan troglodytes Pan-tro 3, Chimpanzee)</li>
             <li> <Link to={'/dashboard/at'}> Thale cress </Link> - Arabidopsis thaliana ,Thale cress </li>
             <li> <Link to={'/dashboard/pt'}> Poplar </Link> - Populus trichocarpa ,Poplar </li>
             <li> <Link to={'/dashboard/os_sb'}> Os vs Sb </Link> - Os(Oriza sativa, Rice) vs Sb(Sorghum bicolor , Broom-Corn)</li>
             <li> <Link to={'/dashboard/at_vv'}> At vs Vv </Link> - At(Arabidopsis thaliana, Thale cress) vs Vv(Vitis vinifera , Grape Vine)</li>
+            <li> <Link to={'/dashboard/ca_lc_mt'}> Ca vs Lc vs Mt </Link> - 3 Way comparision between Chickpea , Lentils and Barrel Meddick </li>
+            <li> <Link to={'/dashboard/lentils_all'}> Lentil all varieties </Link> Multi way comparision between 5 varieties of Lentils(Lc,Le,Ll,Lo and Lt)  </li>
+            <li> <Link to={'/multi-genome/lclelllolt'}> Lentil all matrix </Link> Multi genome matrix plot of 5 varieties of Lentils(Lc,Le,Ll,Lo and Lt) </li>
+            <li> <Link to={'/multi-genome'}> Lentil 4 way matrix </Link> Multi genome matrix plot of P.sativum,M.truncatula,L.culinaris and L.ervoides</li>
+            <li> <Link to={'/linkage-map'}> Linkage group Lentils </Link> Linkage group mapping in Lentils varieties</li>
           </ul>
 
           <h1>Learn more</h1>
           <p> This tool was developed at the Human Computer Interaction Lab at the University of Saskatchewan, Canada to assist genome researchers at the Plant Phenotyping and Imaging Research Centre, Canada <a href="https://p2irc.usask.ca/index.php">(P2IRC)</a>.
-          This tool is part of series of systems that are currently under development as part of the Theme 3 (Computational Informatics of Crop Phenotype Data) of the P2IRC project.</p>
+            This tool is part of series of systems that are currently under development as part of the Theme 3 (Computational Informatics of Crop Phenotype Data) of the P2IRC project.</p>
           <p>Contributions are made by:</p>
           <p><b>Project Lead - </b> Carl Gutwin</p>
           <p><b>System Architect - </b> Venkat Bandi</p>
-          <p><b>Research Collaborators - </b>Isobel Parkin, Andrew Sharpe, Kirstin Bett and Kevin Koh</p>
+          <p><b>Research Collaborators - </b>Isobel Parkin, Andrew Sharpe, Kirstin Bett, Larissa Ramsay and Kevin Koh</p>
         </div>
       </div>
 
@@ -98,5 +105,3 @@ class Home extends Component {
 };
 
 export default Home;
-
-

@@ -2,14 +2,22 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Markers from './Markers';
 import Links from './Links';
+import Tracks from '../LinkageView/Tracks';
+import TrackTrails from './TrackTrails';
 import {
     scaleLinear, interpolateOranges, interpolateReds,
     interpolateGreens, interpolateBlues, line,
-    interpolateRdBu, interpolatePuOr,
+    interpolateBuGn, interpolateYlOrRd, interpolateCool,
+    interpolateRdBu, interpolatePuOr, interpolateYlGnBu,
     interpolateRdYlBu, interpolateRdYlGn,
     interpolateViridis, interpolateInferno,
     interpolatePlasma, interpolateMagma
 } from 'd3';
+
+import HetLegend from './HetLegend';
+import DistortionLegend from './DistortionLegend';
+
+const dynamicColorScale = interpolatePuOr;
 
 class LinkageView extends Component {
 
@@ -85,11 +93,11 @@ class LinkageView extends Component {
 
         _.map(linkageData, (alignment) => {
 
-            const hetScores = linkageData.map((d) => d.het);
+            const hetScores = linkageData.map((d) => +d.het);
 
             let colorScale = scaleLinear()
                 .domain([_.min(hetScores), _.max(hetScores)])
-                .range([0, 1]);
+                .range([0.3, 0.8]);
 
 
             let sourceChromosome = chromosomeMap.get(alignment.locus),
@@ -125,7 +133,7 @@ class LinkageView extends Component {
                 source,
                 target,
                 alignment,
-                color: interpolateRdYlGn(colorScale(alignment.het)),
+                color: dynamicColorScale(colorScale(alignment.het)),
                 width: linkWidth
             });
 
@@ -134,24 +142,82 @@ class LinkageView extends Component {
         return linkList;
     }
 
+
+    initialiseTracks(markerPositions, trackType, trackData, showScale) {
+
+        const moddedMarkerPositions = { 'target': markerPositions.target };
+
+        return _.map(trackData, (singleTrackData, trackIndex) => {
+
+            let trackPositions = {}, trackValue;
+
+            _.each(moddedMarkerPositions, (markerList, markerListId) => {
+
+                let yShifter = (50 * (trackIndex + 1)),
+                    interTrackGap = 20 * (trackIndex),
+                    interScaleShifter = showScale ? 50 + interTrackGap : 20 + interTrackGap,
+                    multiplier = markerListId == 'source' ? -1 * (yShifter + interScaleShifter) : (yShifter - 50 + interScaleShifter);
+                _.each(markerList, (marker) => {
+                    let tracksPerMarker = _.map(singleTrackData.chromosomeMap[marker.key], (trackDataFragment) => {
+                        trackValue = (trackDataFragment.value - singleTrackData.min) / (singleTrackData.max - singleTrackData.min);
+                        return {
+                            x: ((trackDataFragment.start / marker.data.width) * marker.dx) + marker.x,
+                            dx: ((trackDataFragment.end - trackDataFragment.start) / marker.data.width) * marker.dx,
+                            dy: (trackType[trackIndex].type == 'track-heatmap') ? 50 : 50 * trackValue,
+                            y: marker.y + (multiplier) + ((trackType[trackIndex].type == 'track-heatmap') ? 0 : (50 * (1 - trackValue))),
+                            value: trackValue,
+                            trackKey: marker.key
+                        }
+                    });
+                    trackPositions[marker.key + '-' + markerListId] = tracksPerMarker;
+                });
+            });
+            return trackPositions;
+        })
+    }
+
+    areTracksVisible(configuration, trackData) {
+        return (_.reduce(trackData, (acc, d) => (!!d || acc), false) && true);
+    }
+
+
     render() {
 
-        const { configuration, genomeData, isDark, searchResult, sourceID, linkageData } = this.props,
+        let { configuration, genomeData, isDark,
+            trackType, searchResult, linkageData, sourceID } = this.props,
             { isChromosomeModeON = false, genomeView, showScale,
                 markerEdge = 'rounded' } = configuration,
+            areTracksVisible = true,
             trackData = _.filter(window.synVisio.trackData, (d) => !!d),
-            areTracksVisible = false,
             additionalTrackHeight = trackData.length * 140;
 
-        configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
+
+        if (sourceID == 'new') {
+            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
+        }
+        else if (sourceID == 'old') {
+            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7'] };
+        }
+        else if (sourceID == 'lr29') {
+            configuration.markers = { 'source': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'], 'target': ['LG0', 'LG14', 'LG6', 'LG11','LG15','LG3'] };
+            areTracksVisible = false;
+        }
+
+
         configuration.isNormalized = true;
 
-
-        const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible, additionalTrackHeight),
+        const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, false, additionalTrackHeight),
             linkPositions = this.initialiseLinks(genomeData.chromosomeMap, markerPositions, linkageData);
+
+        const trackPositions = areTracksVisible ? this.initialiseTracks(markerPositions, trackType, trackData, showScale) : false;
 
         const trackHeightFix = areTracksVisible ? (trackData.length * 12) : 0;
         const height = genomeView.height - trackHeightFix + (areTracksVisible ? (additionalTrackHeight + (showScale ? 45 : 20)) : 0);
+
+        const hetMax = _.maxBy(linkageData, (d) => +d.het).het,
+            hetMin = _.minBy(linkageData, (d) => +d.het).het,
+            distMax = trackData[0].max,
+            distMin = trackData[0].min;
 
         return (
             <div className='genomeViewRoot' style={{ marginTop: '-35px' }}>
@@ -163,7 +229,17 @@ class LinkageView extends Component {
                     <g ref={node => this.innerG = node} >
                         <Markers areTracksVisible={areTracksVisible} isDark={isDark} configuration={configuration} markerPositions={markerPositions} />
                         <Links isDark={isDark} configuration={configuration} linkPositions={linkPositions} />
+                        {areTracksVisible &&
+                            _.map(trackPositions, (trackPos, index) =>
+                                <Tracks key={'track-sub-' + index}
+                                    trackPositions={trackPos}
+                                    colorScale={trackType[index].color}
+                                    trackType={trackType[index].type} />)}
                     </g>
+                    <HetLegend max={hetMax} min={hetMin}
+                        height={genomeView.height} width={configuration.genomeView.width} />
+                    <DistortionLegend max={distMax} min={distMin}
+                        height={genomeView.height} width={configuration.genomeView.width} />
                 </svg>
             </div >
         );
@@ -173,6 +249,7 @@ class LinkageView extends Component {
 function mapStateToProps(state) {
     return {
         genomeData: state.genome,
+        trackType: state.oracle.trackType,
         searchResult: state.oracle.searchResult,
         isDark: state.oracle.isDark,
         sourceID: state.oracle.sourceID

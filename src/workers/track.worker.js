@@ -60,5 +60,6 @@ export function process(trackData, additionalParams = {}) {
         trackStore.min = overrideValues[1][0];
         trackStore.max = overrideValues[1][1];
     }
+
     return trackStore;
 };
