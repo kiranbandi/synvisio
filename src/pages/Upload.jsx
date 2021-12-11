@@ -177,7 +177,7 @@ class Upload extends Component {
             </div>
 
             <div className='m-t m-b experimental-banner'>
-              <h4 className="sub-info"> (New Experiment Feature) Upload a color template file to have your custom color scheme for the chromosomes instead of the default color palette provided by SynVisio. Refer to the <a target='_blank' href='./assets/files/sample_color_template.txt'>sample file</a> for the format (tab seperated with chromosome ids and color hex codes).</h4>
+              <h4 className="sub-info"> (New Experimental Feature) Upload a color template file to have your custom color scheme for the chromosomes instead of the default color palette provided by SynVisio. Refer to the <a target='_blank' href='./assets/files/sample_color_template.txt'>sample file</a> for the format (tab seperated with chromosome ids and color hex codes).</h4>
               <FileUpload id='color-map-file' label='Color Template File' />
             </div>
 
