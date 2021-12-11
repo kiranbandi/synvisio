@@ -5,6 +5,7 @@ import AxisLines from '../DotView/AxisLines';
 import AlignmentLines from '../DotView/AlignmentLines';
 import CubeFilterPanel from './CubeFilterPanel';
 import AxisLineLabel from '../DotView/AxisLineLabel';
+import AdvancedFilterPanel from '../AdvancedFilterPanel';
 
 class DotView extends Component {
 
@@ -125,6 +126,7 @@ class DotView extends Component {
         return (
             <div className='hiveView-root text-xs-center'>
                 <CubeFilterPanel configuration={configuration} chromosomeMap={chromosomeMap} />
+                <AdvancedFilterPanel width={configuration.dotView.width} />
                 {alignmentList.length > 0 &&
                     <div className={'dotViewWrapper only-dotview'}>
                         <div className={'dotViewRoot threeDcube ' + (isDark ? 'dark' : 'light')}>
