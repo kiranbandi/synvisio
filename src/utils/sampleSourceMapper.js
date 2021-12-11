@@ -36,6 +36,10 @@ export default {
         'source': ['C1', 'C2', 'C3'],
         'target': ['B1', 'B2', 'B3']
     },
+    'bnapus_juncea_carinata': {
+        'source': ['A01', 'A02', 'A03'],
+        'target': ['B1', 'B2', 'B3']
+    },
     'pv': {
         'source': ['pv1', 'pv2', 'pv3', 'pv4', 'pv5', 'pv6', 'pv7', 'pv8', 'pv9', 'pv10', 'pv11'],
         'target': ['pv1', 'pv2', 'pv3', 'pv4', 'pv5', 'pv6', 'pv7', 'pv8', 'pv9', 'pv10', 'pv11']
@@ -48,9 +52,19 @@ export default {
         'source': ['PT01', 'PT02', 'PT03', 'PT04', 'PT05', 'PT06', 'PT07', 'PT08', 'PT09', 'PT10'],
         'target': ['PT11', 'PT12', 'PT13', 'PT14', 'PT15', 'PT16', 'PT17', 'PT18', 'PT19']
     },
+    'lentils_all': {
+        'source': ['lc1', 'lc2', 'lc3', 'lc4', 'lc5', 'lc6', 'lc7'],
+        'target': ['le1', 'le2', 'le3', 'le4', 'le5', 'le6', 'le7']
+    },
     'lentils_lg': {
         'source': ['le1', 'le5', 'le2', 'le3', 'le4', 'le6', 'le7'],
-        'target': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7']
+        'target': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'],
+        'linkage': ['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7']
+    },
+    'lentils_lg1': {
+        'source': ['le1', 'le5', 'le2', 'le3', 'le4', 'le6', 'le7'],
+        'target': ['lc1', 'lc5', 'lc2', 'lc3', 'lc4', 'lc6', 'lc7'],
+        'linkage': ['LG1', 'LG5.1', 'LG5.2', 'LG2', 'LG3', 'LG4', 'LG6', 'LG7']
     },
     'ancestor-source': {
         'target': ['BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6', 'BN7', 'BN8'],

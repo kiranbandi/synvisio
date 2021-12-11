@@ -99,7 +99,8 @@ class DotView extends Component {
 
     initialiseLines(configuration, axisLinePositions, chromosomeCollection) {
 
-        const { genomeLibrary } = window.synVisio, linkList = [];
+        const { genomeLibrary } = window.synVisio, linkList = [],
+            isColorByOrientation = configuration.alignmentColor == 'orientation';
 
         _.map(configuration.alignmentList, (alignment) => {
             if (!configuration.isChromosomeModeON || !alignment.hidden) {
@@ -120,6 +121,7 @@ class DotView extends Component {
                     'x2': last_link_x,
                     'y1': first_link_y,
                     'y2': last_link_y,
+                    'isFlipped': isColorByOrientation ? alignment.type == 'flipped' : false,
                     alignment
                 });
             }

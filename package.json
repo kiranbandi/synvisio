@@ -28,6 +28,7 @@
         "computed-style-to-inline-style": "^3.0.0",
         "d3": "^5.5.0",
         "d3-selection": "^1.4.1",
+        "d3-svg-legend": "^2.25.6",
         "file-saver": "^2.0.2",
         "html2canvas": "^1.0.0-rc.5",
         "immutability-helper": "^3.0.1",

@@ -44,3 +44,15 @@
         line-height: 1.5;
     }
 }
+
+.custom-legend {
+    text.label {
+        font-size: 15px;
+        font-weight: bolder;
+    }
+    text.legendTitle {
+        // transform: translate(170px, 10px);
+        font-size: 17px;
+        font-weight: bolder;
+    }
+}

@@ -38,7 +38,6 @@ class MultiGenomeFilter extends Component {
             filterMultiGenomeData(_.filter(allMarkers, (d) => d[3] == 'D'), plotType);
         }
         else {
-            debugger;
             filterMultiGenomeData(allMarkers, plotType);
         }
 
