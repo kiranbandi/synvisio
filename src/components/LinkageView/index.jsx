@@ -17,7 +17,7 @@ import {
 import HetLegend from './HetLegend';
 import DistortionLegend from './DistortionLegend';
 
-const dynamicColorScale = interpolatePuOr;
+const dynamicColorScale = interpolateYlGnBu;
 
 class LinkageView extends Component {
 
@@ -218,6 +218,9 @@ class LinkageView extends Component {
             hetMin = _.minBy(linkageData, (d) => +d.het).het,
             distMax = trackData[0].max,
             distMin = trackData[0].min;
+
+            console.log(hetMax,hetMin)
+            console.log(distMax,distMin)
 
         return (
             <div className='genomeViewRoot' style={{ marginTop: '-35px' }}>
