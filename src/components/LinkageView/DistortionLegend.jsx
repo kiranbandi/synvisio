@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {
     scaleSequential,
+    scaleLinear,
+    quantize,
+    interpolate,
+    interpolateRgbBasis,
     interpolateOranges, interpolateReds,
     interpolateGreens, interpolateBlues, line,
     interpolateBuGn, interpolateYlOrRd, interpolateCool,
@@ -11,6 +15,8 @@ import {
 } from 'd3';
 
 import { legendColor } from 'd3-svg-legend';
+
+let invertedColorScale = quantize(interpolateRdYlBu,40).reverse();
 
 export default class Legend extends Component {
 
@@ -27,7 +33,7 @@ export default class Legend extends Component {
 
         const { width, height } = this.props;
 
-        var sequentialScale = scaleSequential(interpolateRdYlBu)
+        var sequentialScale = scaleSequential(interpolateRgbBasis(invertedColorScale))
             .domain([0, 1]);
 
         var legendSequential = legendColor()
@@ -35,14 +41,17 @@ export default class Legend extends Component {
             .shapePadding(0)
             .cells(20)
             .orient("horizontal")
-            .scale(sequentialScale)
-            .title("Level of Distorition")
+            .title("% Eston")
             .titleWidth(500)
             .labels(e => (e['i'] == 0 ? 'Low' : e['i'] == 19 ? 'High' : ''))
             .scale(sequentialScale)
 
         select(".legendSequentialDIS")
             .call(legendSequential);
+
+        // select(".legendSequentialDIS .legendTitle")
+        // .style('transform','translate(10%,1%)');
+
 
     }
 

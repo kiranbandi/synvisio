@@ -12,7 +12,7 @@ import {
 
 import { legendColor } from 'd3-svg-legend';
 
-const dynamicScale = interpolatePuOr;
+const dynamicScale = interpolateYlGnBu;
 
 export default class Legend extends Component {
 
