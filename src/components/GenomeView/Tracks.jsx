@@ -26,7 +26,7 @@ export default class Tracks extends Component {
     }
 
     generateTracks(trackPositions, trackType, color = 'blue') {
-
+        
         let trackPositionsList = [], customColorScale = colorGroup[color];
 
         if (trackType == 'track-histogram' || trackType == 'track-heatmap') {
