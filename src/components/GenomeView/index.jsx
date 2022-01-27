@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Markers from './Markers';
 import Links from './Links';
-import Tracks from '../LinkageView/Tracks';
+import Tracks from './Tracks';
 import TrackTrails from './TrackTrails';
 import { InlayIcon } from '..';
 import * as d3 from 'd3';
