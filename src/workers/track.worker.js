@@ -23,7 +23,7 @@ export function process(trackData, additionalParams = {}) {
                 trackEnd = +trackLine[2],
                 trackValue = +trackLine[3];
             // ignore empty lines and scaffolds
-            if (chromosomeId.length >= 3 && (chromosomeId.length <= (processScaffolds ? 25 : 4))) {
+            if (chromosomeId.length >= 2 && (chromosomeId.length <= (processScaffolds ? 25 : 4))) {
                 // if there is an entry for the chromosome simply add to it , if not create a new one
                 if (trackStore.chromosomeMap.hasOwnProperty(chromosomeId)) {
                     trackStore.chromosomeMap[chromosomeId].push({

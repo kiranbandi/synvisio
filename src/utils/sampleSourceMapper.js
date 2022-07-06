@@ -16,6 +16,10 @@ export default {
         'source': ['os1', 'os2', 'os3', 'os4', 'os5', 'os6', 'os7', 'os8'],
         'target': ['sb1', 'sb2', 'sb3', 'sb4']
     },
+    'dh12075_topas': {
+        'source': ['N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7', 'N8', 'N9', 'N10','N11', 'N12', 'N13', 'N14', 'N15', 'N16', 'N17', 'N18', 'N19'],
+        'target':  ['DN1', 'DN2', 'DN3', 'DN4', 'DN5', 'DN6', 'DN7', 'DN8', 'DN9', 'DN10','DN11', 'DN12', 'DN13', 'DN14', 'DN15', 'DN16', 'DN17', 'DN18', 'DN19'],
+    },
     'hs_pt': {
         'source': ['hs1', 'hs2', 'hs3', 'hs4', 'hs5', 'hs6', 'hs7', 'hs8', 'hs9', 'hs10', 'hs11', 'hs12', 'hs13', 'hs14', 'hs15', 'hs16', 'hs17', 'hs18', 'hs19', 'hs20', 'hs21', 'hs22', 'hsX', 'hsY'],
         'target': ['pt1', 'pt2A', 'pt2B', 'pt3', 'pt4', 'pt5', 'pt6', 'pt7', 'pt8', 'pt9', 'pt10', 'pt11', 'pt12', 'pt13', 'pt14', 'pt15', 'pt16', 'pt17', 'pt18', 'pt19', 'pt20', 'pt21', 'pt22', 'ptX', 'ptY']
