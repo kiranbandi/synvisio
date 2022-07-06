@@ -67,14 +67,13 @@ export default (plotType = 'dashboard') => {
             }
         }
     } else {
-
         configuration = {
             'genomeView': {
-                'height': 0.35 * height,
+                'height': 0.45 * height,
                 'width': width,
                 'verticalPositions': {
                     'source': 45,
-                    'target': (0.35 * height) - 45
+                    'target': (0.45 * height) - 45
                 }
             },
             'dotView': {
