@@ -114,6 +114,9 @@ class PlotCharacterisitics extends Component {
                                 <option value={'1'}>Track 2</option>
                                 <option value={'2'}>Track 3</option>
                                 <option value={'3'}>Track 4</option>
+                                <option value={'4'}>Track 5</option>
+                                <option value={'5'}>Track 6</option>
+                                <option value={'6'}>Track 7</option>
                             </select>
                         </span>
                         <span className='select-wrapper'>Track Type

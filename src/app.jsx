@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import {
-  NotFound, Home, Dashboard, LinkageMap,
+  NotFound, Home, Dashboard, LinkageMap,BlastTrackProcessor,
   Upload, PyadhoreProcessor, MultiGenome, MultiHive
 } from './pages';
 import { Container } from './components';
@@ -36,6 +36,7 @@ class App extends Component {
             <Route path='dashboard(/:sourceID)' component={Dashboard} />
             <Route path='upload' component={Upload} />
             <Route path='pyadhore-processor' component={PyadhoreProcessor} />
+            <Route path='blast-to-track' component={BlastTrackProcessor} />
             <Route path='multi-genome(/:sourceID)' component={MultiGenome} />
             <Route path='multi-hive(/:sourceID)' component={MultiHive} />
             <Route path='linkage-map(/:sourceID)' component={LinkageMap} />
