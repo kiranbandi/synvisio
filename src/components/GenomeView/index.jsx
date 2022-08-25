@@ -288,7 +288,7 @@ class GenomeView extends Component {
                 markerEdge = 'rounded' } = configuration,
             trackData = _.filter(window.synVisio.trackData, (d) => !!d),
             areTracksVisible = this.areTracksVisible(configuration, trackData),
-            additionalTrackHeight = trackData.length * 140;
+            additionalTrackHeight = trackData.length * 150;
 
         const markerPositions = this.initialiseMarkers(configuration, genomeData.chromosomeMap, areTracksVisible, additionalTrackHeight),
             linkPositions = this.initialiseLinks(configuration, genomeData.chromosomeMap, markerPositions, searchResult, sourceID),

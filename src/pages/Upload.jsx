@@ -45,7 +45,7 @@ class Upload extends Component {
     configureSourceID('bn', multiLevel);
 
     // check the number of tracks files that are available to process
-    let trackFiles = _.map([0, 1, 2, 3], (d) => document.getElementById('track-file-' + d).files.length > 0);
+    let trackFiles = _.map([0, 1, 2, 3, 4, 5, 6], (d) => document.getElementById('track-file-' + d).files.length > 0);
 
     // check if color palette is available 
     let isColorMapAvailable = document.getElementById('color-map-file').files.length > 0;
@@ -115,6 +115,30 @@ class Upload extends Component {
       })
       .then((trackData) => {
         datastore.trackData.push(trackData);
+        return trackFiles[4] ? getFile('track-file-4') : Promise.resolve(false);
+      })
+      // process 3rd trackfile data if present
+      .then((data) => {
+        return trackFiles[4] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);
+      })
+      .then((trackData) => {
+        datastore.trackData.push(trackData);
+        return trackFiles[5] ? getFile('track-file-5') : Promise.resolve(false);
+      })
+      // process 3rd trackfile data if present
+      .then((data) => {
+        return trackFiles[5] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);
+      })
+      .then((trackData) => {
+        datastore.trackData.push(trackData);
+        return trackFiles[6] ? getFile('track-file-6') : Promise.resolve(false);
+      })
+      // process 3rd trackfile data if present
+      .then((data) => {
+        return trackFiles[6] ? processFile(data, 'track', { processScaffolds }) : Promise.resolve(false);
+      })
+      .then((trackData) => {
+        datastore.trackData.push(trackData);
         // update the sourceID set in the state with the new sourceID
         configureSourceID('uploaded-source', multiLevel);
         // set the genomic data
@@ -150,6 +174,9 @@ class Upload extends Component {
             <FileUpload id='track-file-1' label='Track File 2 (optional)' />
             <FileUpload id='track-file-2' label='Track File 3 (optional)' />
             <FileUpload id='track-file-3' label='Track File 4 (optional)' />
+            <FileUpload id='track-file-4' label='Track File 5 (optional)' />
+            <FileUpload id='track-file-5' label='Track File 6 (optional)' />
+            <FileUpload id='track-file-6' label='Track File 7 (optional)' />
             <div className="m-t-md">
               <h4 className="sub-info">Would you like to ignore Scaffold regions ?</h4>
               <RadioButton value={'scaffold-yes'} id={'scaffold-yes'} className='conf-radio' name='scaffold-select'

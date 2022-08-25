@@ -26,7 +26,7 @@ export default class Tracks extends Component {
     }
 
     generateTracks(trackPositions, trackType, color = 'blue') {
-        
+
         let trackPositionsList = [], customColorScale = colorGroup[color];
 
         if (trackType == 'track-histogram' || trackType == 'track-heatmap') {
@@ -39,7 +39,11 @@ export default class Tracks extends Component {
         }
         else if (trackType == 'track-scatter') {
             // convert object to list 
-            _.each(trackPositions, (value) => { trackPositionsList.push(...value) });
+            _.each(trackPositions, (value) => {
+                let non_zero_values = _.filter(value, e => e.value != 0);
+                    trackPositionsList.push(...non_zero_values);
+                
+            });
             return _.map(trackPositionsList, (track, index) => {
                 return <circle cx={track.x} cy={track.y} key={'track-' + index} r={2.5} style={{ 'fill': customColorScale(0.6) }}>
                 </circle>
