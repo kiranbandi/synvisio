@@ -60,7 +60,7 @@
         "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.16.0",
         "babel-preset-stage-0": "^6.22.0",
-        "css-loader": "^0.28.11",
+        "css-loader": "^6.7.1",
         "file-loader": "^1.1.11",
         "gh-pages": "^1.2.0",
         "html-webpack-harddisk-plugin": "^1.0.1",
