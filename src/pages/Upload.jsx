@@ -57,6 +57,11 @@ class Upload extends Component {
       // store the data and then load the collinear file
       .then((data) => {
         datastore = Object.assign(datastore, { ...data });
+        // If the user  wants to ignore scaffolds but no chromosomes were found, the flag would be overridden and scaffold filtering would be bypassed.
+        if (data.scaffoldBypassed && !processScaffolds) {
+          alert(`Automatic scaffold region filtering has been overridden, as no chromosomes were found in your gff file.\n\nThis might be due to mischaracterisation of actual chromosomes as scaffolds by SynVisio as they dont follow the two character naming convention.\n\nAll scaffolds will now be considered chromsomes instead so you should be able to choose them in the dashboard.`);
+        }
+
         return getFile('collinear-file');
       })
       // process the collinear file

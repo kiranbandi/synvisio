@@ -84,9 +84,7 @@ class Home extends Component {
             <li> <Link to={'/dashboard/os_sb'}> Os vs Sb </Link> - Os(Oriza sativa, Rice) vs Sb(Sorghum bicolor , Broom-Corn)</li>
             <li> <Link to={'/dashboard/at_vv'}> At vs Vv </Link> - At(Arabidopsis thaliana, Thale cress) vs Vv(Vitis vinifera , Grape Vine)</li>
             <li> <Link to={'/dashboard/ca_lc_mt'}> Ca vs Lc vs Mt </Link> - 3 Way comparision between Chickpea , Lentils and Barrel Meddick </li>
-            <li> <Link to={'/dashboard/lentils_all'}> Lentil all varieties </Link> Multi way comparision between 6 varieties of Lentils(Lc,Le,Ll,Lo,Lt and Lr)  </li>
-            <li> <Link to={'/multi-genome/lclellloltlr'}> Lentil all matrix </Link> Multi genome matrix plot of 6 varieties of Lentils(Lc,Le,Ll,Lo,Lt and Lr) </li>
-            <li> <Link to={'/multi-genome'}> Lentil 4 way matrix </Link> Multi genome matrix plot of P.sativum,M.truncatula,L.culinaris and L.ervoides</li>
+            <li> <Link to={'/multi-genome'}> Wheat 4 way matrix </Link> Multi genome matrix plot of sub genome D in Wheat.</li>
             <li> <Link to={'/linkage-map'}> Linkage group Lentils </Link> Linkage group mapping in Lentils varieties</li>
           </ul>
 

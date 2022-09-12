@@ -14,7 +14,7 @@ class MultiGenome extends Component {
 
         const { actions, params } = this.props,
             // get the source name based on window query params
-            { sourceID = 'lentils' } = params,
+            { sourceID = 'wheat' } = params,
             { setLoaderState, setGenomicData, configureSourceID } = actions;
 
         // turn loader on
