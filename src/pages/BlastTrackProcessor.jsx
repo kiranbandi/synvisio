@@ -5,6 +5,10 @@ import toastr from '../utils/toastr';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
+import {
+    scaleLog
+} from 'd3';
+
 
 export default class PyadhoreProcessor extends Component {
 
@@ -65,9 +69,9 @@ export default class PyadhoreProcessor extends Component {
                     }
                 });
 
-                let windowStore = {}, windowSize = 1000000;
+                let windowStore = {}, windowSize = 100000;
                 chromosomeMap.forEach((chromosome, key) => {
-                    let maxWindowCount = Math.ceil(chromosome.end / 1000000);
+                    let maxWindowCount = Math.ceil(chromosome.end / windowSize);
                     if (!windowStore[key]) {
                         windowStore[key] = [];
                     }
@@ -76,77 +80,110 @@ export default class PyadhoreProcessor extends Component {
                     }
                 });
 
-                genomeLibrary.forEach((gene, key) => {
-                    let windowList = windowStore[gene.chromosomeId];
-                    windowList[Math.floor(gene.start / windowSize)].count += 1;
-                });
+                window.genomeLibrary = genomeLibrary;
+                window.windowStore = windowStore;
+                window.windowSize = windowSize;
 
-                return Promise.resolve(_.flatMap(windowStore));
+                return Promise.resolve(windowStore);
             })
             // Process the pyadhore file and create a collinearity file
             .then((trackData) => {
-                datastore = Object.assign(datastore, { trackData });
                 return getFile('blast-file');
             })
             // process the pyadhore file
             .then((response) => {
 
-                let blast_data = response.trim().split("\n")
-                    .map(e => e.split('\t'))
+                let gene_expression_data = response.trim().split("\n")
+                    // remove header
+                    .slice(1)
+                    .map(e => e.trim().split(','))
                     .map(f => {
                         return {
-                            'source': f[0].split(":")[0],
-                            'target': {
-                                'chromosome': f[1],
-                                'start': f[2],
-                                'end': f[3]
-                            }
+                            'start': genomeLibrary.get(f[0]).start,
+                            'chromosomeId': genomeLibrary.get(f[0]).chromosomeId,
+                            'value': _.sum(f.slice(1).map(e => +e)),
+                            'seed_value': _.sum(f.slice(1).slice(24, 51).map(e => +e)),
+                            'leaf_value': _.sum(f.slice(1).slice(9, 21).map(e => +e))
                         }
                     });
 
-                const groupedBySource = _.groupBy(blast_data, e => e.source);
+                let windowAllStore = _.cloneDeep(windowStore),
+                    windowSeedStore = _.cloneDeep(windowStore),
+                    windowLeafStore = _.cloneDeep(windowStore);
 
-                let maxCount = 0, minCount = 0, textDownloadStore = {};
+                gene_expression_data.forEach((gene, key) => {
+                    let windowAllList = windowAllStore[gene.chromosomeId];
+                    windowAllList[Math.floor(gene.start / windowSize)].count += gene.value;
 
-                _.map(_.keys(groupedBySource), sourceKey => {
+                    let windowSeedList = windowSeedStore[gene.chromosomeId];
+                    windowSeedList[Math.floor(gene.start / windowSize)].count += gene.seed_value;
 
-                    const blast_data_grouped_by_target_chromosome = _.groupBy(groupedBySource[sourceKey], e => e.target.chromosome);
+                    let windowLeafList = windowLeafStore[gene.chromosomeId];
+                    windowLeafList[Math.floor(gene.start / windowSize)].count += gene.leaf_value;
 
-                    const updated_track = _.map(datastore.trackData, window_e => {
-
-                        let count = 0;
-
-                        _.map(blast_data_grouped_by_target_chromosome[window_e.chromosome], f => {
-                            let start = +f.target.start,
-                                end = +f.target.end;
-
-                            // if end and start and flipped, invert them around
-                            if (end < start) {
-                                let copy = end;
-                                end = start;
-                                start = copy;
-                            }
-
-                            if (start >= +window_e.start && end <= +window_e.end) {
-                                count += 1;
-                            }
-                        });
-
-                        // check for new min and max
-                        maxCount = count > maxCount ? count : maxCount;
-                        minCount = count < minCount ? count : minCount;
-
-                        return { ...window_e, count };
-                    });
-
-                    let remapped_track = _.map(updated_track, e => [e.chromosome, e.start, e.end, e.count].join("\t"));
-                    textDownloadStore["track_data" + "_" + sourceKey + ".txt"] = remapped_track;
                 });
 
-                _.map(textDownloadStore, (text, fileName) => {
-                    let blob = new Blob([["min=" + minCount + ",max=" + maxCount, ...text].join('\n')], { type: 'text/plain;charset=utf-8' });
-                    FileSaver.saveAs(blob, fileName);
+                let allExpressionMap = _.flatMap(windowAllStore),
+                    seedExpressionMap = _.flatMap(windowSeedStore),
+                    leafExpressionMap = _.flatMap(windowLeafStore);
+
+                _.map([allExpressionMap, seedExpressionMap, leafExpressionMap], dataMap => {
+
+                    let minCount = _.minBy(dataMap, e => e.count).count,
+                        maxCount = _.maxBy(dataMap, e => e.count).count;
+
+                    let logScale = scaleLog().domain([Math.max(minCount, 1), maxCount]).range([0, 100]);
+                    let remapped_track = _.map(dataMap, e => [e.chromosome, e.start, e.end, Math.round(logScale(Math.max(e.count, 1)))].join("\t"));
+
+                    let blob = new Blob([["min=0,max=100", ...remapped_track].join('\n')], { type: 'text/plain;charset=utf-8' });
+                    FileSaver.saveAs(blob, 'sample.txt');
+
                 });
+
+
+                // const groupedBySource = _.groupBy(blast_data, e => e.source);
+
+                // let maxCount = 0, minCount = 0, textDownloadStore = {};
+
+                // _.map(_.keys(groupedBySource), sourceKey => {
+
+                //     const blast_data_grouped_by_target_chromosome = _.groupBy(groupedBySource[sourceKey], e => e.target.chromosome);
+
+                //     const updated_track = _.map(datastore.trackData, window_e => {
+
+                //         let count = 0;
+
+                //         _.map(blast_data_grouped_by_target_chromosome[window_e.chromosome], f => {
+                //             let start = +f.target.start,
+                //                 end = +f.target.end;
+
+                //             // if end and start and flipped, invert them around
+                //             if (end < start) {
+                //                 let copy = end;
+                //                 end = start;
+                //                 start = copy;
+                //             }
+
+                //             if (start >= +window_e.start && end <= +window_e.end) {
+                //                 count += 1;
+                //             }
+                //         });
+
+                //         // check for new min and max
+                //         maxCount = count > maxCount ? count : maxCount;
+                //         minCount = count < minCount ? count : minCount;
+
+                //         return { ...window_e, count };
+                //     });
+
+                //     let remapped_track = _.map(updated_track, e => [e.chromosome, e.start, e.end, e.count].join("\t"));
+                //     textDownloadStore["track_data" + "_" + sourceKey + ".txt"] = remapped_track;
+                // });
+
+                // _.map(textDownloadStore, (text, fileName) => {
+                //     let blob = new Blob([["min=" + minCount + ",max=" + maxCount, ...text].join('\n')], { type: 'text/plain;charset=utf-8' });
+                //     FileSaver.saveAs(blob, fileName);
+                // });
 
             })
             .catch(() => { toastr["error"]("Failed to process the files , Please try again.", "ERROR") })
