@@ -23,169 +23,212 @@ export default class PyadhoreProcessor extends Component {
 
         this.setState({ isProcessing: true });
 
-        var datastore = {};
+        var a_data = ["Gene	SG1	SG2	SG3"], c_data = ["Gene	SG1	SG2	SG3"], overall_data = ["Gene    SG1	SG2	SG3 SG4	SG5	SG6"];
 
         // load the coordinate file
         getFile('gff-file')
             // process the file in the main thread
             .then((response) => {
 
-                let genomeEntry, genomeLibrary = new Map(), chromosomeMap = new Map();
+                try {
+                    let data = _.sortBy(response.trim().split("\n").slice(1).map(e => e.trim().split('\t')), f => f[0]);
 
-                response.trim().split('\n').map((line) => {
+                    let remappedData = _.map(data, g => {
 
-                    genomeEntry = line.split("\t");
-                    // 4 tab seperated entries , 1st in chromosome index , 2nd is unique gene id ,3rd and 4th are the start and end positions
-                    let chromosomeId = genomeEntry[0],
-                        speciesIdentifier = genomeEntry[0].slice(0, 2),
-                        geneStart = parseInt(genomeEntry[2]),
-                        geneEnd = parseInt(genomeEntry[3]),
-                        geneId = genomeEntry[1];
+                        let numberedData = g.slice(1).map(l => +l);
 
-                    if (chromosomeId.length >= 2 && (chromosomeId.length <= 25)) {
-                        genomeLibrary.set(geneId, {
-                            'start': geneStart,
-                            'end': geneEnd,
-                            // the first 2 characters are the genome name and can be removed
-                            'chromosomeId': chromosomeId
-                        })
-                        // To create a list of the start and end of all chromosomes
-                        if (!chromosomeMap.has(chromosomeId)) {
-                            chromosomeMap.set(chromosomeId, {
-                                start: geneStart,
-                                end: geneEnd,
-                                'speciesIdentifier': speciesIdentifier
-                            });
-                        } else {
-                            var entry = chromosomeMap.get(chromosomeId);
-                            if (geneStart < entry.start) {
-                                entry.start = geneStart;
-                            }
-                            if (geneEnd > entry.end) {
-                                entry.end = geneEnd;
-                            }
-                            chromosomeMap.set(chromosomeId, entry);
+
+                        let a_sum = _.sum(numberedData.slice(0, 3)),
+                            c_sum = _.sum(numberedData.slice(3, 6)),
+                            overall_sum = _.sum([a_sum, c_sum]),
+                            a_normalised_datapoint = numberedData.slice(0, 3).map(k => (k * 100) / a_sum),
+                            c_normalised_datapoint = numberedData.slice(3, 6).map(k => (k * 100) / c_sum),
+                            overall_normalised_datapoint = numberedData.map(k => (k * 100) / overall_sum);
+
+                        if (a_sum != 0) {
+                            a_data.push([g[0], ...a_normalised_datapoint].join("\t"));
                         }
-                    }
-                });
-
-                let windowStore = {}, windowSize = 100000;
-                chromosomeMap.forEach((chromosome, key) => {
-                    let maxWindowCount = Math.ceil(chromosome.end / windowSize);
-                    if (!windowStore[key]) {
-                        windowStore[key] = [];
-                    }
-                    for (let i = 0; i < maxWindowCount; i++) {
-                        windowStore[key].push({ 'chromosome': key, 'start': (i * windowSize) + (i == 0 ? 0 : 1), 'end': (i + 1) * windowSize, 'count': 0 });
-                    }
-                });
-
-                window.genomeLibrary = genomeLibrary;
-                window.windowStore = windowStore;
-                window.windowSize = windowSize;
-
-                return Promise.resolve(windowStore);
-            })
-            // Process the pyadhore file and create a collinearity file
-            .then((trackData) => {
-                return getFile('blast-file');
-            })
-            // process the pyadhore file
-            .then((response) => {
-
-                let gene_expression_data = response.trim().split("\n")
-                    // remove header
-                    .slice(1)
-                    .map(e => e.trim().split(','))
-                    .map(f => {
-                        return {
-                            'start': genomeLibrary.get(f[0]).start,
-                            'chromosomeId': genomeLibrary.get(f[0]).chromosomeId,
-                            'value': _.sum(f.slice(1).map(e => +e)),
-                            'seed_value': _.sum(f.slice(1).slice(24, 51).map(e => +e)),
-                            'leaf_value': _.sum(f.slice(1).slice(9, 21).map(e => +e))
+                        if (c_sum != 0) {
+                            c_data.push([g[0], ...c_normalised_datapoint].join("\t"));
                         }
+                        if (overall_sum != 0) {
+                            overall_data.push([g[0], ...overall_normalised_datapoint].join("\t"));
+                        }
+
                     });
 
-                let windowAllStore = _.cloneDeep(windowStore),
-                    windowSeedStore = _.cloneDeep(windowStore),
-                    windowLeafStore = _.cloneDeep(windowStore);
+                    let blob = new Blob([[...a_data].join('\n')], { type: 'text/plain;charset=utf-8' });
+                    FileSaver.saveAs(blob, 'bn_a_pollen.txt');
 
-                gene_expression_data.forEach((gene, key) => {
-                    let windowAllList = windowAllStore[gene.chromosomeId];
-                    windowAllList[Math.floor(gene.start / windowSize)].count += gene.value;
+                    let blob2 = new Blob([[...c_data].join('\n')], { type: 'text/plain;charset=utf-8' });
+                    FileSaver.saveAs(blob2, 'bn_c_pollen.txt');
 
-                    let windowSeedList = windowSeedStore[gene.chromosomeId];
-                    windowSeedList[Math.floor(gene.start / windowSize)].count += gene.seed_value;
-
-                    let windowLeafList = windowLeafStore[gene.chromosomeId];
-                    windowLeafList[Math.floor(gene.start / windowSize)].count += gene.leaf_value;
-
-                });
-
-                let allExpressionMap = _.flatMap(windowAllStore),
-                    seedExpressionMap = _.flatMap(windowSeedStore),
-                    leafExpressionMap = _.flatMap(windowLeafStore);
-
-                _.map([allExpressionMap, seedExpressionMap, leafExpressionMap], dataMap => {
-
-                    let minCount = _.minBy(dataMap, e => e.count).count,
-                        maxCount = _.maxBy(dataMap, e => e.count).count;
-
-                    let logScale = scaleLog().domain([Math.max(minCount, 1), maxCount]).range([0, 100]);
-                    let remapped_track = _.map(dataMap, e => [e.chromosome, e.start, e.end, Math.round(logScale(Math.max(e.count, 1)))].join("\t"));
-
-                    let blob = new Blob([["min=0,max=100", ...remapped_track].join('\n')], { type: 'text/plain;charset=utf-8' });
-                    FileSaver.saveAs(blob, 'sample.txt');
-
-                });
+                    let blob3 = new Blob([[...overall_data].join('\n')], { type: 'text/plain;charset=utf-8' });
+                    FileSaver.saveAs(blob3, 'bn_all_pollen.txt');
+                } catch (error) {
+                    debugger;
+                }
 
 
-                // const groupedBySource = _.groupBy(blast_data, e => e.source);
 
-                // let maxCount = 0, minCount = 0, textDownloadStore = {};
 
-                // _.map(_.keys(groupedBySource), sourceKey => {
 
-                //     const blast_data_grouped_by_target_chromosome = _.groupBy(groupedBySource[sourceKey], e => e.target.chromosome);
+                // let genomeEntry, genomeLibrary = new Map(), chromosomeMap = new Map();
 
-                //     const updated_track = _.map(datastore.trackData, window_e => {
+                // response.trim().split('\n').map((line) => {
 
-                //         let count = 0;
+                //     genomeEntry = line.split("\t");
+                //     // 4 tab seperated entries , 1st in chromosome index , 2nd is unique gene id ,3rd and 4th are the start and end positions
+                //     let chromosomeId = genomeEntry[0],
+                //         speciesIdentifier = genomeEntry[0].slice(0, 2),
+                //         geneStart = parseInt(genomeEntry[2]),
+                //         geneEnd = parseInt(genomeEntry[3]),
+                //         geneId = genomeEntry[1];
 
-                //         _.map(blast_data_grouped_by_target_chromosome[window_e.chromosome], f => {
-                //             let start = +f.target.start,
-                //                 end = +f.target.end;
-
-                //             // if end and start and flipped, invert them around
-                //             if (end < start) {
-                //                 let copy = end;
-                //                 end = start;
-                //                 start = copy;
+                //     if (chromosomeId.length >= 2 && (chromosomeId.length <= 25)) {
+                //         genomeLibrary.set(geneId, {
+                //             'start': geneStart,
+                //             'end': geneEnd,
+                //             // the first 2 characters are the genome name and can be removed
+                //             'chromosomeId': chromosomeId
+                //         })
+                //         // To create a list of the start and end of all chromosomes
+                //         if (!chromosomeMap.has(chromosomeId)) {
+                //             chromosomeMap.set(chromosomeId, {
+                //                 start: geneStart,
+                //                 end: geneEnd,
+                //                 'speciesIdentifier': speciesIdentifier
+                //             });
+                //         } else {
+                //             var entry = chromosomeMap.get(chromosomeId);
+                //             if (geneStart < entry.start) {
+                //                 entry.start = geneStart;
                 //             }
-
-                //             if (start >= +window_e.start && end <= +window_e.end) {
-                //                 count += 1;
+                //             if (geneEnd > entry.end) {
+                //                 entry.end = geneEnd;
                 //             }
-                //         });
-
-                //         // check for new min and max
-                //         maxCount = count > maxCount ? count : maxCount;
-                //         minCount = count < minCount ? count : minCount;
-
-                //         return { ...window_e, count };
-                //     });
-
-                //     let remapped_track = _.map(updated_track, e => [e.chromosome, e.start, e.end, e.count].join("\t"));
-                //     textDownloadStore["track_data" + "_" + sourceKey + ".txt"] = remapped_track;
+                //             chromosomeMap.set(chromosomeId, entry);
+                //         }
+                //     }
                 // });
 
-                // _.map(textDownloadStore, (text, fileName) => {
-                //     let blob = new Blob([["min=" + minCount + ",max=" + maxCount, ...text].join('\n')], { type: 'text/plain;charset=utf-8' });
-                //     FileSaver.saveAs(blob, fileName);
+                // let windowStore = {}, windowSize = 100000;
+                // chromosomeMap.forEach((chromosome, key) => {
+                //     let maxWindowCount = Math.ceil(chromosome.end / windowSize);
+                //     if (!windowStore[key]) {
+                //         windowStore[key] = [];
+                //     }
+                //     for (let i = 0; i < maxWindowCount; i++) {
+                //         windowStore[key].push({ 'chromosome': key, 'start': (i * windowSize) + (i == 0 ? 0 : 1), 'end': (i + 1) * windowSize, 'count': 0 });
+                //     }
                 // });
 
+                // window.genomeLibrary = genomeLibrary;
+                // window.windowStore = windowStore;
+                // window.windowSize = windowSize;
+
+                // return Promise.resolve(windowStore);
             })
+            // // Process the pyadhore file and create a collinearity file
+            // .then((trackData) => {
+            //     return getFile('blast-file');
+            // })
+            // process the pyadhore file
+            // .then((response) => {
+
+            //     let gene_expression_data = response.trim().split("\n")
+            //         // remove header
+            //         .slice(1)
+            //         .map(e => e.trim().split(','))
+            //         .map(f => {
+            //             return {
+            //                 'start': genomeLibrary.get(f[0]).start,
+            //                 'chromosomeId': genomeLibrary.get(f[0]).chromosomeId,
+            //                 'value': _.sum(f.slice(1).map(e => +e)),
+            //                 'seed_value': _.sum(f.slice(1).slice(24, 51).map(e => +e)),
+            //                 'leaf_value': _.sum(f.slice(1).slice(9, 21).map(e => +e))
+            //             }
+            //         });
+
+            //     let windowAllStore = _.cloneDeep(windowStore),
+            //         windowSeedStore = _.cloneDeep(windowStore),
+            //         windowLeafStore = _.cloneDeep(windowStore);
+
+            //     gene_expression_data.forEach((gene, key) => {
+            //         let windowAllList = windowAllStore[gene.chromosomeId];
+            //         windowAllList[Math.floor(gene.start / windowSize)].count += gene.value;
+
+            //         let windowSeedList = windowSeedStore[gene.chromosomeId];
+            //         windowSeedList[Math.floor(gene.start / windowSize)].count += gene.seed_value;
+
+            //         let windowLeafList = windowLeafStore[gene.chromosomeId];
+            //         windowLeafList[Math.floor(gene.start / windowSize)].count += gene.leaf_value;
+
+            //     });
+
+            //     let allExpressionMap = _.flatMap(windowAllStore),
+            //         seedExpressionMap = _.flatMap(windowSeedStore),
+            //         leafExpressionMap = _.flatMap(windowLeafStore);
+
+            //     _.map([allExpressionMap, seedExpressionMap, leafExpressionMap], dataMap => {
+
+            //         let minCount = _.minBy(dataMap, e => e.count).count,
+            //             maxCount = _.maxBy(dataMap, e => e.count).count;
+
+            //         let logScale = scaleLog().domain([Math.max(minCount, 1), maxCount]).range([0, 100]);
+            //         let remapped_track = _.map(dataMap, e => [e.chromosome, e.start, e.end, Math.round(logScale(Math.max(e.count, 1)))].join("\t"));
+
+            //         let blob = new Blob([["min=0,max=100", ...remapped_track].join('\n')], { type: 'text/plain;charset=utf-8' });
+            //         FileSaver.saveAs(blob, 'sample.txt');
+
+            //     });
+
+
+            //     // const groupedBySource = _.groupBy(blast_data, e => e.source);
+
+            //     // let maxCount = 0, minCount = 0, textDownloadStore = {};
+
+            //     // _.map(_.keys(groupedBySource), sourceKey => {
+
+            //     //     const blast_data_grouped_by_target_chromosome = _.groupBy(groupedBySource[sourceKey], e => e.target.chromosome);
+
+            //     //     const updated_track = _.map(datastore.trackData, window_e => {
+
+            //     //         let count = 0;
+
+            //     //         _.map(blast_data_grouped_by_target_chromosome[window_e.chromosome], f => {
+            //     //             let start = +f.target.start,
+            //     //                 end = +f.target.end;
+
+            //     //             // if end and start and flipped, invert them around
+            //     //             if (end < start) {
+            //     //                 let copy = end;
+            //     //                 end = start;
+            //     //                 start = copy;
+            //     //             }
+
+            //     //             if (start >= +window_e.start && end <= +window_e.end) {
+            //     //                 count += 1;
+            //     //             }
+            //     //         });
+
+            //     //         // check for new min and max
+            //     //         maxCount = count > maxCount ? count : maxCount;
+            //     //         minCount = count < minCount ? count : minCount;
+
+            //     //         return { ...window_e, count };
+            //     //     });
+
+            //     //     let remapped_track = _.map(updated_track, e => [e.chromosome, e.start, e.end, e.count].join("\t"));
+            //     //     textDownloadStore["track_data" + "_" + sourceKey + ".txt"] = remapped_track;
+            //     // });
+
+            //     // _.map(textDownloadStore, (text, fileName) => {
+            //     //     let blob = new Blob([["min=" + minCount + ",max=" + maxCount, ...text].join('\n')], { type: 'text/plain;charset=utf-8' });
+            //     //     FileSaver.saveAs(blob, fileName);
+            //     // });
+
+            // })
             .catch(() => { toastr["error"]("Failed to process the files , Please try again.", "ERROR") })
             .finally(() => { this.setState({ isProcessing: false }) });
 
