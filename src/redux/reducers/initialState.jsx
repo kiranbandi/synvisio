@@ -12,7 +12,7 @@ export default {
     multiLevel: false,
     multiLevelType: 'tree',
     plotType: 'linearplot',
-    trackType: [{ 'type': 'track-scatter', 'color': 'red' },
+    trackType: [{ 'type': 'track-histogram', 'color': 'red' },
     { 'type': 'track-scatter', 'color': 'red' },
     { 'type': 'track-scatter', 'color': 'red' },
     { 'type': 'track-scatter', 'color': 'red' },

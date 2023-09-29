@@ -5,17 +5,17 @@ import toastr from './toastr';
 
 var fetchData = {};
 
-fetchData.getGenomicsData = function (trialId, fileId, origin) {
+fetchData.getGenomicsData = function (collinearityFile = '', gffFile = '', trackFile = '', configFile) {
     return new Promise((resolve, reject) => {
         var datastore = {};
         // get the coordinate file
-        axios.get(`${origin}/api/download?trialId=${trialId}&fileId=${fileId}_coordinate.gff&mode=read`)
+        axios.get(gffFile)
             // process the coordinate file 
             .then((response) => { return processFile(response.data, 'gff') })
             // get the collinear file
             .then((data) => {
                 datastore = Object.assign(datastore, { ...data });
-                return axios.get(`${origin}/api/download?trialId=${trialId}&fileId=${fileId}_collinear.collinearity&mode=read`);
+                return axios.get(collinearityFile);
             })
             // process the collinear file
             .then(((response) => {
@@ -31,7 +31,7 @@ fetchData.getGenomicsData = function (trialId, fileId, origin) {
             .then((data) => {
                 datastore = Object.assign({}, datastore, { ...data });
                 console.log('Data loading and processing complete...');
-                return axios.get(`${origin}/api/download?trialId=${trialId}&fileId=${fileId}_track.bed&mode=read`);
+                return axios.get(trackFile);
             })
             // if the data is not present resolve the promise without the track data
             .then((response) => { return processFile(response.data, 'track') })

@@ -22,14 +22,14 @@ class Dashboard extends Component {
 
         const { multiLevel, actions } = this.props, { configureSourceID, setLoaderState, setGenomicData } = actions;
 
-        const { origin, trialId, fileId } = processQueryParams();
+        const { collinearityFile, gffFile, trackFile, configFile } = processQueryParams();
 
         // Turn on loader
         setLoaderState(true);
         // update the sourceID set in the state with the new sourceID
-        configureSourceID(trialId, multiLevel);
+        configureSourceID(collinearityFile, multiLevel);
         // get the data from the files
-        getGenomicsData(trialId, fileId, origin).then((data) => {
+        getGenomicsData(collinearityFile, gffFile, trackFile, configFile ).then((data) => {
             // set the genomic data
             setGenomicData(data);
         }).finally(() => {
