@@ -1,3 +1,4 @@
 import React from 'react';
 
-export default () => <div className='loading-container'><img src="assets/img/spinner.gif" /></div>;
+export default () => <div className='loading-container text-center'> 
+<h2> Loading... </h2></div>;

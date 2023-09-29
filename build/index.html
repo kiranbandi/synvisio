@@ -8,39 +8,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="SynVisio, MCScanX Synteny Browser developed at UofS">
     <meta name="author" content="kiranbandi">
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123324097-1"></script>
-    <script type="text/javascript">
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'UA-123324097-1');
-    </script>
-
     <title>SynVisio : Synteny Browser</title>
     <!--font used by bootstrap theme-->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic" rel="stylesheet">
     <!--vendor stylesheet-->
-    <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
-    <link rel="stylesheet" href="assets/css/toolkit-inverse.css">
-
-
-    <!-- Link for favicon-->
-    <link href="assets/img/favicon.png" rel="icon">
+    <link rel="stylesheet" href="/assets/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="/assets/css/toolkit-light.css">
 </head>
 
-<body class='with-top-navbar'>
+<body class=''>
     <!--react root container where content would be loaded-->
-    <div id="root"></div>
+    <div id="synvisio-content-mount"></div>
     <!--loading assets and webpack bundle-->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/toolkit.min.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/toolkit.min.js"></script>
     <!-- Assets for Bootstrap Multi Select-->
-    <script src="assets/js/bootstrap-select.min.js"></script>
+    <script src="/assets/js/bootstrap-select.min.js"></script>
     <!-- Loading webpack code bundle here -->
 <script type="text/javascript" src="/assets/bundle/bundle.js"></script></body>
 

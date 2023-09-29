@@ -4,14 +4,14 @@ const configuration = getPlotDimensions();
 
 export default {
   oracle: {
-    isDark: true,
+    isDark: false,
     isModalVisible: false,
     isSnapShotAvailable: false,
     sourceID: 'bn',
     searchResult: [],
     multiLevel: false,
     multiLevelType: 'tree',
-    plotType: 'dashboard',
+    plotType: 'linearplot',
     trackType: [{ 'type': 'track-scatter', 'color': 'red' },
     { 'type': 'track-scatter', 'color': 'red' },
     { 'type': 'track-scatter', 'color': 'red' },

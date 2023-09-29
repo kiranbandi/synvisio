@@ -2,7 +2,9 @@
     background: #1a1c22;
     border-radius: 10px;
     margin: 10px 15px 10px 15px;
+    color:white;
     .advanced-filter-head {
+        color:white;
         padding: 5px;
         cursor: pointer;
         margin: 15px 0px 0px 0;
@@ -21,11 +23,11 @@
             font-size: 16px;
             display: inline-block;
             font-weight: bold;
+            color:white;
         }
     }
     .advanced-filter-content {
         margin-top: 0px;
-        background: #252830;
         overflow: hidden;
         .advanced-info-box {
             p {
