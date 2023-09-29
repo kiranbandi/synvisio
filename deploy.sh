@@ -1,13 +1,12 @@
 #!/bin/sh
-# Script to update apache server
 # create new build folder
 npm run build
 # stop apache server
-service apache2 stop
+service nginx stop
 # clear old assets
-rm -rf /var/www/html/
+rm -rf /var/www/synvisio/
 # copy new assets
-cp -a build/. /var/www/html/
+cp -a build/. /var/www/synvisio/
 # restart apache server
-service apache2 restart
-echo "Deploy complete successfully"
+service nginx restart
+echo "SynVisio Deploy complete successfully"
