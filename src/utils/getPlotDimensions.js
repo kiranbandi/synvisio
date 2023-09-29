@@ -1,12 +1,11 @@
-export default (plotType = 'dashboard') => {
+export default (plotType = 'linearplot') => {
 
     const width = 0.975 * window.innerWidth,
         height = 0.90 * window.innerHeight;
     let configuration;
-
     // If the width is less than 95% of 540 pixels = 513 pixels , bootstrap gird small screen is 540 
     // Then each plot takes the maximum available width and default values 
-    if (width < 513 || (width < height)) {
+    if (width < 513) {
         configuration = {
             'genomeView': {
                 'height': 350,

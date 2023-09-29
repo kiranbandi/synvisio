@@ -34,8 +34,7 @@ export default class SingleLevel extends Component {
             <div>
                 <Information />
                 <AdvancedFilterPanel />
-                {isMarkerListEmpty ?
-                    <h2 className='text-danger text-xs-center m-t-lg'>Source or Target Empty</h2> :
+                {!isMarkerListEmpty &&
                     areLinksAvailable &&
                     <div className='anchor-root'>
                         {plotType == 'dashboard' ?
