@@ -7,3 +7,4 @@ export { default as MultiHive } from './MultiHive';
 export { default as PyadhoreProcessor } from './PyadhoreProcessor';
 export { default as LinkageMap } from './LinkageMap';
 export { default as BlastTrackProcessor } from './BlastTrackProcessor';
+export { default as MapBlast } from './MapBlast';

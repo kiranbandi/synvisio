@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import {
   NotFound, Home, Dashboard, LinkageMap,BlastTrackProcessor,
-  Upload, PyadhoreProcessor, MultiGenome, MultiHive
+  Upload, PyadhoreProcessor, MultiGenome, MultiHive,MapBlast 
 } from './pages';
 import { Container } from './components';
 import configureStore from './redux/store/configureStore';
@@ -37,6 +37,7 @@ class App extends Component {
             <Route path='upload' component={Upload} />
             <Route path='pyadhore-processor' component={PyadhoreProcessor} />
             <Route path='blast-to-track' component={BlastTrackProcessor} />
+            <Route path='map-to-blast' component={MapBlast} />
             <Route path='multi-genome(/:sourceID)' component={MultiGenome} />
             <Route path='multi-hive(/:sourceID)' component={MultiHive} />
             <Route path='linkage-map(/:sourceID)' component={LinkageMap} />
