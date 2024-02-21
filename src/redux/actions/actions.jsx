@@ -74,7 +74,13 @@ export function setGenomicData(data) {
     //  Treading Dangerous Territory here by polluting the global name space 
     //  But this reduces the load placed on the redux and react global store
     window.synVisio = { genomeLibrary, alignmentList, trackData };
-    return { type: types.SET_GENOME_DATA, data: otherData };
+
+    return dispatch => {
+        if (window.synvisioConfig) {
+            dispatch(setRootMarkers(window.synvisioConfig));
+        }
+        dispatch({ type: types.SET_GENOME_DATA, data: otherData });
+    }
 }
 
 export function setRootMarkers(markers, reversedMarkers = false) {

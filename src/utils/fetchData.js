@@ -5,11 +5,27 @@ import toastr from './toastr';
 
 var fetchData = {};
 
-fetchData.getGenomicsData = function (collinearityFile = '', gffFile = '', trackFile = '', configFile) {
+fetchData.getGenomicsData = function (collinearityFile = '', gffFile = '', trackFile = '', configFile = '') {
     return new Promise((resolve, reject) => {
         var datastore = {};
-        // get the coordinate file
-        axios.get(gffFile)
+
+        // First get the config file, if its present or not proceed with fetching the other files
+        axios.get(configFile)
+            .then((response) => {
+                const responseData = response.data;
+                if (responseData.indexOf('source') > -1) {
+                    const source = response.data.split("\n")[0].trim().slice("7").split(",");
+                    const target = response.data.split("\n")[1].trim().slice("7").split(",");
+                    window.synvisioConfig = {
+                        source, target
+                    };
+                }
+                return axios.get(gffFile);
+            })
+            // get the coordinate file
+            .catch((err) => {
+                return axios.get(gffFile);
+            })
             // process the coordinate file 
             .then((response) => { return processFile(response.data, 'gff') })
             // get the collinear file
