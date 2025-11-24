@@ -84,6 +84,14 @@ class PlotCharacterisitics extends Component {
                             label={"Parallel Link PLot"}
                             onChange={this.radioChange}
                             checked={plotType == 'linearplot'} />
+                        <RadioButton value={'barplot'} id={'barplot'} className='conf-radio' name='plot-select'
+                            label={"Bar Plot"}
+                            onChange={this.radioChange}
+                            checked={plotType == 'barplot'} />
+                        <RadioButton value={'circleplot'} id={'circleplot'} className='conf-radio' name='plot-select'
+                            label={"Circle Plot"}
+                            onChange={this.radioChange}
+                            checked={plotType == 'circleplot'} />
                     </div>}
 
                     {multiLevel && <div>

@@ -8,6 +8,8 @@ export { default as PieChart } from './Misc/PieChart';
 export { default as GenomeView } from './GenomeView';
 export { default as SaveModal } from './Misc/SaveModal';
 export { default as DotView } from './DotView';
+export { default as BarPlotView } from './BarPlotView';
+export { default as CirclePlotView } from './CirclePlotView';
 export { default as BlockView } from './BlockView';
 export { default as PanelView } from './Misc/PanelView';
 export { default as RadioButton } from './Misc/RadioButton';

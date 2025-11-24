@@ -44,7 +44,7 @@ export default (plotType = 'dashboard') => {
                 'width': 750
             }
         }
-    } else if (plotType == 'linearplot' || plotType == 'dotplot') {
+    } else if (plotType == 'linearplot' || plotType == 'dotplot' || plotType == 'barplot' || plotType == 'circleplot') {
         configuration = {
             'genomeView': {
                 'height': 350,
@@ -56,6 +56,14 @@ export default (plotType = 'dashboard') => {
             },
             'dotView': {
                 'width': 523
+            },
+            'barPlotView': {
+                'width': width,
+                'height': 1200
+            },
+            'circlePlotView': {
+                'width': Math.min(width, height),
+                'height': Math.min(width, height)
             },
             'blockView': {
                 'verticalPositions': {
@@ -78,6 +86,14 @@ export default (plotType = 'dashboard') => {
             },
             'dotView': {
                 'width': 0.55 * height
+            },
+            'barPlotView': {
+                'width': width,
+                'height': 0.90 * height
+            },
+            'circlePlotView': {
+                'width': Math.min(width, height) * 0.9,
+                'height': Math.min(width, height) * 0.9
             },
             'panelView': {
                 'height': 0.55 * height,

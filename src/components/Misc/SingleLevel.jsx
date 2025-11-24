@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
     Information, GenomeView, AdvancedFilterPanel,
-    BlockView, DotView, PanelView
+    BlockView, DotView, BarPlotView, CirclePlotView, PanelView
 } from '../';
 
 export default class SingleLevel extends Component {
@@ -46,6 +46,10 @@ export default class SingleLevel extends Component {
                             </div> :
                             plotType == 'dotplot' ?
                                 <DotView configuration={configuration} plotType={plotType} /> :
+                            plotType == 'barplot' ?
+                                <BarPlotView configuration={configuration} plotType={plotType} /> :
+                            plotType == 'circleplot' ?
+                                <CirclePlotView configuration={configuration} plotType={plotType} /> :
                                 <GenomeView configuration={configuration} plotType={plotType} />}
                         {isBlockModeON && <BlockView configuration={configuration} />}
                     </div>}
