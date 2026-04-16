@@ -71,10 +71,15 @@ export function toggleModalVisbility() {
 
 export function setGenomicData(data) {
     const { genomeLibrary, alignmentList, trackData = false, ...otherData } = data;
-    //  Treading Dangerous Territory here by polluting the global name space 
+    //  Treading Dangerous Territory here by polluting the global name space
     //  But this reduces the load placed on the redux and react global store
     window.synVisio = { genomeLibrary, alignmentList, trackData };
-    return { type: types.SET_GENOME_DATA, data: otherData };
+
+    // Derive the distinct chromosome sets for each role from the alignment list
+    const sourceChromosomes = _.uniq(_.map(alignmentList, 'source'));
+    const targetChromosomes = _.uniq(_.map(alignmentList, 'target'));
+
+    return { type: types.SET_GENOME_DATA, data: { ...otherData, sourceChromosomes, targetChromosomes } };
 }
 
 export function setRootMarkers(markers, reversedMarkers = false) {
@@ -390,6 +395,10 @@ export function setPlotProps(levelOrType, value) {
 
 export function setMarkerEdge(value) {
     return { type: types.SET_MARKER_EDGE, value }
+}
+
+export function setColorMap(colorMap) {
+    return { type: types.SET_COLOR_MAP, colorMap };
 }
 
 export function setAlignmentColor(value) {

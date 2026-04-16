@@ -29,5 +29,33 @@
                 font-weight: bold;
             }
         }
+        .color-picker-heading {
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        .color-picker-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            margin-bottom: 8px;
+        }
+        .color-picker-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            .color-picker-label {
+                font-size: 12px;
+                min-width: 40px;
+            }
+            input[type='color'] {
+                width: 28px;
+                height: 22px;
+                padding: 1px;
+                border: 1px solid #555;
+                border-radius: 3px;
+                cursor: pointer;
+                background: none;
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 import gffWorker from "../workers/gff.worker";
 import collinearWorker from "../workers/collinear.worker";
+import anchorsWorker from "../workers/anchors.worker";
 import trackWorker from "../workers/track.worker";
 import orthologueWorker from "../workers/orthologue.worker";
 import toastr from './toastr';
@@ -13,6 +14,9 @@ export default function(rawData, typeOfFile, additionalParams = {}) {
                 break;
             case 'collinear':
                 instance = collinearWorker();
+                break;
+            case 'anchors':
+                instance = anchorsWorker();
                 break;
             case 'track':
                 instance = trackWorker();
