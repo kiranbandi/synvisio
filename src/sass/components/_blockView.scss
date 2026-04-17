@@ -37,6 +37,9 @@
                     stroke: #cf6c6c !important
                 }
             }
+            &.table-hover-highlight {
+                stroke: #e67e22 !important;
+            }
         }
         .blockview-polylink {
             opacity: 0.6;
@@ -51,6 +54,10 @@
                 &.inverted {
                     fill: #cf6c6c !important
                 }
+            }
+            &.table-hover-highlight {
+                opacity: 1;
+                fill: #e67e22;
             }
         }
     }

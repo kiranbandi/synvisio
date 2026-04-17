@@ -14,6 +14,8 @@ class BlockView extends Component {
             .filter(() => !(d3.event.type == 'mouseover'))
             .on("zoom", this.zoomed.bind(this));
 
+        this.state = { showTable: false };
+
         this.invertState = false;
         this.zoomTransform = d3.zoomIdentity.scale(1).translate(0, 0);
         this.resetZoom = this.resetZoom.bind(this);
@@ -21,6 +23,8 @@ class BlockView extends Component {
         this.invertTarget = this.invertTarget.bind(this);
         this.shiftAlignment = this.shiftAlignment.bind(this);
         this.resetAllMarkerPositions = this.resetAllMarkerPositions.bind(this);
+        this.toggleTable = this.toggleTable.bind(this);
+        this.downloadCSV = this.downloadCSV.bind(this);
     }
 
     componentDidMount() {
@@ -143,6 +147,31 @@ class BlockView extends Component {
             })
     }
 
+
+    toggleTable() {
+        this.setState(prev => ({ showTable: !prev.showTable }));
+    }
+
+    downloadCSV() {
+        const { configuration } = this.props;
+        const { alignment } = configuration.filterLevel;
+        const { genomeLibrary } = window.synVisio;
+
+        const header = 'Source Gene,Source Chr,Source Start,Source End,Target Gene,Target Chr,Target Start,Target End,Score\n';
+        const rows = alignment.links.map(link => {
+            const src = genomeLibrary.get(link.source) || {};
+            const tgt = genomeLibrary.get(link.target) || {};
+            return [link.source, src.chromosomeId, src.start, src.end, link.target, tgt.chromosomeId, tgt.start, tgt.end, link.e_value].join(',');
+        }).join('\n');
+
+        const blob = new Blob([header + rows], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = alignment.source + '_' + alignment.target + '_block.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
 
     resetZoom() {
         d3.select(this.outerG).call(this.zoom.transform, d3.zoomIdentity.scale(1).translate(0, 0));
@@ -291,54 +320,136 @@ class BlockView extends Component {
 
         })
 
+        const { showTable } = this.state;
+
+        const highlightLink = (index, on) => {
+            const srcEl = document.getElementById('source-marker-' + index);
+            const tgtEl = document.getElementById('target-marker-' + index);
+            const polyEl = document.getElementById('polylink-' + index);
+            const cls = 'table-hover-highlight';
+            [srcEl, tgtEl, polyEl].forEach(el => {
+                if (!el) return;
+                if (on) el.classList.add(cls);
+                else el.classList.remove(cls);
+            });
+        };
+
+        const tableRows = alignment.links.map((link, index) => {
+            const src = genomeLibrary.get(link.source) || {};
+            const tgt = genomeLibrary.get(link.target) || {};
+            return (
+                <tr key={link.source + '-' + link.target}
+                    style={{ cursor: 'pointer' }}
+                    onMouseEnter={() => highlightLink(index, true)}
+                    onMouseLeave={() => highlightLink(index, false)}>
+                    <td>{index + 1}</td>
+                    <td>{link.source}</td>
+                    <td>{src.chromosomeId}</td>
+                    <td>{src.start}</td>
+                    <td>{src.end}</td>
+                    <td>{link.target}</td>
+                    <td>{tgt.chromosomeId}</td>
+                    <td>{tgt.start}</td>
+                    <td>{tgt.end}</td>
+                    <td>{link.e_value}</td>
+                </tr>
+            );
+        });
+
         const containerStyle = {
-            height: blockView.height,
             width: blockView.width,
             'backgroundColor': isDark ? '#1a1c22' : 'white'
+        }
+
+        const svgContainerStyle = {
+            height: blockView.height,
+            width: blockView.width,
+            position: 'relative'
         }
 
         return (
 
             <div className={'blockViewRoot rounded-corner'} style={containerStyle} >
 
-                {/* Buttons for resetting zoom and inverting alignment */}
-                <InlayIcon onClick={this.resetZoom} right={30} />
-                {alignment.type == 'flipped' && <InlayIcon icon='shuffle' onClick={this.invertTarget} right={blockView.width - 80} />}
+                {/* SVG visualization wrapper with fixed height */}
+                <div style={svgContainerStyle}>
 
-                {/* Buttons for moving top strand to left or right */}
-                <InlayIcon onClick={this.shiftAlignment.bind(this, 'right', 'top')} icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.source - 15} type='info' />
-                <InlayIcon onClick={this.shiftAlignment.bind(this, 'left', 'top')} icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.source - 15} type='info' />
+                    {/* Buttons for resetting zoom and inverting alignment */}
+                    <InlayIcon onClick={this.resetZoom} right={30} />
+                    {alignment.type == 'flipped' && <InlayIcon icon='shuffle' onClick={this.invertTarget} right={blockView.width - 80} />}
 
-                {/* Buttons for moving bottom strand to left or right */}
-                <InlayIcon onClick={this.shiftAlignment.bind(this, 'right', 'bottom')} icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.target - 15} type='info' />
-                <InlayIcon onClick={this.shiftAlignment.bind(this, 'left', 'bottom')} icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.target - 15} type='info' />
+                    {/* Buttons for moving top strand to left or right */}
+                    <InlayIcon onClick={this.shiftAlignment.bind(this, 'right', 'top')} icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.source - 15} type='info' />
+                    <InlayIcon onClick={this.shiftAlignment.bind(this, 'left', 'top')} icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.source - 15} type='info' />
 
+                    {/* Buttons for moving bottom strand to left or right */}
+                    <InlayIcon onClick={this.shiftAlignment.bind(this, 'right', 'bottom')} icon='arrow-right' fontSize={15} right={this.leftOffset - 40} top={blockView.verticalPositions.target - 15} type='info' />
+                    <InlayIcon onClick={this.shiftAlignment.bind(this, 'left', 'bottom')} icon='arrow-left' fontSize={15} right={this.innerWidth + this.leftOffset} top={blockView.verticalPositions.target - 15} type='info' />
 
-                <svg className='blockViewSVG exportable-svg snapshot-thumbnail '
-                    id='geneblock-view-graphic'
-                    style={{ 'background': isDark ? '#1a1c22' : 'white' }}
-                    transform={'translate(' + this.leftOffset + ',0)'}
-                    ref={node => this.outerG = node}
-                    height={blockView.height} width={this.innerWidth}>
-                    <g className='axis axis--x' transform='translate(0,40)' ref={node => this.gxTop = node} > </g>
-                    <g className='axis axis--x' transform={'translate(0,' + (blockView.height - 40) + ')'} ref={node => this.gxBottom = node} > </g>
+                    <svg className='blockViewSVG exportable-svg snapshot-thumbnail '
+                        id='geneblock-view-graphic'
+                        style={{ 'background': isDark ? '#1a1c22' : 'white' }}
+                        transform={'translate(' + this.leftOffset + ',0)'}
+                        ref={node => this.outerG = node}
+                        height={blockView.height} width={this.innerWidth}>
+                        <g className='axis axis--x' transform='translate(0,40)' ref={node => this.gxTop = node} > </g>
+                        <g className='axis axis--x' transform={'translate(0,' + (blockView.height - 40) + ')'} ref={node => this.gxBottom = node} > </g>
 
-                    <g ref={node => this.innerG = node}>
-                        <line
-                            className='marker-tracks source'
-                            x1={0} y1={blockView.verticalPositions.source}
-                            x2={this.innerWidth} y2={blockView.verticalPositions.source} ></line>
+                        <g ref={node => this.innerG = node}>
+                            <line
+                                className='marker-tracks source'
+                                x1={0} y1={blockView.verticalPositions.source}
+                                x2={this.innerWidth} y2={blockView.verticalPositions.source} ></line>
 
-                        {sourceMarkers}
-                        {targetMarkers}
-                        {polygonLinks}
+                            {sourceMarkers}
+                            {targetMarkers}
+                            {polygonLinks}
 
-                        <line
-                            className='marker-tracks target'
-                            x1={0} y1={blockView.verticalPositions.target}
-                            x2={this.innerWidth} y2={blockView.verticalPositions.target} ></line>
-                    </g>
-                </svg>
+                            <line
+                                className='marker-tracks target'
+                                x1={0} y1={blockView.verticalPositions.target}
+                                x2={this.innerWidth} y2={blockView.verticalPositions.target} ></line>
+                        </g>
+                    </svg>
+                </div>
+
+                {/* Gene pair table toggle */}
+                <div style={{ padding: '6px 10px', borderTop: '1px solid #ccc' }}>
+                    <button
+                        className='btn btn-primary-outline m-r-sm'
+                        onClick={this.toggleTable}>
+                        {showTable ? 'Hide gene table' : 'Show gene table (' + alignment.links.length + ' pairs)'}
+                    </button>
+                    {showTable &&
+                        <button className='btn btn-primary-outline' onClick={this.downloadCSV}>
+                            Export CSV
+                        </button>
+                    }
+                </div>
+
+                {showTable &&
+                    <div style={{ maxHeight: '260px', overflowY: 'auto', fontSize: '12px', padding: '0 10px 10px' }}>
+                        <table className='table table-condensed table-bordered' style={{ width: '100%', tableLayout: 'fixed' }}>
+                            <thead>
+                                <tr>
+                                    <th style={{ width: '3%' }}>#</th>
+                                    <th style={{ width: '16%' }}>Source gene</th>
+                                    <th style={{ width: '8%' }}>Chr</th>
+                                    <th style={{ width: '9%' }}>Start</th>
+                                    <th style={{ width: '9%' }}>End</th>
+                                    <th style={{ width: '16%' }}>Target gene</th>
+                                    <th style={{ width: '8%' }}>Chr</th>
+                                    <th style={{ width: '9%' }}>Start</th>
+                                    <th style={{ width: '9%' }}>End</th>
+                                    <th style={{ width: '13%' }}>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {tableRows}
+                            </tbody>
+                        </table>
+                    </div>
+                }
             </div>
         );
     }

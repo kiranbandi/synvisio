@@ -14,8 +14,8 @@ class Upload extends Component {
 
     this.state = {
       processScaffolds: false,
-      showAllScaffolds: false
-
+      showAllScaffolds: false,
+      collinearFileType: 'collinear'
     };
     this.onUpload = this.onUpload.bind(this);
     this.uploadRadioChange = this.uploadRadioChange.bind(this);
@@ -23,21 +23,24 @@ class Upload extends Component {
   }
 
   uploadRadioChange(event) {
-    let value = event.target.value, { processScaffolds, showAllScaffolds } = this.state;
+    let value = event.target.value, { processScaffolds, showAllScaffolds, collinearFileType } = this.state;
     if (value.indexOf('scaffold') > -1) {
       processScaffolds = value.indexOf('no') > -1;
+    }
+    else if (value === 'collinear' || value === 'anchors') {
+      collinearFileType = value;
     }
     else {
       showAllScaffolds = value.indexOf('no') > -1;
     }
-    this.setState({ processScaffolds, showAllScaffolds });
+    this.setState({ processScaffolds, showAllScaffolds, collinearFileType });
   }
 
   onUpload() {
 
     let datastore = { trackData: [], colorMap: {} };
     const { actions, multiLevel } = this.props,
-      { processScaffolds, showAllScaffolds } = this.state,
+      { processScaffolds, showAllScaffolds, collinearFileType } = this.state,
       { configureSourceID, setGenomicData, setLoaderState } = actions;
 
     // Turn on loader to indicate file uploading and processing 
@@ -57,15 +60,15 @@ class Upload extends Component {
       // store the data and then load the collinear file
       .then((data) => {
         datastore = Object.assign(datastore, { ...data });
-        // If the user  wants to ignore scaffolds but no chromosomes were found, the flag would be overridden and scaffold filtering would be bypassed.
-        if (data.scaffoldBypassed && !processScaffolds) {
-          alert(`Automatic scaffold region filtering has been overridden, as no chromosomes were found in your gff file.\n\nThis might be due to mischaracterisation of actual chromosomes as scaffolds by SynVisio as they dont follow the two character naming convention.\n\nAll scaffolds will now be considered chromsomes instead so you should be able to choose them in the dashboard.`);
-        }
-
         return getFile('collinear-file');
       })
-      // process the collinear file
-      .then(((response) => { return processFile(response, 'collinear') }))
+      // process the collinear/anchors file using the selected format
+      .then((response) => {
+        const anchorsParams = collinearFileType === 'anchors'
+          ? { genomeLibrary: datastore.genomeLibrary }
+          : {};
+        return processFile(response, collinearFileType, anchorsParams);
+      })
       // store the collinear data and load the track file if one is provided
       .then((data) => {
 
@@ -159,14 +162,29 @@ class Upload extends Component {
   render() {
 
     const { sourceID = '', loaderState = false } = this.props,
-      { processScaffolds, showAllScaffolds } = this.state;
+      { processScaffolds, showAllScaffolds, collinearFileType } = this.state;
+
+    const collinearFileLabel = collinearFileType === 'anchors'
+      ? 'JCVI MCScan Anchors File (.anchors)'
+      : 'MCScanX Collinearity File (.collinearity)';
 
     return (
       <div className="configuration-container">
         <div className="container">
           <div className='upload-panel'>
             <h2 className='text-primary m-t-lg configuration-sub-title'>Upload Collinearity Files</h2>
-            <FileUpload id='collinear-file' label='MCScanX Collinearity File' />
+            <div className="m-b">
+              <h4 className="sub-info">Collinearity file format :</h4>
+              <RadioButton value={'collinear'} id={'type-collinear'} className='conf-radio' name='collinear-type-select'
+                label={"MCScanX (.collinearity)"}
+                onChange={this.uploadRadioChange}
+                checked={collinearFileType === 'collinear'} />
+              <RadioButton value={'anchors'} id={'type-anchors'} className='conf-radio' name='collinear-type-select'
+                label={"JCVI MCScan (.anchors)"}
+                onChange={this.uploadRadioChange}
+                checked={collinearFileType === 'anchors'} />
+            </div>
+            <FileUpload id='collinear-file' label={collinearFileLabel} />
             <FileUpload id='coordinate-file' label='GFF File' />
             <h4 className='text-primary m-t' style={{ 'lineHeight': '25px' }}>
               You can upload upto 4 track files, these however are only visible in some charts
