@@ -62,3 +62,4 @@ typings/
 
 
 build/assets/bundle/
+.DS_Store
